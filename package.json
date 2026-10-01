@@ -1,0 +1,10 @@
+{
+  "name": "nexa-capital-lead-notifications",
+  "private": true,
+  "version": "1.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs"
+  }
+}

@@ -1,0 +1,1236 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0A0F1D" />
+  <meta name="description" content="Compare personal and business loan options from 30+ banks and NBFCs with Nexa Capital and the Ruconnect network." />
+  <title>Nexa Capital — Smarter Loans. Fast Approvals.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            nexa: { navy: '#0A0F1D', emerald: '#10B981', cyan: '#06B6D4', mist: '#F4F8FA' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'Plus Jakarta Sans', 'ui-sans-serif', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            glow: '0 0 28px rgba(16, 185, 129, .3)'
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0A0F1D;
+      --navy-2: #111a2a;
+      --navy-3: #18243a;
+      --emerald: #10B981;
+      --emerald-deep: #078963;
+      --cyan: #06B6D4;
+      --ink: #101a2c;
+      --muted: #687789;
+      --line: #e5ebef;
+      --surface: #f5f8fa;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 82px; }
+    body { margin: 0; min-width: 320px; color: var(--ink); background: #f7f9fb; font-family: Inter, "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    button, input, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid rgba(6,182,212,.45); outline-offset: 3px; }
+    a { color: inherit; text-decoration: none; }
+    button { color: inherit; }
+    ::selection { background: rgba(16,185,129,.22); }
+    .container { width: min(1190px, calc(100% - 48px)); margin: 0 auto; }
+    .icon { width: 18px; height: 18px; display: inline-block; flex: 0 0 auto; vertical-align: middle; }
+    .icon-sm { width: 15px; height: 15px; }
+    .icon-lg { width: 21px; height: 21px; }
+    .icon-xl { width: 25px; height: 25px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    [hidden] { display: none !important; }
+
+    /* Header */
+    .site-header { position: sticky; z-index: 50; top: 0; border-bottom: 1px solid rgba(255,255,255,.09); background: rgba(10,15,29,.91); color: #f8fafc; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+    .nav-shell { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; flex: 0 0 auto; }
+    .brand-mark { position: relative; width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid rgba(131,238,197,.34); border-radius: 12px; background: linear-gradient(145deg, rgba(16,185,129,.24), rgba(6,182,212,.15)); box-shadow: 0 0 21px rgba(16,185,129,.2), inset 0 1px 0 rgba(255,255,255,.13); }
+    .brand-mark::after { content: ""; position: absolute; inset: -4px; border: 1px solid rgba(16,185,129,.13); border-radius: 15px; }
+    .brand-mark svg { position: relative; z-index: 1; width: 24px; height: 24px; color: #8bf0c9; }
+    .brand-name { display: flex; align-items: baseline; gap: 5px; color: #f8fafc; font-size: 16px; letter-spacing: -.055em; }
+    .brand-name strong { font-weight: 800; }
+    .brand-name span { color: #9ba9b8; font-weight: 500; }
+    .desktop-nav { display: flex; align-items: center; justify-content: center; gap: 28px; margin-left: auto; margin-right: auto; }
+    .nav-link { display: inline-flex; align-items: center; gap: 5px; padding: 12px 0; border: 0; background: transparent; color: #b7c1cd; font-size: 11px; font-weight: 600; transition: color .18s ease; cursor: pointer; white-space: nowrap; }
+    .nav-link:hover, .nav-link[aria-expanded="true"] { color: #fff; }
+    .nav-link svg { transition: transform .2s ease; }
+    .nav-link[aria-expanded="true"] svg { transform: rotate(180deg); }
+    .nav-dropdown-wrap { position: relative; }
+    .products-dropdown { position: absolute; z-index: 60; top: calc(100% + 13px); left: -17px; width: 290px; padding: 9px; border: 1px solid rgba(216,231,233,.76); border-radius: 15px; background: rgba(255,255,255,.98); color: var(--ink); box-shadow: 0 20px 55px rgba(0,0,0,.22); animation: pop-in .18s ease both; }
+    .products-dropdown::before { content: ""; position: absolute; top: -6px; left: 33px; width: 11px; height: 11px; border-top: 1px solid rgba(216,231,233,.76); border-left: 1px solid rgba(216,231,233,.76); background: #fff; transform: rotate(45deg); }
+    .product-option { position: relative; display: grid; grid-template-columns: 35px 1fr 16px; align-items: center; gap: 10px; padding: 10px; border-radius: 10px; transition: background .18s ease; }
+    .product-option:hover { background: #f1faf6; }
+    .product-option-icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: #e9faf2; color: #0b9e70; }
+    .product-option strong, .product-option small { display: block; }
+    .product-option strong { color: #17253a; font-size: 11px; font-weight: 700; }
+    .product-option small { margin-top: 3px; color: #86939f; font-size: 8px; }
+    .product-option > svg { color: #a0adb6; }
+    .nav-cta { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 16px; border: 1px solid rgba(84,229,172,.55); border-radius: 10px; background: linear-gradient(110deg, #12c58d, #09ac82); color: #052d22; box-shadow: 0 0 23px rgba(16,185,129,.24), inset 0 1px 0 rgba(255,255,255,.35); font-size: 10px; font-weight: 800; white-space: nowrap; transition: transform .2s ease, box-shadow .2s ease, filter .2s ease; }
+    .nav-cta:hover { transform: translateY(-2px); filter: saturate(1.1); box-shadow: 0 0 32px rgba(16,185,129,.38), inset 0 1px 0 rgba(255,255,255,.4); }
+    .mobile-toggle { display: none; width: 40px; height: 40px; place-items: center; border: 1px solid rgba(255,255,255,.15); border-radius: 11px; background: rgba(255,255,255,.06); color: #f6fbfd; cursor: pointer; }
+    .mobile-nav { display: none; }
+
+    /* Hero */
+    .hero { position: relative; overflow: hidden; padding: 74px 0 45px; background: radial-gradient(ellipse at 76% 42%, rgba(6,182,212,.14), transparent 33%), radial-gradient(ellipse at 10% 100%, rgba(16,185,129,.1), transparent 33%), var(--navy); color: #fff; isolation: isolate; }
+    .hero::before { content: ""; position: absolute; z-index: -1; inset: 0; opacity: .16; background-image: linear-gradient(rgba(160,220,204,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(160,220,204,.18) 1px, transparent 1px); background-size: 42px 42px; mask-image: linear-gradient(110deg, transparent 2%, #000 55%, transparent 96%); }
+    .hero::after { content: ""; position: absolute; z-index: -1; top: -310px; right: 1%; width: 600px; height: 600px; border: 1px solid rgba(16,185,129,.1); border-radius: 50%; box-shadow: 0 0 0 36px rgba(16,185,129,.025), 0 0 0 82px rgba(6,182,212,.022), 0 0 0 130px rgba(255,255,255,.012); }
+    .hero-layout { position: relative; display: grid; grid-template-columns: minmax(0,1.03fr) minmax(410px,.97fr); align-items: center; gap: 58px; }
+    .hero-copy { position: relative; z-index: 1; padding: 3px 0 15px; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 21px; padding: 7px 11px; border: 1px solid rgba(95,225,177,.21); border-radius: 999px; background: rgba(16,185,129,.09); color: #7de1b8; font-size: 8px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+    .eyebrow-pulse { width: 6px; height: 6px; border-radius: 50%; background: #39daa4; box-shadow: 0 0 0 4px rgba(57,218,164,.13), 0 0 12px rgba(57,218,164,.6); }
+    .hero h1 { max-width: 675px; margin: 0; color: #f8fbff; font-family: "Plus Jakarta Sans", Inter, sans-serif; font-size: clamp(43px,5.15vw,67px); font-weight: 760; letter-spacing: -.071em; line-height: 1.055; }
+    .hero h1 .gradient-text { color: transparent; background: linear-gradient(95deg,#63e2b2 4%,#31d1bd 52%,#3dd3ea 100%); -webkit-background-clip: text; background-clip: text; }
+    .hero-subhead { max-width: 565px; margin: 21px 0 0; color: #b0bdca; font-size: 13px; line-height: 1.8; letter-spacing: -.006em; }
+    .hero-subhead strong { color: #e8f4f3; font-weight: 650; }
+    .hero-highlights { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 24px; }
+    .hero-highlight { display: inline-flex; align-items: center; gap: 7px; padding: 8px 10px; border: 1px solid rgba(217,232,239,.12); border-radius: 9px; background: rgba(255,255,255,.045); color: #d0dde2; font-size: 8px; font-weight: 600; }
+    .hero-highlight svg { color: #55dcae; }
+    .hero-highlight strong { color: #f5fbfd; font-weight: 750; }
+    .hero-proof { display: flex; align-items: center; gap: 12px; margin-top: 34px; }
+    .proof-avatars { display: flex; padding-left: 5px; }
+    .proof-avatars span { width: 27px; height: 27px; display: grid; place-items: center; margin-left: -5px; border: 2px solid #111a2a; border-radius: 50%; background: #d8f4e7; color: #166648; font-size: 7px; font-weight: 800; }
+    .proof-avatars span:nth-child(2) { background: #d9eff4; color: #1b7282; }
+    .proof-avatars span:nth-child(3) { background: #f5e7d7; color: #8d6543; }
+    .proof-avatars span:nth-child(4) { background: #e7e2f7; color: #685c9c; }
+    .proof-copy { color: #92a1ad; font-size: 8px; line-height: 1.5; }
+    .proof-copy strong { color: #eaf2f3; font-weight: 700; }
+    .proof-stars { display: inline-flex; align-items: center; gap: 2px; margin-right: 5px; color: #ffc65e; vertical-align: -2px; }
+    .hero-footnote { max-width: 570px; margin-top: 19px; color: #758392; font-size: 7px; line-height: 1.65; }
+    .hero-footnote a { color: #80dbc0; text-decoration: underline; text-decoration-color: rgba(128,219,192,.35); text-underline-offset: 2px; }
+
+    /* Lead form */
+    .lead-card-wrap { position: relative; z-index: 2; }
+    .lead-card-wrap::before { content: ""; position: absolute; z-index: -1; inset: 9% -9% -9% 8%; border: 1px solid rgba(77,228,180,.15); border-radius: 28px; background: linear-gradient(140deg,rgba(16,185,129,.11),rgba(6,182,212,.1)); transform: rotate(3deg); }
+    .lead-card { padding: 25px 25px 18px; border: 1px solid rgba(255,255,255,.8); border-radius: 20px; background: rgba(255,255,255,.97); color: var(--ink); box-shadow: 0 32px 80px rgba(0,0,0,.29),0 2px 5px rgba(7,18,34,.08); }
+    .lead-card-head { display: flex; align-items: flex-start; gap: 10px; }
+    .lead-card-symbol { width: 38px; height: 38px; display: grid; flex: 0 0 auto; place-items: center; border: 1px solid #d8f2e5; border-radius: 12px; background: linear-gradient(135deg,#ecfbf3,#e9f8fb); color: #079b70; }
+    .lead-card-head-copy { min-width: 0; flex: 1; }
+    .lead-card-overline { display: flex; align-items: center; gap: 6px; color: #178b6b; font-size: 7px; font-weight: 800; letter-spacing: .12em; }
+    .lead-card-overline i { width: 5px; height: 5px; border-radius: 50%; background: #11b981; box-shadow: 0 0 0 3px rgba(16,185,129,.12); }
+    .lead-card h2 { margin: 6px 0 0; color: #101a2c; font-family: "Plus Jakarta Sans",Inter,sans-serif; font-size: 19px; font-weight: 740; letter-spacing: -.055em; line-height: 1.2; }
+    .lead-card-side { display: inline-flex; align-items: center; gap: 4px; margin-top: 2px; padding: 6px 7px; border: 1px solid #e0f2e8; border-radius: 999px; background: #f5fcf7; color: #168960; font-size: 6px; font-weight: 800; white-space: nowrap; }
+    .lead-card-side svg { width: 11px; height: 11px; }
+    .form-section-label { display: block; margin: 18px 0 8px; color: #657486; font-size: 8px; font-weight: 700; }
+    .loan-type-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
+    .loan-type-btn { min-height: 38px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 4px 3px; border: 1px solid #e8edef; border-radius: 9px; background: #fff; color: #72808f; font-size: 7px; font-weight: 650; cursor: pointer; transition: .18s ease; }
+    .loan-type-btn svg { width: 14px; height: 14px; color: #8b9aa5; }
+    .loan-type-btn:hover { border-color: #bfead4; background: #f8fcf9; }
+    .loan-type-btn.is-active { border-color: #81d8b3; background: linear-gradient(135deg,#effbf5,#f2fcfd); color: #086b4b; box-shadow: inset 0 0 0 1px rgba(16,185,129,.07); }
+    .loan-type-btn.is-active svg { color: #0b9f72; }
+    .loan-amount-panel { margin-top: 17px; padding: 12px 13px 10px; border: 1px solid #e9eeef; border-radius: 11px; background: #fbfdfc; }
+    .amount-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .amount-head label { color: #687788; font-size: 8px; font-weight: 600; }
+    .amount-output { color: #101b2d; font-size: 20px; font-weight: 780; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
+    .amount-output small { margin-left: 3px; color: #8a98a1; font-size: 7px; font-weight: 550; letter-spacing: 0; }
+    .range { width: 100%; height: 4px; display: block; margin: 11px 0 0; border: 0; border-radius: 99px; outline: 0; appearance: none; -webkit-appearance: none; background: linear-gradient(90deg,#10b981 0%,#10b981 var(--progress,20%),#e4ece8 var(--progress,20%),#e4ece8 100%); cursor: pointer; }
+    .range::-webkit-slider-thumb { width: 15px; height: 15px; appearance: none; -webkit-appearance: none; border: 3px solid #fff; border-radius: 50%; background: #10b981; box-shadow: 0 1px 6px rgba(6,117,79,.33); }
+    .range::-moz-range-thumb { width: 10px; height: 10px; border: 3px solid #fff; border-radius: 50%; background: #10b981; box-shadow: 0 1px 6px rgba(6,117,79,.33); }
+    .range-limit { display: flex; justify-content: space-between; margin-top: 5px; color: #9aa6ad; font-size: 6px; }
+    .lead-fields { display: grid; grid-template-columns: 1.2fr .8fr; gap: 9px; margin-top: 12px; }
+    .field-wrap { min-width: 0; }
+    .field-wrap label { display: block; margin-bottom: 5px; color: #647385; font-size: 8px; font-weight: 680; }
+    .input-shell { height: 39px; display: flex; align-items: center; gap: 7px; padding: 0 10px; border: 1px solid #e2e9eb; border-radius: 8px; background: #fff; transition: border .18s ease, box-shadow .18s ease; }
+    .input-shell:focus-within { border-color: #88d9b5; box-shadow: 0 0 0 3px rgba(16,185,129,.08); }
+    .input-shell .prefix { color: #89969f; font-size: 8px; font-weight: 650; white-space: nowrap; }
+    .input-shell input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: #19283a; font-size: 10px; font-weight: 600; }
+    .input-shell input::placeholder { color: #adb7bd; font-size: 8px; font-weight: 450; }
+    .input-shell > svg { width: 14px; height: 14px; flex: 0 0 auto; color: #9aa7ad; }
+    .consent-row { display: flex; align-items: flex-start; gap: 7px; margin-top: 12px; color: #828f98; font-size: 7px; line-height: 1.5; }
+    .consent-row input { width: 12px; height: 12px; flex: 0 0 auto; margin: 1px 0 0; accent-color: #10b981; }
+    .consent-row a { color: #178e6b; text-decoration: underline; text-underline-offset: 2px; }
+    .apply-button { width: 100%; min-height: 46px; display: flex; align-items: center; justify-content: center; gap: 9px; margin-top: 13px; border: 1px solid rgba(6,148,102,.22); border-radius: 10px; background: linear-gradient(100deg,#16c487,#0eb58d 60%,#0eaa97); color: #042c22; box-shadow: 0 9px 22px rgba(16,185,129,.21),inset 0 1px 0 rgba(255,255,255,.42); font-size: 10px; font-weight: 800; cursor: pointer; transition: .2s ease; }
+    .apply-button:hover { transform: translateY(-2px); box-shadow: 0 13px 28px rgba(16,185,129,.31),inset 0 1px 0 rgba(255,255,255,.44); filter: saturate(1.1); }
+    .apply-button svg { width: 17px; height: 17px; transition: transform .18s ease; }
+    .apply-button:hover svg { transform: translateX(3px); }
+    .form-privacy-note { display: flex; justify-content: center; align-items: center; gap: 5px; margin: 10px 0 0; color: #9aa5ab; font-size: 6px; text-align: center; }
+    .form-privacy-note svg { width: 11px; height: 11px; color: #12a778; }
+    .hero-bottom { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 31px; padding-top: 19px; border-top: 1px solid rgba(255,255,255,.085); }
+    .hero-bottom-left { display: flex; align-items: center; gap: 8px; color: #81909e; font-size: 7px; }
+    .hero-bottom-left svg { color: #6edbb2; }
+    .hero-bottom-right { display: flex; align-items: center; gap: 7px; color: #8594a1; font-size: 7px; }
+    .hero-bottom-right strong { color: #cbd7dc; font-weight: 700; }
+    .partner-mini-stack { display: flex; padding-left: 4px; }
+    .partner-mini-stack span { width: 21px; height: 21px; display: grid; place-items: center; margin-left: -4px; border: 1.5px solid var(--navy); border-radius: 50%; background: #e9f8ef; color: #14724f; font-size: 6px; font-weight: 800; }
+    .partner-mini-stack span:nth-child(2) { background: #e7f3f8; color: #327a90; }
+    .partner-mini-stack span:nth-child(3) { background: #f4eee4; color: #856943; }
+    .partner-mini-stack span:nth-child(4) { background: #e8e6f8; color: #635a9d; }
+
+    /* Partner network */
+    .network-section { padding: 35px 0 57px; background: #fff; }
+    .network-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 21px; }
+    .network-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: #188968; font-size: 8px; font-weight: 800; letter-spacing: .14em; }
+    .network-eyebrow i { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 4px rgba(16,185,129,.1); }
+    .network-subtext { color: #7d8b96; font-size: 9px; font-weight: 550; }
+    .partner-logo-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 10px; }
+    .partner-logo { min-height: 62px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; border: 1px solid #edf1f2; border-radius: 11px; background: linear-gradient(180deg,#fff,#fbfcfd); color: #7c8994; filter: grayscale(1); opacity: .83; transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease; }
+    .partner-logo:hover { transform: translateY(-3px); box-shadow: 0 9px 20px rgba(15,23,42,.06); opacity: 1; }
+    .partner-logo strong { font-size: 14px; font-weight: 850; letter-spacing: -.055em; }
+    .partner-logo small { display: block; margin-top: 1px; font-size: 5px; font-weight: 800; letter-spacing: .1em; text-align: center; }
+    .partner-mark { width: 17px; height: 17px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 5px; font-size: 8px; font-weight: 850; }
+    .partner-logo--hdfc .partner-mark { border-radius: 2px; background: #7c8994; color: #fff; }
+    .partner-logo--icici .partner-mark { border: 0; border-radius: 50%; background: linear-gradient(135deg,#7c8994 50%,#b1bbc1 50%); color: white; }
+    .partner-logo--axis strong { letter-spacing: .08em; }
+    .partner-logo--kotak { font-style: italic; }
+    .partner-logo--bajaj .partner-mark { border: 0; background: #7c8994; color: #fff; }
+    .partner-logo--tata .partner-mark { border-radius: 50%; }
+    .network-footnote { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 13px; color: #a2adb4; font-size: 7px; }
+    .network-footnote svg { width: 12px; height: 12px; color: #1aa276; }
+    .lender-browser { margin-top: 18px; padding: 17px 18px 13px; border: 1px solid #e7edef; border-radius: 14px; background: linear-gradient(145deg,#fbfdfc,#f8fbfc); }
+    .lender-browser-head { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+    .lender-browser-head strong, .lender-browser-head span { display: block; }
+    .lender-browser-head strong { color: #16243a; font-size: 11px; font-weight: 750; letter-spacing: -.02em; }
+    .lender-browser-head div > span { margin-top: 4px; color: #87949d; font-size: 7px; }
+    .lender-count { display: inline-flex !important; align-items: center; gap: 6px; padding: 6px 8px; border: 1px solid #e5eeea; border-radius: 999px; background: #fff; color: #688074; font-size: 6px; font-weight: 800; letter-spacing: .08em; white-space: nowrap; }
+    .lender-count svg { width: 13px; height: 13px; color: #16966e; }
+    .lender-tabs { display: flex; gap: 5px; margin-top: 14px; padding-bottom: 9px; overflow-x: auto; border-bottom: 1px solid #e9efed; scrollbar-width: thin; }
+    .lender-tab { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 9px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: #76848e; font-size: 7px; font-weight: 650; cursor: pointer; transition: .18s ease; white-space: nowrap; }
+    .lender-tab span { min-width: 16px; padding: 2px 4px; border-radius: 99px; background: #eef2f1; color: #7e8c8b; font-size: 6px; text-align: center; }
+    .lender-tab:hover { background: #f1f8f4; color: #17694f; }
+    .lender-tab.is-active { border-color: #d8eee2; background: #eefaF3; color: #08744f; }
+    .lender-tab.is-active span { background: #d7f1e3; color: #14865f; }
+    .lender-chip-grid { display: flex; flex-wrap: wrap; gap: 7px; padding: 12px 0 2px; }
+    .lender-category-group { width: 100%; padding: 4px 0 10px; }
+    .lender-category-group + .lender-category-group { padding-top: 10px; border-top: 1px solid #e9efed; }
+    .lender-category-title { margin-bottom: 7px; color: #168967; font-size: 6px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .lender-category-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .lender-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 25px; padding: 5px 8px; border: 1px solid #e5ece9; border-radius: 7px; background: #fff; color: #526273; font-size: 7px; font-weight: 600; box-shadow: 0 2px 5px rgba(15,23,42,.018); animation: fade-in .16s ease both; }
+    .lender-chip::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: #19ad7b; }
+    .lender-disclaimer { margin: 9px 0 0; color: #9aa6aa; font-size: 6px; line-height: 1.6; }
+
+    /* Personal loan application */
+    .personal-application-section { background: linear-gradient(145deg,#eef4f7,#f8fbfc); }
+    .personal-application-layout { display: grid; grid-template-columns: minmax(0,.76fr) minmax(0,1.24fr); align-items: start; gap: 45px; }
+    .personal-application-copy { position: sticky; top: 105px; }
+    .personal-application-copy h2 { margin: 14px 0 0; color: var(--navy); font-family: "Plus Jakarta Sans",Inter,sans-serif; font-size: clamp(34px,3.8vw,45px); font-weight: 750; letter-spacing: -.07em; line-height: 1.1; }
+    .personal-application-copy h2 span { color: #7b8a99; font-weight: 550; }
+    .personal-application-copy > p { max-width: 365px; margin: 14px 0 0; color: #71808e; font-size: 10px; line-height: 1.8; }
+    .personal-safety-card { display: flex; align-items: flex-start; gap: 10px; max-width: 370px; margin-top: 24px; padding: 12px; border: 1px solid #e3e9ec; border-radius: 11px; background: rgba(255,255,255,.75); }
+    .personal-safety-icon { width: 30px; height: 30px; display: grid; flex: 0 0 auto; place-items: center; border-radius: 9px; background: #fff3df; color: #a57725; }
+    .personal-safety-card p { margin: 0; color: #798792; font-size: 7px; line-height: 1.7; }
+    .personal-safety-card strong { color: #425263; font-size: 8px; }
+    .personal-steps-mini { display: flex; flex-direction: column; gap: 11px; margin-top: 22px; }
+    .personal-steps-mini > span { display: flex; align-items: center; gap: 8px; color: #667687; font-size: 8px; }
+    .personal-steps-mini i { width: 20px; height: 20px; display: grid; place-items: center; border: 1px solid #d5ebe0; border-radius: 7px; background: #f7fcf9; color: #128e68; font-size: 7px; font-style: normal; font-weight: 800; }
+    .personal-form-card { padding: 22px; border: 1px solid #e5ecef; border-radius: 17px; background: #fff; box-shadow: 0 18px 48px rgba(15,23,42,.06); }
+    .personal-form-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 15px; border-bottom: 1px solid #edf1f2; }
+    .personal-form-head small { display: block; color: #12916a; font-size: 7px; font-weight: 800; letter-spacing: .13em; }
+    .personal-form-head h3 { margin: 5px 0 0; color: #121f32; font-family: "Plus Jakarta Sans",Inter,sans-serif; font-size: 18px; font-weight: 740; letter-spacing: -.05em; }
+    .personal-prefill-note { margin: 12px 0 -4px; padding: 8px 10px; border: 1px solid #d7efe2; border-radius: 8px; background: #f3fbf6; color: #26775b; font-size: 7px; line-height: 1.55; }
+    .personal-form-badge { display: inline-flex; align-items: center; gap: 5px; padding: 6px 8px; border: 1px solid #e4eee8; border-radius: 99px; background: #f8fcf9; color: #648373; font-size: 6px; font-weight: 700; white-space: nowrap; }
+    .personal-form-badge svg { width: 12px; height: 12px; color: #16966e; }
+    .personal-form-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px 11px; padding-top: 17px; }
+    .personal-field { min-width: 0; }
+    .personal-field--full { grid-column: 1 / -1; }
+    .personal-field label { display: block; margin-bottom: 5px; color: #5d6d7e; font-size: 8px; font-weight: 700; }
+    .personal-field label span { color: #a5afb5; font-size: 6px; font-weight: 500; }
+    .personal-field input, .personal-field select, .personal-field textarea { width: 100%; min-height: 39px; padding: 0 10px; border: 1px solid #e0e8eb; border-radius: 8px; outline: none; background: #fff; color: #203146; font-size: 9px; transition: border .17s ease,box-shadow .17s ease; }
+    .personal-field input::placeholder, .personal-field textarea::placeholder { color: #a4afb5; font-size: 8px; }
+    .personal-field input:focus, .personal-field select:focus, .personal-field textarea:focus { border-color: #86d8b4; box-shadow: 0 0 0 3px rgba(16,185,129,.08); }
+    .personal-field textarea { min-height: 66px; padding: 9px 10px; resize: vertical; line-height: 1.5; }
+    .pan-hint { display: block; margin-top: 4px; color: #98a4aa; font-size: 6px; }
+    .personal-amount-field { padding: 10px 11px 9px; border: 1px solid #e0e8eb; border-radius: 8px; background: #fbfdfc; }
+    .personal-amount-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .personal-amount-head label { margin: 0; }
+    .personal-amount-head output { color: #16263b; font-size: 11px; font-weight: 780; letter-spacing: -.03em; }
+    .personal-amount-field .range { margin-top: 10px; }
+    .personal-consent { display: flex; align-items: flex-start; gap: 7px; margin-top: 14px; color: #778590; font-size: 7px; line-height: 1.65; }
+    .personal-consent input { width: 13px; height: 13px; flex: 0 0 auto; margin: 1px 0 0; accent-color: #10b981; }
+    .personal-consent a { color: #128963; text-decoration: underline; text-underline-offset: 2px; }
+    .personal-submit { width: 100%; min-height: 45px; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 13px; border: 1px solid rgba(6,148,102,.22); border-radius: 9px; background: linear-gradient(100deg,#16c487,#0eb58d 60%,#0eaa97); color: #042c22; box-shadow: 0 8px 20px rgba(16,185,129,.2); font-size: 9px; font-weight: 800; cursor: pointer; transition: .2s ease; }
+    .personal-submit:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(16,185,129,.3); }
+    .personal-submit:disabled { opacity: .65; cursor: wait; transform: none; }
+    .personal-submit svg { width: 16px; height: 16px; }
+    .personal-delivery-note { display: flex; align-items: flex-start; gap: 5px; margin: 9px 0 0; color: #9aa5ab; font-size: 6px; line-height: 1.55; }
+    .personal-delivery-note svg { width: 11px; height: 11px; flex: 0 0 auto; margin-top: 1px; color: #169a70; }
+
+    /* General section styles */
+    .section { padding: 91px 0; }
+    .section-heading { max-width: 680px; margin: 0 auto 39px; text-align: center; }
+    .section-kicker { display: inline-flex; align-items: center; gap: 8px; color: #0f9870; font-size: 8px; font-weight: 800; letter-spacing: .16em; }
+    .section-kicker::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 4px rgba(16,185,129,.1); }
+    .section-heading h2, .calc-copy h2, .process-copy h2, .reviews-heading h2 { margin: 13px 0 0; color: var(--navy); font-family: "Plus Jakarta Sans",Inter,sans-serif; font-size: clamp(33px,4vw,47px); font-weight: 750; letter-spacing: -.068em; line-height: 1.08; }
+    .section-heading h2 span, .reviews-heading h2 span { color: #7b8a99; font-weight: 560; }
+    .section-heading p { max-width: 545px; margin: 13px auto 0; color: #71808e; font-size: 11px; line-height: 1.8; }
+
+    /* Advantages */
+    .advantages-section { position: relative; background: linear-gradient(180deg,#f7f9fb,#fff 66%); }
+    .advantage-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+    .advantage-card { position: relative; min-height: 256px; overflow: hidden; padding: 21px 19px; border: 1px solid #e8eef0; border-radius: 16px; background: #fff; box-shadow: 0 7px 25px rgba(15,23,42,.027); transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease; }
+    .advantage-card:hover { transform: translateY(-5px); border-color: #cfe9dc; box-shadow: 0 18px 38px rgba(15,23,42,.08); }
+    .advantage-card::after { content: ""; position: absolute; top: -38px; right: -43px; width: 111px; height: 111px; border: 1px solid rgba(16,185,129,.09); border-radius: 50%; box-shadow: 0 0 0 13px rgba(16,185,129,.025),0 0 0 27px rgba(16,185,129,.02); pointer-events: none; }
+    .adv-icon { width: 41px; height: 41px; display: grid; place-items: center; border: 1px solid #daf0e4; border-radius: 13px; background: #effaf4; color: #0b9d70; }
+    .advantage-card:nth-child(2) .adv-icon { border-color: #dceef3; background: #f0fafb; color: #078fa6; }
+    .advantage-card:nth-child(3) .adv-icon { border-color: #f1e7d3; background: #fffaf0; color: #b3832e; }
+    .advantage-card:nth-child(4) .adv-icon { border-color: #e8e4f5; background: #f7f5fc; color: #7b69ba; }
+    .adv-number { position: absolute; top: 24px; right: 20px; color: #bdc7ca; font-size: 8px; font-weight: 800; letter-spacing: .1em; }
+    .advantage-card h3 { position: relative; z-index: 1; margin: 21px 0 8px; color: #111e32; font-size: 15px; font-weight: 750; letter-spacing: -.04em; }
+    .advantage-card p { position: relative; z-index: 1; max-width: 245px; margin: 0; color: #778592; font-size: 9px; line-height: 1.75; }
+    .advantage-tag { display: inline-flex; align-items: center; gap: 5px; margin-top: 15px; padding: 5px 7px; border: 1px solid #e8f2ec; border-radius: 999px; background: #f8fcf9; color: #51806c; font-size: 6px; font-weight: 700; }
+    .advantage-tag svg { width: 11px; height: 11px; color: #16a678; }
+
+    /* Calculator */
+    .calculator-section { position: relative; overflow: hidden; padding: 94px 0; background: linear-gradient(115deg,#0a0f1d,#111e31 68%,#102934); color: #f8fafc; isolation: isolate; }
+    .calculator-section::before { content: ""; position: absolute; z-index: -1; inset: 0; opacity: .18; background-image: radial-gradient(rgba(255,255,255,.3) .6px,transparent .7px); background-size: 18px 18px; mask-image: linear-gradient(90deg,transparent,#000 45%,transparent); }
+    .calculator-section::after { content: ""; position: absolute; z-index: -1; right: -190px; bottom: -330px; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle,rgba(6,182,212,.18),transparent 70%); }
+    .calculator-layout { display: grid; grid-template-columns: minmax(280px,.72fr) minmax(0,1.28fr); align-items: center; gap: 60px; }
+    .section-kicker--light { color: #7ce1b9; }
+    .section-kicker--light::before { background: #48daa7; box-shadow: 0 0 0 4px rgba(72,218,167,.13); }
+    .calc-copy h2 { margin-top: 17px; color: #f8fbff; font-size: clamp(36px,4vw,49px); }
+    .calc-copy h2 span { color: #72dcb7; }
+    .calc-copy > p { max-width: 390px; margin: 16px 0 0; color: #aab7c5; font-size: 11px; line-height: 1.85; }
+    .calc-bullets { display: flex; flex-direction: column; gap: 13px; margin-top: 24px; }
+    .calc-bullets li { display: flex; align-items: center; gap: 9px; list-style: none; color: #dbe4e9; font-size: 9px; }
+    .calc-bullets svg { width: 18px; height: 18px; padding: 3px; border: 1px solid rgba(82,219,166,.2); border-radius: 6px; background: rgba(16,185,129,.1); color: #77e1b9; }
+    .calc-copy-note { display: inline-flex; align-items: center; gap: 7px; margin-top: 25px; padding: 8px 10px; border: 1px solid rgba(255,255,255,.13); border-radius: 8px; color: #9eacb8; font-size: 7px; }
+    .calc-copy-note svg { width: 13px; height: 13px; color: #71ddb7; }
+    .calculator-card { padding: 23px; border: 1px solid rgba(230,239,239,.9); border-radius: 19px; background: #fff; color: #101a2b; box-shadow: 0 30px 80px rgba(0,0,0,.24); }
+    .calculator-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; padding-bottom: 15px; border-bottom: 1px solid #edf1f2; }
+    .calculator-card-head span { color: #138966; font-size: 7px; font-weight: 800; letter-spacing: .13em; }
+    .calculator-card-head h3 { margin: 5px 0 0; color: #101a2c; font-family: "Plus Jakarta Sans",Inter,sans-serif; font-size: 18px; font-weight: 740; letter-spacing: -.045em; }
+    .calc-free-badge { display: inline-flex; align-items: center; gap: 5px; padding: 6px 8px; border: 1px solid #e2f2e9; border-radius: 99px; background: #f5fcf7; color: #258866; font-size: 7px; font-weight: 700; white-space: nowrap; }
+    .calc-free-badge svg { width: 12px; height: 12px; }
+    .calculator-main { display: grid; grid-template-columns: minmax(0,1.02fr) minmax(245px,.98fr); gap: 19px; padding-top: 18px; }
+    .calc-controls { display: flex; flex-direction: column; justify-content: space-between; gap: 19px; padding: 2px 0; }
+    .calc-control-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .calc-control-head label { color: #657486; font-size: 8px; font-weight: 620; }
+    .calc-control-head output { color: #1a2a3d; font-size: 10px; font-weight: 750; letter-spacing: -.02em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .calc-control .range { height: 4px; margin-top: 10px; }
+    .calc-control .range::-webkit-slider-thumb { width: 13px; height: 13px; }
+    .calc-control .range::-moz-range-thumb { width: 8px; height: 8px; }
+    .calc-limits { display: flex; justify-content: space-between; margin-top: 5px; color: #a2adb5; font-size: 6px; }
+    .calc-result { min-height: 304px; padding: 17px 16px 13px; border: 1px solid #ddefe5; border-radius: 14px; background: linear-gradient(155deg,#f3fbf6,#f8fcfb 68%,#f0fafb); }
+    .result-label { display: flex; align-items: center; justify-content: space-between; gap: 7px; color: #83928e; font-size: 7px; font-weight: 800; letter-spacing: .11em; }
+    .result-live { display: inline-flex; align-items: center; gap: 4px; color: #128f69; font-size: 6px; font-weight: 700; letter-spacing: 0; }
+    .result-live i { width: 5px; height: 5px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,.12); }
+    .emi-amount { margin-top: 7px; color: #0c1b30; font-size: 29px; font-weight: 780; letter-spacing: -.065em; line-height: 1.15; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .emi-amount small { margin-left: 4px; color: #87958f; font-size: 8px; font-weight: 500; letter-spacing: 0; }
+    .result-divider { height: 1px; margin: 13px 0; background: #e3eee8; }
+    .amount-composition-label { display: flex; justify-content: space-between; color: #85928d; font-size: 6px; }
+    .amount-composition { height: 7px; display: flex; overflow: hidden; margin-top: 7px; border-radius: 99px; background: #dce8e2; }
+    .amount-composition .principal-bar { width: 72%; border-radius: 99px 0 0 99px; background: linear-gradient(90deg,#10b981,#45d5a5); transition: width .25s ease; }
+    .amount-composition .interest-bar { flex: 1; background: linear-gradient(90deg,#7bdcc0,#8bd6e0); transition: width .25s ease; }
+    .calc-legend { display: flex; gap: 13px; margin-top: 7px; color: #87958e; font-size: 6px; }
+    .calc-legend span { display: inline-flex; align-items: center; gap: 4px; }
+    .calc-legend i { width: 6px; height: 6px; border-radius: 2px; background: #10b981; }
+    .calc-legend span:nth-child(2) i { background: #7bdcc0; }
+    .result-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 13px; }
+    .result-breakdown > div { min-width: 0; padding: 9px 8px; border: 1px solid #e5efea; border-radius: 8px; background: rgba(255,255,255,.7); }
+    .result-breakdown span, .result-breakdown strong { display: block; }
+    .result-breakdown span { color: #8a9791; font-size: 6px; }
+    .result-breakdown strong { overflow: hidden; margin-top: 4px; color: #35473f; font-size: 9px; font-weight: 730; text-overflow: ellipsis; white-space: nowrap; }
+    .calculator-disclaimer { margin: 11px 0 0; color: #9ba7a3; font-size: 6px; line-height: 1.6; }
+
+    /* Process and tracking */
+    .process-section { background: #fff; }
+    .process-heading { display: flex; align-items: end; justify-content: space-between; gap: 40px; margin-bottom: 37px; }
+    .process-heading .section-kicker { margin-bottom: 0; }
+    .process-heading h2 { max-width: 560px; margin: 13px 0 0; color: var(--navy); font-family: "Plus Jakarta Sans",Inter,sans-serif; font-size: clamp(33px,4vw,46px); font-weight: 750; letter-spacing: -.068em; line-height: 1.08; }
+    .process-heading h2 span { color: #7c8997; font-weight: 560; }
+    .process-heading > p { max-width: 330px; margin: 0 0 4px; color: #758391; font-size: 10px; line-height: 1.75; }
+    .process-layout { display: grid; grid-template-columns: minmax(0,1.45fr) minmax(260px,.55fr); align-items: stretch; gap: 20px; }
+    .process-steps { position: relative; display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; padding: 21px 17px 17px; border: 1px solid #e8eef0; border-radius: 17px; background: linear-gradient(140deg,#fbfdfc,#f8fbfb); }
+    .process-steps::before { content: ""; position: absolute; top: 43px; right: 11%; left: 11%; height: 1px; background: linear-gradient(90deg,#a9e7cb,#b6dfe0,#e9dfc2); }
+    .process-step { position: relative; z-index: 1; padding: 0 7px; }
+    .step-icon-wrap { width: 45px; height: 45px; display: grid; place-items: center; margin-bottom: 17px; border: 1px solid #d8efe3; border-radius: 14px; background: #fff; color: #0d9b6e; box-shadow: 0 4px 12px rgba(15,23,42,.04); }
+    .process-step:nth-child(2) .step-icon-wrap { border-color: #d8eef2; color: #078da4; }
+    .process-step:nth-child(3) .step-icon-wrap { border-color: #eee4d0; color: #ac8133; }
+    .process-step:nth-child(4) .step-icon-wrap { border-color: #e6e0f4; color: #7662b5; }
+    .step-count { display: block; color: #12966e; font-size: 7px; font-weight: 800; letter-spacing: .14em; }
+    .process-step h3 { margin: 7px 0 6px; color: #1a293d; font-size: 11px; font-weight: 740; letter-spacing: -.025em; line-height: 1.35; }
+    .process-step p { margin: 0; color: #7c8995; font-size: 7px; line-height: 1.7; }
+    .step-speed { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; padding: 4px 6px; border: 1px solid #e9e4f5; border-radius: 999px; background: #fff; color: #7665ae; font-size: 6px; font-weight: 750; }
+    .step-speed svg { width: 10px; height: 10px; }
+    .tracking-card { display: flex; flex-direction: column; justify-content: center; padding: 20px; border: 1px solid rgba(118,145,168,.16); border-radius: 17px; background: linear-gradient(150deg,#101a2d,#14263a 75%,#13394a); color: #fff; box-shadow: 0 12px 32px rgba(12,25,44,.1); }
+    .track-icon { width: 37px; height: 37px; display: grid; place-items: center; border: 1px solid rgba(90,213,174,.2); border-radius: 11px; background: rgba(16,185,129,.1); color: #70dfb6; }
+    .tracking-card h3 { margin: 13px 0 5px; color: #f6fbfd; font-size: 15px; font-weight: 740; letter-spacing: -.045em; }
+    .tracking-card > p { margin: 0; color: #a4b2be; font-size: 8px; line-height: 1.7; }
+    .track-form { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+    .track-form input { width: 100%; height: 35px; padding: 0 10px; border: 1px solid rgba(222,235,241,.17); border-radius: 7px; outline: 0; background: rgba(255,255,255,.06); color: #eef6f8; font-size: 8px; }
+    .track-form input::placeholder { color: #8999a6; }
+    .track-form input:focus { border-color: rgba(79,216,167,.7); box-shadow: 0 0 0 3px rgba(16,185,129,.1); }
+    .track-submit { min-height: 35px; display: flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid rgba(102,229,183,.33); border-radius: 7px; background: linear-gradient(95deg,#17bc87,#0ba990); color: #052b21; font-size: 8px; font-weight: 800; cursor: pointer; transition: .18s ease; }
+    .track-submit:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .track-privacy { margin-top: 9px; color: #81929e; font-size: 6px; line-height: 1.5; }
+
+    /* Testimonials */
+    .reviews-section { background: linear-gradient(180deg,#f5f8fa,#fafcfd); }
+    .reviews-heading { display: flex; align-items: end; justify-content: space-between; gap: 25px; margin-bottom: 30px; }
+    .reviews-heading h2 { font-size: clamp(32px,4vw,45px); }
+    .reviews-heading > p { max-width: 340px; margin: 0 0 4px; color: #778491; font-size: 9px; line-height: 1.75; }
+    .review-rating-badge { display: inline-flex; align-items: center; gap: 9px; margin-top: 14px; padding: 9px 11px; border: 1px solid #e6ecee; border-radius: 10px; background: #fff; }
+    .stars { display: inline-flex; gap: 2px; color: #e8aa44; }
+    .stars svg { width: 12px; height: 12px; fill: currentColor; stroke: currentColor; }
+    .review-rating-badge strong { color: #15243a; font-size: 12px; font-weight: 780; }
+    .review-rating-badge small { color: #8b969d; font-size: 6px; }
+    .review-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .review-card { min-height: 255px; display: flex; flex-direction: column; padding: 18px; border: 1px solid #e7edef; border-radius: 15px; background: #fff; box-shadow: 0 7px 24px rgba(15,23,42,.03); transition: transform .2s ease, box-shadow .2s ease; }
+    .review-card:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(15,23,42,.07); }
+    .review-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .sample-review { padding: 4px 6px; border: 1px solid #e9efec; border-radius: 99px; color: #809087; background: #fafcfb; font-size: 5px; font-weight: 750; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }
+    .review-type { display: inline-flex; align-items: center; gap: 4px; margin-top: 13px; padding: 5px 7px; border-radius: 5px; background: #eff9f4; color: #168661; font-size: 6px; font-weight: 700; }
+    .review-type svg { width: 10px; height: 10px; }
+    .review-card blockquote { flex: 1; margin: 11px 0 17px; color: #465567; font-size: 9px; line-height: 1.8; }
+    .review-footer { display: flex; align-items: center; gap: 8px; padding-top: 12px; border-top: 1px solid #eef1f2; }
+    .review-avatar { width: 31px; height: 31px; display: grid; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #e9f7ef; color: #2a8261; font-size: 7px; font-weight: 800; }
+    .review-card:nth-child(2) .review-avatar { background: #e9f3f7; color: #337f93; }
+    .review-card:nth-child(3) .review-avatar { background: #f7eee4; color: #9b7149; }
+    .review-author { min-width: 0; flex: 1; }
+    .review-author strong, .review-author small { display: block; }
+    .review-author strong { color: #26364a; font-size: 8px; font-weight: 740; }
+    .review-author small { margin-top: 3px; color: #9aa5ab; font-size: 6px; }
+    .disbursed-amount { text-align: right; }
+    .disbursed-amount strong { display: block; color: #11966d; font-size: 8px; font-weight: 780; }
+    .disbursed-amount small { display: block; margin-top: 3px; color: #a0aaa9; font-size: 5px; }
+    .review-note { margin: 15px 0 0; color: #9ca8ad; font-size: 7px; text-align: right; }
+
+    /* Final CTA and footer */
+    .final-cta-section { padding: 0 0 75px; background: #f7f9fb; }
+    .final-cta { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 30px; min-height: 225px; overflow: hidden; padding: 36px 48px; border: 1px solid rgba(81,221,173,.19); border-radius: 19px; background: linear-gradient(110deg,#102037,#10364a 62%,#0d584d); color: #fff; isolation: isolate; }
+    .final-cta::before { content: ""; position: absolute; z-index: -1; inset: 0; opacity: .21; background-image: radial-gradient(rgba(255,255,255,.43) .7px,transparent .7px); background-size: 16px 16px; mask-image: linear-gradient(90deg,transparent,#000); }
+    .final-cta::after { content: ""; position: absolute; z-index: -1; top: -145px; right: 16%; width: 300px; height: 300px; border: 1px solid rgba(85,231,180,.23); border-radius: 50%; box-shadow: 0 0 0 29px rgba(85,231,180,.045),0 0 0 58px rgba(6,182,212,.035); }
+    .final-cta-copy { max-width: 530px; }
+    .final-cta-overline { display: inline-flex; align-items: center; gap: 7px; color: #79e0b8; font-size: 7px; font-weight: 800; letter-spacing: .14em; }
+    .final-cta h2 { margin: 12px 0 0; color: #fff; font-family: "Plus Jakarta Sans",Inter,sans-serif; font-size: 34px; font-weight: 720; letter-spacing: -.065em; line-height: 1.1; }
+    .final-cta p { max-width: 420px; margin: 10px 0 0; color: #b5c6cf; font-size: 9px; line-height: 1.7; }
+    .final-cta-action { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .final-cta-action .nav-cta { min-height: 47px; padding-inline: 19px; background: #fff; color: #104333; box-shadow: 0 9px 22px rgba(0,0,0,.18); }
+    .final-cta-action .nav-cta:hover { background: #e9fcf3; }
+    .final-cta-action small { display: inline-flex; align-items: center; gap: 5px; color: #afc3c4; font-size: 6px; }
+    .final-cta-action small svg { width: 11px; height: 11px; color: #76deb8; }
+    .site-footer { padding: 50px 0 17px; background: #080d18; color: #bfccd4; }
+    .footer-main { display: grid; grid-template-columns: 1.7fr 1fr 1fr 1.25fr; gap: 38px; padding-bottom: 31px; }
+    .footer-tagline { margin: 15px 0 0; color: #eef4f5; font-size: 11px; font-weight: 650; line-height: 1.55; }
+    .footer-brand-copy { max-width: 210px; margin: 7px 0 0; color: #8997a6; font-size: 7px; line-height: 1.7; }
+    .footer-contact-lines { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; margin-top: 13px; }
+    .footer-contact-lines a { display: inline-flex; align-items: center; gap: 7px; color: #c5d1d8; font-size: 7px; font-weight: 600; transition: color .18s ease; }
+    .footer-contact-lines a:hover { color: #79dfb9; }
+    .footer-contact-lines svg { width: 13px; height: 13px; flex: 0 0 auto; color: #65d1a8; }
+    .footer-socials {  display: flex; gap: 7px; margin-top: 15px; }
+    .footer-socials a { width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid rgba(222,232,238,.14); border-radius: 8px; color: #aebdc7; font-size: 9px; font-weight: 800; transition: .18s ease; }
+    .footer-socials a:hover { border-color: rgba(16,185,129,.48); background: rgba(16,185,129,.11); color: #76deb8; }
+    .footer-col { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .footer-col h3 { margin: 2px 0 5px; color: #91a0af; font-size: 7px; font-weight: 800; letter-spacing: .15em; }
+    .footer-col a { color: #b8c5ce; font-size: 8px; transition: color .17s ease; }
+    .footer-col a:hover { color: #76ddb8; }
+    .footer-col .footer-icon-link { display: inline-flex; align-items: center; gap: 6px; }
+    .footer-icon-link svg { width: 12px; height: 12px; color: #63cda5; }
+    .footer-disclaimer { padding: 18px 0 15px; border-top: 1px solid rgba(222,232,238,.12); border-bottom: 1px solid rgba(222,232,238,.12); }
+    .disclaimer-title { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; color: #e0e9ed; font-size: 8px; font-weight: 750; }
+    .disclaimer-title svg { width: 16px; height: 16px; color: #72dcb7; }
+    .footer-disclaimer p { margin: 7px 0 0; color: #8694a2; font-size: 7px; line-height: 1.75; }
+    .footer-disclaimer p strong { color: #c3cfd6; font-weight: 700; }
+    .footer-disclaimer a { color: #78dcb9; text-decoration: underline; text-decoration-color: rgba(120,220,185,.32); text-underline-offset: 2px; }
+    .authorization-note { display: block; margin-top: 8px; padding: 8px 10px; border: 1px solid rgba(244,191,90,.16); border-radius: 7px; background: rgba(244,191,90,.045); color: #b6a781; font-size: 6px; line-height: 1.6; }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding-top: 14px; color: #738190; font-size: 6px; }
+    .footer-bottom-links { display: flex; flex-wrap: wrap; gap: 14px; }
+    .footer-bottom a:hover { color: #75dcb7; }
+    .footer-demo { display: inline-flex; align-items: center; gap: 5px; color: #85968f; }
+    .footer-demo i { width: 5px; height: 5px; border-radius: 50%; background: #10b981; }
+
+    /* Dialog */
+    .dialog-overlay { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; overflow-y: auto; padding: 20px; background: rgba(4,10,20,.68); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); animation: fade-in .15s ease both; }
+    .dialog-box { position: relative; width: min(430px,100%); padding: 29px 28px 25px; border: 1px solid rgba(235,244,241,.9); border-radius: 19px; background: #fff; box-shadow: 0 28px 85px rgba(0,0,0,.35); animation: dialog-in .2s cubic-bezier(.2,.8,.2,1) both; text-align: center; }
+    .dialog-close { position: absolute; top: 13px; right: 13px; width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid #e6ecee; border-radius: 50%; background: #fff; color: #7b8994; cursor: pointer; }
+    .dialog-icon { width: 57px; height: 57px; display: grid; place-items: center; margin: 4px auto 15px; border: 1px solid #d7f0e3; border-radius: 18px; background: linear-gradient(135deg,#eefaf3,#eefafb); color: #0b9c6d; box-shadow: 0 0 0 8px rgba(16,185,129,.035); }
+    .dialog-icon svg { width: 27px; height: 27px; }
+    .dialog-kicker { color: #12936d; font-size: 7px; font-weight: 800; letter-spacing: .14em; }
+    .dialog-box h2 { margin: 8px 0 0; color: #111e32; font-family: "Plus Jakarta Sans",Inter,sans-serif; font-size: 23px; font-weight: 760; letter-spacing: -.055em; }
+    .dialog-box p { margin: 9px 0 0; color: #768492; font-size: 9px; line-height: 1.8; }
+    .dialog-action { min-width: 130px; min-height: 39px; margin-top: 19px; padding: 0 17px; border: 1px solid rgba(16,185,129,.25); border-radius: 9px; background: linear-gradient(95deg,#16c487,#0eb58d); color: #062c22; font-size: 9px; font-weight: 800; cursor: pointer; }
+
+    @keyframes pop-in { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes dialog-in { from { opacity: .6; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+    @media (max-width: 1060px) {
+      .desktop-nav { gap: 17px; }
+      .hero-layout { gap: 32px; grid-template-columns: minmax(0,1fr) minmax(390px,.95fr); }
+      .hero h1 { font-size: clamp(43px,5vw,57px); }
+      .lead-card { padding: 22px 20px 16px; }
+      .calculator-layout { gap: 35px; }
+      .process-layout { grid-template-columns: 1fr; }
+      .tracking-card { display: grid; grid-template-columns: 42px 1fr auto; align-items: center; gap: 0 12px; }
+      .track-icon { grid-row: 1 / 3; }
+      .tracking-card h3 { margin: 0; }
+      .tracking-card > p { margin-top: 4px; }
+      .track-form { grid-column: 3; grid-row: 1 / 3; flex-direction: row; width: 390px; margin-top: 0; }
+      .track-privacy { display: none; }
+    }
+    @media (max-width: 860px) {
+      .container { width: min(100% - 40px,720px); }
+      .desktop-nav, .nav-shell > .nav-cta { display: none; }
+      .mobile-toggle { display: grid; }
+      .nav-shell { min-height: 68px; }
+      .mobile-nav { position: absolute; top: 100%; right: 0; left: 0; display: flex; flex-direction: column; max-height: calc(100vh - 69px); overflow-y: auto; padding: 15px 21px 20px; border-top: 1px solid rgba(255,255,255,.08); border-bottom: 1px solid rgba(255,255,255,.12); background: rgba(10,15,29,.98); box-shadow: 0 18px 28px rgba(0,0,0,.25); animation: pop-in .17s ease both; }
+      .mobile-nav > a, .mobile-nav > button { min-height: 42px; display: flex; align-items: center; justify-content: space-between; border: 0; background: transparent; color: #d8e1e6; font-size: 11px; font-weight: 650; text-align: left; cursor: pointer; }
+      .mobile-nav .mobile-subnav { display: flex; flex-direction: column; margin: 0 0 6px 12px; padding-left: 12px; border-left: 1px solid rgba(16,185,129,.25); }
+      .mobile-nav .mobile-subnav a { padding: 9px 0; color: #97a8b5; font-size: 9px; }
+      .mobile-nav .mobile-cta { min-height: 43px; justify-content: center; margin-top: 11px; border: 1px solid rgba(84,229,172,.45); border-radius: 9px; background: linear-gradient(100deg,#12c58d,#09ac82); color: #052d22; font-size: 10px; }
+      .hero { padding: 56px 0 35px; }
+      .hero-layout { grid-template-columns: 1fr; gap: 35px; max-width: 680px; }
+      .hero-copy { max-width: 650px; }
+      .hero h1 { max-width: 635px; font-size: clamp(45px,8vw,64px); }
+      .hero-subhead { max-width: 590px; }
+      .lead-card-wrap { width: min(100%,500px); margin: 0 auto; }
+      .lead-card-wrap::before { inset: 8% -4% -7% 5%; }
+      .hero-bottom { margin-top: 26px; }
+      .network-section { padding: 30px 0 48px; }
+      .partner-logo-grid { grid-template-columns: repeat(3,1fr); }
+      .section { padding: 76px 0; }
+      .advantage-grid { grid-template-columns: repeat(2,1fr); }
+      .advantage-card { min-height: 226px; }
+      .personal-application-layout { grid-template-columns: 1fr; gap: 25px; max-width: 680px; }
+      .personal-application-copy { position: static; }
+      .personal-application-copy h2 { max-width: 600px; }
+      .personal-application-copy > p { max-width: 580px; }
+      .personal-safety-card { max-width: 580px; }
+      .personal-steps-mini { display: grid; grid-template-columns: repeat(3,1fr); }
+      .calculator-layout { grid-template-columns: 1fr; gap: 31px; max-width: 680px; }
+      .calc-copy h2 br { display: none; }
+      .calc-copy > p { max-width: 520px; }
+      .calc-bullets { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+      .calc-bullets li { align-items: flex-start; font-size: 8px; line-height: 1.55; }
+      .calc-copy-note { margin-top: 18px; }
+      .process-heading { align-items: flex-start; flex-direction: column; gap: 13px; }
+      .process-heading > p { max-width: 570px; }
+      .process-steps { padding-inline: 13px; }
+      .process-step { padding-inline: 4px; }
+      .reviews-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
+      .reviews-heading > p { max-width: 500px; }
+      .review-grid { grid-template-columns: repeat(2,1fr); }
+      .review-card:nth-child(3) { display: none; }
+      .final-cta { padding: 32px 30px; }
+      .footer-main { grid-template-columns: 1.4fr 1fr 1fr; gap: 28px; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+    @media (max-width: 600px) {
+      html { scroll-padding-top: 72px; }
+      .container { width: calc(100% - 34px); }
+      .nav-shell { min-height: 65px; }
+      .brand-mark { width: 35px; height: 35px; }
+      .brand-name { font-size: 15px; }
+      .hero { padding: 41px 0 28px; }
+      .hero-layout { gap: 28px; }
+      .hero-eyebrow { margin-bottom: 17px; font-size: 7px; }
+      .hero h1 { font-size: clamp(39px,11.1vw,53px); line-height: 1.045; }
+      .hero-subhead { margin-top: 15px; font-size: 10px; line-height: 1.8; }
+      .hero-highlights { gap: 6px; margin-top: 17px; }
+      .hero-highlight { padding: 7px 8px; font-size: 6px; }
+      .hero-highlight svg { width: 13px; height: 13px; }
+      .hero-proof { margin-top: 22px; }
+      .proof-copy { font-size: 7px; }
+      .hero-footnote { margin-top: 14px; font-size: 6px; }
+      .lead-card { padding: 17px 14px 14px; border-radius: 16px; }
+      .lead-card-symbol { width: 33px; height: 33px; border-radius: 10px; }
+      .lead-card h2 { font-size: 16px; }
+      .lead-card-side { font-size: 5px; }
+      .lead-card-side svg { width: 9px; height: 9px; }
+      .form-section-label { margin-top: 14px; }
+      .loan-type-grid { gap: 4px; }
+      .loan-type-btn { min-height: 36px; font-size: 6px; }
+      .loan-type-btn svg { width: 12px; height: 12px; }
+      .loan-amount-panel { margin-top: 13px; padding: 10px; }
+      .amount-output { font-size: 18px; }
+      .lead-fields { gap: 7px; margin-top: 10px; }
+      .input-shell { height: 37px; padding-inline: 7px; }
+      .input-shell input { font-size: 9px; }
+      .input-shell .prefix { font-size: 7px; }
+      .consent-row { font-size: 6px; }
+      .apply-button { min-height: 43px; font-size: 8px; }
+      .form-privacy-note { align-items: flex-start; font-size: 5px; line-height: 1.5; }
+      .hero-bottom { align-items: flex-start; flex-direction: column; gap: 10px; margin-top: 19px; padding-top: 13px; }
+      .hero-bottom-left, .hero-bottom-right { font-size: 6px; }
+      .network-section { padding: 25px 0 38px; }
+      .network-heading { align-items: flex-start; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+      .network-eyebrow { font-size: 7px; }
+      .network-subtext { font-size: 7px; }
+      .partner-logo-grid { grid-template-columns: repeat(2,1fr); gap: 7px; }
+      .partner-logo { min-height: 50px; border-radius: 9px; }
+      .partner-logo strong { font-size: 12px; }
+      .network-footnote { align-items: flex-start; font-size: 6px; line-height: 1.5; }
+      .lender-browser { margin-top: 13px; padding: 13px 11px 10px; }
+      .lender-browser-head { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .lender-browser-head div > span { font-size: 6px; line-height: 1.5; }
+      .lender-tabs { margin-top: 10px; }
+      .lender-tab { min-height: 28px; padding-inline: 7px; font-size: 6px; }
+      .lender-chip-grid { gap: 5px; }
+      .lender-category-group { padding: 3px 0 8px; }
+      .lender-category-group + .lender-category-group { padding-top: 8px; }
+      .lender-category-title { margin-bottom: 5px; font-size: 5px; }
+      .lender-category-chips { gap: 5px; }
+      .lender-chip { min-height: 23px; padding: 4px 6px; font-size: 6px; }
+      .lender-disclaimer { font-size: 5px; }
+      .section { padding: 64px 0; }
+      .personal-application-layout { gap: 19px; }
+      .personal-application-copy h2 { font-size: 33px; }
+      .personal-application-copy > p { font-size: 8px; }
+      .personal-safety-card { margin-top: 16px; }
+      .personal-steps-mini { grid-template-columns: 1fr; gap: 8px; margin-top: 14px; }
+      .personal-form-card { padding: 16px 13px; border-radius: 14px; }
+      .personal-form-head h3 { font-size: 15px; }
+      .personal-form-grid { grid-template-columns: 1fr; gap: 10px; padding-top: 13px; }
+      .personal-field--full { grid-column: auto; }
+      .personal-field input, .personal-field select { min-height: 38px; }
+      .personal-field textarea { min-height: 60px; }
+      .personal-form-head .personal-form-badge { font-size: 5px; }
+      .section-heading { margin-bottom: 27px; }
+      .section-heading h2, .process-heading h2, .reviews-heading h2 { font-size: 34px; }
+      .section-heading p { font-size: 9px; }
+      .advantage-grid { grid-template-columns: 1fr; gap: 9px; }
+      .advantage-card { min-height: unset; padding: 16px; }
+      .adv-icon { width: 36px; height: 36px; border-radius: 11px; }
+      .advantage-card h3 { margin-top: 15px; font-size: 14px; }
+      .advantage-card p { font-size: 8px; }
+      .advantage-tag { margin-top: 11px; }
+      .calculator-section { padding: 66px 0; }
+      .calculator-layout { gap: 24px; }
+      .calc-copy h2 { font-size: 37px; }
+      .calc-copy > p { font-size: 9px; }
+      .calc-bullets { display: flex; gap: 9px; margin-top: 19px; }
+      .calc-bullets li { align-items: center; font-size: 7px; }
+      .calc-copy-note { font-size: 6px; }
+      .calculator-card { padding: 16px 13px 12px; border-radius: 15px; }
+      .calculator-card-head h3 { font-size: 16px; }
+      .calc-free-badge { padding: 5px 6px; font-size: 6px; }
+      .calculator-main { grid-template-columns: 1fr; gap: 18px; padding-top: 16px; }
+      .calc-controls { gap: 16px; }
+      .calc-result { min-height: unset; padding: 15px; }
+      .emi-amount { font-size: 27px; }
+      .process-heading { margin-bottom: 24px; }
+      .process-heading h2 { font-size: 34px; }
+      .process-heading > p { font-size: 8px; }
+      .process-layout { gap: 11px; }
+      .process-steps { grid-template-columns: repeat(2,1fr); gap: 17px 8px; padding: 17px 12px; }
+      .process-steps::before { display: none; }
+      .process-step { padding: 0 4px; }
+      .step-icon-wrap { width: 38px; height: 38px; margin-bottom: 11px; border-radius: 12px; }
+      .step-icon-wrap svg { width: 17px; height: 17px; }
+      .process-step h3 { font-size: 9px; }
+      .process-step p { font-size: 6px; }
+      .tracking-card { display: flex; align-items: stretch; padding: 16px; }
+      .tracking-card h3 { margin-top: 11px; }
+      .tracking-card > p { margin-top: 4px; }
+      .track-form { width: auto; flex-direction: column; margin-top: 13px; }
+      .track-privacy { display: block; }
+      .reviews-heading { margin-bottom: 22px; }
+      .reviews-heading h2 { font-size: 33px; }
+      .reviews-heading > p { font-size: 8px; }
+      .review-grid { grid-template-columns: 1fr; }
+      .review-card { min-height: 230px; padding: 16px; }
+      .review-card:nth-child(2), .review-card:nth-child(3) { display: none; }
+      .review-note { font-size: 6px; line-height: 1.5; text-align: left; }
+      .final-cta-section { padding-bottom: 48px; }
+      .final-cta { align-items: flex-start; flex-direction: column; gap: 22px; padding: 27px 21px; border-radius: 16px; }
+      .final-cta h2 { font-size: 30px; }
+      .final-cta p { font-size: 8px; }
+      .final-cta-action { gap: 8px; }
+      .final-cta-action .nav-cta { min-height: 43px; font-size: 8px; }
+      .site-footer { padding-top: 38px; }
+      .footer-main { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding-bottom: 25px; }
+      .footer-brand { grid-column: 1 / -1; }
+      .footer-col { gap: 9px; }
+      .footer-col h3 { font-size: 6px; }
+      .footer-col a { font-size: 7px; }
+      .footer-disclaimer { padding: 15px 0 13px; }
+      .footer-disclaimer p { font-size: 6px; line-height: 1.7; }
+      .authorization-note { font-size: 5px; }
+      .footer-bottom { align-items: flex-start; flex-direction: column; gap: 9px; font-size: 6px; }
+      .footer-bottom-links { gap: 11px; }
+      .dialog-box { padding: 25px 20px 21px; }
+      .dialog-box h2 { font-size: 21px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+  <header class="site-header" id="top">
+    <div class="container nav-shell">
+      <a class="brand" href="#top" aria-label="Nexa Capital home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 23V9l16 14V9"/><path d="M23.5 8.5h.01" stroke-width="4"/></svg>
+        </span>
+        <span class="brand-name"><strong>Nexa</strong><span>Capital</span></span>
+      </a>
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <div class="nav-dropdown-wrap">
+          <button class="nav-link" id="products-toggle" aria-expanded="false" aria-haspopup="true">Products
+            <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="products-dropdown" id="products-dropdown" hidden>
+            <a class="product-option" href="#personal-application"><span class="product-option-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/></svg></span><span><strong>Personal loan</strong><small>For plans big and small</small></span><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+            <a class="product-option" href="#lead-form"><span class="product-option-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg></span><span><strong>Business loan</strong><small>Capital for your next move</small></span><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+            <a class="product-option" href="#lead-form"><span class="product-option-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M5 6h14a2 2 0 0 1 2 2v10H3V8a2 2 0 0 1 2-2Z"/><path d="M7 14h4M3 18h18"/></svg></span><span><strong>Overdraft</strong><small>Flexible access to funds</small></span><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+            <a class="product-option" href="#lead-form"><span class="product-option-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg></span><span><strong>Home loan</strong><small>Find a fit for your home</small></span><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+        <a class="nav-link" href="#partners">Lending network</a>
+        <a class="nav-link" href="#calculator">EMI calculator</a>
+        <a class="nav-link" href="#track">Track application</a>
+        <a class="nav-link" href="#contact">Contact</a>
+      </nav>
+      <a class="nav-cta" href="#lead-form">Check Eligibility Now
+        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
+      <button class="mobile-toggle" id="mobile-toggle" aria-label="Open navigation" aria-expanded="false">
+        <svg class="icon" id="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation" hidden>
+      <button id="mobile-products-toggle" aria-expanded="false">Products <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="mobile-subnav" id="mobile-products" hidden><a href="#personal-application">Personal loan</a><a href="#lead-form">Business loan</a><a href="#lead-form">Overdraft</a><a href="#lead-form">Home loan</a></div>
+      <a href="#partners">Lending network</a><a href="#calculator">EMI calculator</a><a href="#track">Track application</a><a href="#contact">Contact</a>
+      <a class="mobile-cta" href="#lead-form">Check Eligibility Now <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-layout">
+        <div class="hero-copy">
+          <div class="hero-eyebrow"><span class="eyebrow-pulse"></span> Powered by the Ruconnect network</div>
+          <h1 id="hero-title">Instant Personal &amp; Business Loans from <span class="gradient-text">30+ Top Banks.</span></h1>
+          <p class="hero-subhead">Compare rates starting from <strong>10.49% p.a.</strong> Zero upfront fees, 100% digital process with Ruconnect network backing.</p>
+          <div class="hero-highlights">
+            <span class="hero-highlight"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg><strong>30+</strong> bank &amp; NBFC options</span>
+            <span class="hero-highlight"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg> No upfront Nexa fee*</span>
+            <span class="hero-highlight"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg> 100% digital journey</span>
+          </div>
+          <div class="hero-proof">
+            <div class="proof-avatars" aria-hidden="true"><span>AK</span><span>SM</span><span>RP</span><span>+30</span></div>
+            <div class="proof-copy"><span class="proof-stars" aria-label="5 out of 5 stars"><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg></span><strong>Borrowing made clearer.</strong><br />Illustrative experience for a connected lender network.</div>
+          </div>
+          <p class="hero-footnote">*Rates and fees are indicative and lender-specific. Offers and approvals depend on lender criteria. Partner names, claims and examples are concept placeholders until verified. <a href="#disclaimer">Important disclosures</a>.</p>
+        </div>
+
+        <div class="lead-card-wrap">
+          <form class="lead-card" id="lead-form" autocomplete="on">
+            <div class="lead-card-head">
+              <span class="lead-card-symbol"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="m3.5 7.7 8.5 4.5 8.5-4.5M12 12.2V21"/><path d="m9 8.8 6 3.2"/></svg></span>
+              <div class="lead-card-head-copy"><span class="lead-card-overline"><i></i> RUCONNECT NETWORK</span><h2>Get your loan journey started.</h2></div>
+              <span class="lead-card-side"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg> FREE CHECK</span>
+            </div>
+            <label class="form-section-label">What are you looking for?</label>
+            <div class="loan-type-grid" role="group" aria-label="Choose loan type">
+              <button class="loan-type-btn is-active" type="button" data-loan-type="Personal Loan" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/></svg>Personal</button>
+              <button class="loan-type-btn" type="button" data-loan-type="Business Loan" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2"/></svg>Business</button>
+              <button class="loan-type-btn" type="button" data-loan-type="Overdraft" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M5 6h14a2 2 0 0 1 2 2v10H3V8a2 2 0 0 1 2-2Z"/><path d="M7 14h4"/></svg>Overdraft</button>
+              <button class="loan-type-btn" type="button" data-loan-type="Home Loan" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+            </div>
+            <input type="hidden" id="selected-loan-type" name="loanType" value="Personal Loan" />
+            <div class="loan-amount-panel">
+              <div class="amount-head"><label for="lead-amount">How much do you need?</label><output class="amount-output" id="lead-amount-output" for="lead-amount">₹10,00,000</output></div>
+              <input class="range" id="lead-amount" name="amount" type="range" min="100000" max="10000000" step="50000" value="1000000" aria-label="Loan amount" />
+              <div class="range-limit"><span>₹1 lakh</span><span>₹1 crore</span></div>
+            </div>
+            <div class="lead-fields">
+              <div class="field-wrap"><label for="mobile">Mobile number</label><div class="input-shell"><span class="prefix">+91</span><input id="mobile" name="mobile" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="10-digit mobile number" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" required aria-describedby="form-privacy" /></div></div>
+              <div class="field-wrap"><label for="pincode">Pincode</label><div class="input-shell"><input id="pincode" name="pincode" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="6-digit pincode" pattern="[0-9]{6}" minlength="6" maxlength="6" required /><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></div></div>
+            </div>
+            <label class="consent-row"><input id="consent" name="consent" type="checkbox" required /><span>I agree Nexa may contact me by phone or WhatsApp about this enquiry. My details may be shared with relevant lenders for evaluation only with my consent. <a href="#privacy">Privacy policy</a></span></label>
+            <div class="sr-only" aria-hidden="true"><label for="website">Leave this field blank</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off" /></div>
+            <button class="apply-button" type="submit">Continue to application <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            <p class="form-privacy-note" id="form-privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span id="delivery-note">Email/WhatsApp alerts are not configured yet. No details are sent.</span></p>
+          </form>
+        </div>
+      </div>
+      <div class="container hero-bottom">
+        <div class="hero-bottom-left"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>Secure, consent-led experience <span>·</span> No hard credit enquiry in this demo</div>
+        <div class="hero-bottom-right"><div class="partner-mini-stack" aria-hidden="true"><span>H</span><span>I</span><span>A</span><span>+</span></div><span><strong>One application.</strong> More lender options.</span></div>
+      </div>
+    </section>
+
+    <section class="network-section" id="partners" aria-labelledby="partner-title">
+      <div class="container">
+        <div class="network-heading"><span class="network-eyebrow" id="partner-title"><i></i> LENDING NETWORK</span><span class="network-subtext">Bank, NBFC &amp; digital lending names supplied for this concept</span></div>
+        <div class="partner-logo-grid" aria-label="Illustrative lender wordmarks">
+          <div class="partner-logo partner-logo--hdfc"><span class="partner-mark">H</span><span><strong>HDFC</strong><small>BANK</small></span></div>
+          <div class="partner-logo partner-logo--icici"><span class="partner-mark">i</span><span><strong>ICICI</strong><small>BANK</small></span></div>
+          <div class="partner-logo partner-logo--axis"><span class="partner-mark">A</span><span><strong>AXIS</strong><small>BANK</small></span></div>
+          <div class="partner-logo partner-logo--kotak"><span class="partner-mark">K</span><span><strong>kotak</strong><small>MAHINDRA BANK</small></span></div>
+          <div class="partner-logo partner-logo--bajaj"><span class="partner-mark">B</span><span><strong>BAJAJ</strong><small>FINSERV</small></span></div>
+          <div class="partner-logo partner-logo--tata"><span class="partner-mark">T</span><span><strong>TATA</strong><small>CAPITAL</small></span></div>
+        </div>
+        <div class="lender-browser">
+          <div class="lender-browser-head"><div><strong>Explore lender names</strong><span>Institution and product availability can change by location, eligibility and active channel authorisation.</span></div><span class="lender-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg>49 NAMES SUPPLIED</span></div>
+          <div class="lender-tabs" role="tablist" aria-label="Filter lender directory">
+            <button class="lender-tab is-active" type="button" data-lender-group="all" role="tab" aria-selected="true">All supplied names <span>49</span></button>
+            <button class="lender-tab" type="button" data-lender-group="private" role="tab" aria-selected="false">Private &amp; other banks <span>15</span></button>
+            <button class="lender-tab" type="button" data-lender-group="public" role="tab" aria-selected="false">Public sector banks <span>10</span></button>
+            <button class="lender-tab" type="button" data-lender-group="nbfc" role="tab" aria-selected="false">Major NBFCs <span>15</span></button>
+            <button class="lender-tab" type="button" data-lender-group="fintech" role="tab" aria-selected="false">Fintech &amp; neo-lenders <span>9</span></button>
+          </div>
+          <div class="lender-chip-grid" id="lender-list" role="tabpanel" aria-live="polite" aria-label="Lender names"></div>
+          <p class="lender-disclaimer">Names are illustrative, not confirmation of a current direct partnership or product availability. Verify lender/DSA authorisations before publication.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section personal-application-section" id="personal-application">
+      <div class="container personal-application-layout">
+        <div class="personal-application-copy">
+          <span class="section-kicker">PERSONAL LOAN APPLICATION</span>
+          <h2>Start your personal loan application <span>here.</span></h2>
+          <p>Enter the details once. With your consent, Nexa’s team can follow up and help you compare available lender options. The lender makes every final approval decision.</p>
+          <div class="personal-safety-card"><span class="personal-safety-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v5c0 5.5 3.4 8.5 8 10 4.6-1.5 8-4.5 8-10V6l-8-3Z"/><path d="M12 8v4M12 16h.01"/></svg></span><p><strong>Important: sensitive information.</strong><br />PAN, income and address are sensitive. With your consent, this form sends them to Nexa’s configured email and WhatsApp recipients; those providers may retain messages. Use only over HTTPS, publish a retention policy, and prefer the lender’s secure KYC flow for final verification.</p></div>
+          <div class="personal-steps-mini"><span><i>1</i> Fill in your application details</span><span><i>2</i> Nexa team follows up, with your consent</span><span><i>3</i> Lender completes its own KYC and assessment</span></div>
+        </div>
+        <form class="personal-form-card" id="personal-loan-form" autocomplete="on">
+          <div class="personal-form-head"><div><small>PERSONAL LOAN · APPLICATION DETAILS</small><h3>Tell us a little about yourself.</h3></div><span class="personal-form-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Consent required</span></div>
+          <p class="personal-prefill-note" id="personal-prefill-note" hidden>Loan amount, mobile and pincode from the quick check have been carried forward. Complete the remaining details below.</p>
+          <div class="personal-form-grid">
+            <div class="personal-field"><label for="personal-name">Full name <span>(as on PAN)</span></label><input id="personal-name" name="fullName" type="text" autocomplete="name" minlength="2" maxlength="100" placeholder="Enter your full name" required /></div>
+            <div class="personal-field"><label for="personal-mobile">Mobile number</label><input id="personal-mobile" name="mobile" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="10-digit mobile number" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" required /></div>
+            <div class="personal-field"><label for="personal-pincode">Pincode</label><input id="personal-pincode" name="pincode" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="6-digit pincode" pattern="[0-9]{6}" minlength="6" maxlength="6" required /></div>
+            <div class="personal-field"><label for="personal-salary">Monthly take-home salary <span>(₹)</span></label><input id="personal-salary" name="monthlySalary" type="number" inputmode="numeric" min="5000" max="5000000" step="1000" placeholder="e.g. 75000" required /></div>
+            <div class="personal-field personal-field--full"><div class="personal-amount-field"><div class="personal-amount-head"><label for="personal-amount">Loan amount required</label><output id="personal-amount-output" for="personal-amount">₹10,00,000</output></div><input class="range" id="personal-amount" name="amount" type="range" min="100000" max="10000000" step="50000" value="1000000" aria-label="Personal loan amount required" /><div class="range-limit"><span>₹1 lakh</span><span>₹1 crore</span></div></div></div>
+            <div class="personal-field"><label for="personal-tenure">Preferred loan tenure</label><select id="personal-tenure" name="tenureMonths" required><option value="12">12 months</option><option value="24">24 months</option><option value="36" selected>36 months</option><option value="48">48 months</option><option value="60">60 months</option><option value="72">72 months</option><option value="84">84 months</option></select></div>
+            <div class="personal-field"><label for="personal-pan">PAN number</label><input id="personal-pan" name="pan" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" placeholder="ABCDE1234F" pattern="[A-Za-z]{5}[0-9]{4}[A-Za-z]" minlength="10" maxlength="10" required /><small class="pan-hint">10 characters · format ABCDE1234F</small></div>
+            <div class="personal-field personal-field--full"><label for="personal-address">Residential address</label><textarea id="personal-address" name="address" autocomplete="street-address" minlength="10" maxlength="300" placeholder="Flat / house, street, area, city and state" required></textarea></div>
+          </div>
+          <label class="personal-consent"><input id="personal-consent" type="checkbox" name="consent" required /><span>I consent to my application details—including PAN, salary and address—being sent to Nexa Capital’s configured email and WhatsApp recipients for follow-up. Details may be shared with a lender only with my consent and as described in the <a href="#privacy">Privacy Policy</a>.</span></label>
+          <div class="sr-only" aria-hidden="true"><label for="personal-website">Leave blank</label><input id="personal-website" type="text" tabindex="-1" autocomplete="off" /></div>
+          <button class="personal-submit" type="submit">Apply for personal loan <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <p class="personal-delivery-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span id="personal-delivery-note">Email/WhatsApp delivery is not configured yet; no details will be sent.</span></p>
+          <p class="calculator-disclaimer">Submitting an enquiry is not a loan approval. Rates, eligibility, KYC and final terms are decided by the selected lender.</p>
+        </form>
+      </div>
+    </section>
+
+    <section class="section advantages-section" id="advantages">
+      <div class="container">
+        <div class="section-heading"><span class="section-kicker">THE NEXA ADVANTAGE</span><h2>One connection.<br /><span>More ways to move forward.</span></h2><p>Built for a simpler borrowing journey—with human support and more lender options, all in one place.</p></div>
+        <div class="advantage-grid">
+          <article class="advantage-card">
+            <span class="adv-number">01 / MATCH</span><span class="adv-icon"><svg class="icon-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M17 7.5c0-1.4-1.8-2.5-5-2.5S7 6.1 7 7.5 8.8 10 12 10s5 1.1 5 2.5-1.8 2.5-5 2.5-5-1.1-5-2.5"/><path d="M5 3h14M5 21h14"/></svg></span>
+            <h3>Maximise your approval chances.</h3><p>One guided application can open more lending paths. Each bank or NBFC makes its own credit decision.</p><span class="advantage-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>More choices. No approval promise.</span>
+          </article>
+          <article class="advantage-card">
+            <span class="adv-number">02 / SUPPORT</span><span class="adv-icon"><svg class="icon-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H8l-4 2v-5.2A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11h8M8 14h5"/></svg></span>
+            <h3>A dedicated loan manager.</h3><p>A real person to guide you from application and document checks through to your lender’s disbursal update.</p><span class="advantage-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>Help, at every step</span>
+          </article>
+          <article class="advantage-card">
+            <span class="adv-number">03 / FLEXIBILITY</span><span class="adv-icon"><svg class="icon-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.4-6.4L21 8"/><path d="M21 3v5h-5M21 12a9 9 0 0 1-15.4 6.4L3 16"/><path d="M3 21v-5h5"/></svg></span>
+            <h3>Doorstep &amp; digital KYC.</h3><p>Complete eligible steps online or choose document assistance where a partner lender supports it.</p><span class="advantage-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>Paper-light by design</span>
+          </article>
+          <article class="advantage-card">
+            <span class="adv-number">04 / CLARITY</span><span class="adv-icon"><svg class="icon-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 12h5M8 16h3M16 15l1.5 1.5L20 13"/></svg></span>
+            <h3>Transparent charges.</h3><p>No hidden Nexa brokerage. Any lender processing fees and applicable charges should be disclosed before you accept.</p><span class="advantage-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>Know the full cost</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="calculator-section" id="calculator">
+      <div class="container calculator-layout">
+        <div class="calc-copy">
+          <span class="section-kicker section-kicker--light">PLAN BEFORE YOU APPLY</span>
+          <h2>Make the monthly<br />number <span>make sense.</span></h2>
+          <p>Adjust the amount, rate and tenure to see an estimated EMI and total repayment. A clearer estimate is a better place to start.</p>
+          <ul class="calc-bullets"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>Estimated monthly EMI</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>Total interest over time</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>Principal vs interest view</li></ul>
+          <div class="calc-copy-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Your calculator inputs stay in this browser.</div>
+        </div>
+        <div class="calculator-card">
+          <div class="calculator-card-head"><div><span>EMI &amp; ELIGIBILITY CALCULATOR</span><h3>Explore your repayment range.</h3></div><span class="calc-free-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg> Instant estimate</span></div>
+          <div class="calculator-main">
+            <div class="calc-controls">
+              <div class="calc-control"><div class="calc-control-head"><label for="calc-amount">Loan amount</label><output id="calc-amount-value" for="calc-amount">₹15,00,000</output></div><input class="range" id="calc-amount" type="range" min="100000" max="10000000" step="100000" value="1500000" aria-label="Calculator loan amount" /><div class="calc-limits"><span>₹1 lakh</span><span>₹1 crore</span></div></div>
+              <div class="calc-control"><div class="calc-control-head"><label for="calc-rate">Interest rate (p.a.)</label><output id="calc-rate-value" for="calc-rate">10.49%</output></div><input class="range" id="calc-rate" type="range" min="8" max="24" step="0.25" value="10.49" aria-label="Annual interest rate" /><div class="calc-limits"><span>8%</span><span>24%</span></div></div>
+              <div class="calc-control"><div class="calc-control-head"><label for="calc-tenure">Loan tenure</label><output id="calc-tenure-value" for="calc-tenure">5 years</output></div><input class="range" id="calc-tenure" type="range" min="1" max="7" step="1" value="5" aria-label="Loan tenure in years" /><div class="calc-limits"><span>1 year</span><span>7 years</span></div></div>
+            </div>
+            <div class="calc-result" aria-live="polite">
+              <div class="result-label"><span>ESTIMATED MONTHLY EMI</span><span class="result-live"><i></i> Live estimate</span></div>
+              <div class="emi-amount" id="emi-output">₹32,204<small>/ month</small></div>
+              <div class="result-divider"></div>
+              <div class="amount-composition-label"><span>Principal + interest</span><span id="interest-share">—</span></div>
+              <div class="amount-composition" aria-hidden="true"><span class="principal-bar" id="principal-bar"></span><span class="interest-bar" id="interest-bar"></span></div>
+              <div class="calc-legend"><span><i></i>Principal</span><span><i></i>Interest payable</span></div>
+              <div class="result-breakdown"><div><span>Total interest payable</span><strong id="interest-output">₹4,32,240</strong></div><div><span>Total payable</span><strong id="total-output">₹19,32,240</strong></div></div>
+              <p class="calculator-disclaimer">Illustration only. Actual lender EMI, eligibility, fees and repayment schedule may differ. Interest is calculated on a reducing balance.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section process-section" id="process">
+      <div class="container">
+        <div class="process-heading"><div><span class="section-kicker">SIMPLE, STEP BY STEP</span><h2>A smoother journey<br /><span>from start to disbursal.</span></h2></div><p>One connected path with guidance at every turn. The bank or NBFC makes the final decision and handles disbursal.</p></div>
+        <div class="process-layout">
+          <div class="process-steps">
+            <article class="process-step"><span class="step-icon-wrap"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M11 8v6M8 11h6"/></svg></span><span class="step-count">STEP 01</span><h3>Check eligibility online.</h3><p>Share the basics and start with an indicative view.</p></article>
+            <article class="process-step"><span class="step-icon-wrap"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7h12M8 12h12M8 17h12M3 7h.01M3 12h.01M3 17h.01"/><path d="M15 4v6M12 7h6"/></svg></span><span class="step-count">STEP 02</span><h3>Compare &amp; pick an offer.</h3><p>Review lender terms and choose what fits your plans.</p></article>
+            <article class="process-step"><span class="step-icon-wrap"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h6M9 15h3M16 17l1.5 1.5L21 15"/></svg></span><span class="step-count">STEP 03</span><h3>Complete digital KYC.</h3><p>Finish the lender’s verification and document checks.</p></article>
+            <article class="process-step"><span class="step-icon-wrap"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v13H3zM3 11h18M7 16h3"/><path d="m15 4 2 2 4-4"/></svg></span><span class="step-count">STEP 04</span><h3>Funds to your account.</h3><p>After sanction and complete checks, the lender disburses directly.</p><span class="step-speed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Within 24 hrs in eligible cases*</span></article>
+          </div>
+          <aside class="tracking-card" id="track">
+            <span class="track-icon"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h4M15 16l1.5 1.5L20 14"/></svg></span>
+            <h3>Already applied?</h3><p>Check your application status in one quick step.</p>
+            <form class="track-form" id="track-form"><label class="sr-only" for="application-id">Application ID</label><input id="application-id" name="applicationId" type="text" placeholder="Application ID" required /><label class="sr-only" for="track-mobile">Mobile number last 4 digits</label><input id="track-mobile" name="lastFour" type="text" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="Mobile last 4 digits" required /><button class="track-submit" type="submit">Track status <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></form>
+            <small class="track-privacy">Prototype only—application tracking is not connected and these details are not transmitted.</small>
+          </aside>
+        </div>
+        <p class="network-footnote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 11v5M12 8h.01"/></svg>*24-hour disbursal timing is not guaranteed; it depends on lender approval, verification, documents, cut-off times and other conditions.</p>
+      </div>
+    </section>
+
+    <section class="section reviews-section" id="reviews">
+      <div class="container">
+        <div class="reviews-heading"><div><span class="section-kicker">REAL PEOPLE. CLEARER CHOICES.</span><h2>Confidence looks<br /><span>good on everyone.</span></h2><div class="review-rating-badge"><span class="stars" aria-label="5 star rating"><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg></span><strong>4.9</strong><small>illustrative satisfaction score</small></div></div><p>Every loan journey is personal. These sample stories show how a clearer comparison could feel.</p></div>
+        <div class="review-grid">
+          <article class="review-card"><div class="review-top"><span class="stars" aria-label="5 stars"><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg></span><span class="sample-review">Illustrative review</span></div><span class="review-type"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>Personal loan</span><blockquote>“Seeing the fees and repayment next to each other helped me ask better questions and choose with confidence.”</blockquote><div class="review-footer"><span class="review-avatar">AM</span><span class="review-author"><strong>Aarav M.</strong><small>Mumbai · sample borrower</small></span><span class="disbursed-amount"><strong>₹8,00,000</strong><small>sample amount</small></span></div></article>
+          <article class="review-card"><div class="review-top"><span class="stars" aria-label="5 stars"><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg></span><span class="sample-review">Illustrative review</span></div><span class="review-type"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>Business finance</span><blockquote>“I had a few routes to consider for my business. A dedicated point of contact made the process feel much more manageable.”</blockquote><div class="review-footer"><span class="review-avatar">NR</span><span class="review-author"><strong>Neha R.</strong><small>Pune · sample borrower</small></span><span class="disbursed-amount"><strong>₹12,00,000</strong><small>sample amount</small></span></div></article>
+          <article class="review-card"><div class="review-top"><span class="stars" aria-label="5 stars"><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg></span><span class="sample-review">Illustrative review</span></div><span class="review-type"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>Personal loan</span><blockquote>“The monthly estimate made it easier to see what felt comfortable. I could compare options without feeling rushed.”</blockquote><div class="review-footer"><span class="review-avatar">SK</span><span class="review-author"><strong>Sana K.</strong><small>Bengaluru · sample borrower</small></span><span class="disbursed-amount"><strong>₹5,50,000</strong><small>sample amount</small></span></div></article>
+        </div>
+        <p class="review-note">These are illustrative design samples, not actual customer testimonials or verified disbursals. Publish only consented, substantiated reviews.</p>
+      </div>
+    </section>
+
+    <section class="final-cta-section">
+      <div class="container"><div class="final-cta"><div class="final-cta-copy"><span class="final-cta-overline"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 16 .9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9L19 16Z"/></svg>YOUR NEXT MOVE, MADE CLEARER</span><h2>One smart step can<br />open more doors.</h2><p>See a clearer view of your loan options—then choose the next step that feels right for you.</p></div><div class="final-cta-action"><a class="nav-cta" href="#lead-form">Check Eligibility Now <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></a><small><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Secure, consent-led, and always your choice</small></div></div></div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <div class="container">
+      <div class="footer-main">
+        <div class="footer-brand"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 23V9l16 14V9"/><path d="M23.5 8.5h.01" stroke-width="4"/></svg></span><span class="brand-name"><strong>Nexa</strong><span>Capital</span></span></a><p class="footer-tagline">Smarter Loans.<br />Fast Approvals. Powered by Top Banks.</p><p class="footer-brand-copy">A connected marketplace for personal and business borrowing, built to make comparison easier.</p><div class="footer-contact-lines"><a href="/cdn-cgi/l/email-protection#2a4b5e424b585c4b4b534f5d4b464f1b1a186a4d474b434604494547" aria-label="Email Atharva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span class="__cf_email__" data-cfemail="a2e3f6eae3f0f4e3e3fbe7f5e3eee7939290e2e5efe3ebee8ce1edef">[email&#160;protected]</span></a><a href="tel:+919325324711" aria-label="Call +91 93253 24711"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 19a19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.4 2.8a2 2 0 0 1-.6 1.7L7.5 9.6a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 1.7-.6l2.8.4a2 2 0 0 1 1.6 1.9Z"/></svg>+91 93253 24711</a></div><div class="footer-socials"><a href="#contact" aria-label="LinkedIn preview link">in</a><a href="#contact" aria-label="X preview link">𝕏</a><a href="#contact" aria-label="Instagram preview link">◎</a></div></div>
+        <div class="footer-col"><h3>PRODUCTS</h3><a href="#personal-application">Personal loan</a><a href="#lead-form">Business loan</a><a href="#lead-form">Overdraft</a><a href="#lead-form">Home loan</a><a href="#calculator">EMI calculator</a></div>
+        <div class="footer-col"><h3>COMPANY</h3><a href="#advantages">Why Nexa Capital</a><a href="#partners">Lending network</a><a href="#process">How it works</a><a href="#reviews">Customer stories</a><a href="#track">Track application</a></div>
+        <div class="footer-col"><h3>HELP &amp; COMPLIANCE</h3><a class="footer-icon-link" href="#privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>Privacy policy</a><a class="footer-icon-link" href="#terms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v6h6M8 13h8M8 17h8"/></svg>Terms &amp; conditions</a><a class="footer-icon-link" href="#grievance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 4.3 1.7c-1.2 1.1-1.9 1.4-1.9 3M12 17h.01"/></svg>Grievance redressal</a><a class="footer-icon-link" href="https://www.rbi.org.in/scripts/FS_Notification.aspx?Id=12848" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg>RBI Digital Lending Directions</a></div>
+      </div>
+      <div class="footer-disclaimer" id="disclaimer">
+        <div class="disclaimer-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg>Important partner, rate &amp; regulatory disclosure</div>
+        <p id="terms"><strong>Nexa Capital is an authorized Direct Selling Agent (DSA) / Channel Partner operating in partnership with bank-accredited networks (including Ruconnect). We do not directly lend money; all loans are approved and disbursed by partner Banks/NBFCs.</strong> Loan offers remain subject to the relevant partner lender’s independent assessment, eligibility rules, KYC, approval, terms and disbursal process. Nexa Capital does not guarantee approval or funding.</p>
+        <p>Rates starting from 10.49% p.a., “zero upfront fees”, digital processing, any 24-hour timeline, partner names, ratings, amounts and testimonials displayed on this concept are illustrative and must be verified before use. Rates, interest, fees and other terms vary by lender and customer profile; review the lender’s Key Facts Statement and loan agreement before acceptance. Any fee charged by a bank/NBFC must be disclosed by that lender.</p>
+        <p id="privacy">Personal information should be collected only for a clear purpose, with informed consent, and shared only with relevant parties as permitted by applicable law. When configured, this prototype’s notification backend forwards the submitted lead fields to Nexa’s nominated email and WhatsApp recipients; it does not save them in a lead database or connect to a lender or credit bureau. Do not enable collection until the privacy notice, retention policy and consent wording are approved.</p>
+        <p id="digital-lending">Live digital lending journeys must comply with applicable Indian law and RBI requirements, including the <a href="https://www.rbi.org.in/scripts/FS_Notification.aspx?Id=12848" target="_blank" rel="noopener noreferrer">Reserve Bank of India (Digital Lending) Directions, 2025</a>, as amended or replaced. No RBI or government endorsement is implied.</p>
+        <p id="grievance"><strong>Grievance redressal:</strong> Before launch, publish Nexa Capital’s grievance officer name, contact information and escalation timeline, along with each lending partner’s applicable grievance mechanism. <a href="#contact">Contact details must be completed before going live.</a></p>
+        <span class="authorization-note">Launch checklist: independently verify Nexa Capital’s DSA/channel-partner authorisations, Ruconnect relationship, each lender’s permission to be displayed, all pricing/fee claims, and customer-review evidence before publishing this copy.</span>
+      </div>
+      <div class="footer-bottom"><span>© 2026 Nexa Capital · Concept landing page</span><span class="footer-demo"><i></i> Demo only—no loan application is submitted</span><div class="footer-bottom-links"><a href="#privacy">Privacy</a><a href="#terms">Terms</a><a href="#disclaimer">Disclosures</a><a href="#top">Back to top ↑</a></div></div>
+    </div>
+  </footer>
+
+  <div class="dialog-overlay" id="dialog-overlay" role="presentation" hidden>
+    <section class="dialog-box" role="dialog" aria-modal="true" aria-labelledby="dialog-title" aria-describedby="dialog-message">
+      <button class="dialog-close" id="dialog-close" aria-label="Close dialog"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m18 6-12 12M6 6l12 12"/></svg></button>
+      <span class="dialog-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M17 7.5c0-1.4-1.8-2.5-5-2.5S7 6.1 7 7.5 8.8 10 12 10s5 1.1 5 2.5-1.8 2.5-5 2.5-5-1.1-5-2.5"/><path d="M5 3h14M5 21h14"/></svg></span>
+      <span class="dialog-kicker" id="dialog-kicker">PREVIEW ONLY</span><h2 id="dialog-title">Your next step starts here.</h2><p id="dialog-message">This is a concept experience. Your information is not sent or stored.</p><button class="dialog-action" id="dialog-ok">Got it</button>
+    </section>
+  </div>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    (() => {
+      const numberFormat = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
+      const money = (value) => `₹${numberFormat.format(Math.round(Number(value) || 0))}`;
+      const updateRangeFill = (input) => {
+        const min = Number(input.min || 0);
+        const max = Number(input.max || 100);
+        const value = Number(input.value || min);
+        const progress = max === min ? 0 : ((value - min) / (max - min)) * 100;
+        input.style.setProperty('--progress', `${Math.max(0, Math.min(100, progress))}%`);
+      };
+
+      // Header dropdown and mobile navigation
+      const productsToggle = document.getElementById('products-toggle');
+      const productsDropdown = document.getElementById('products-dropdown');
+      const mobileToggle = document.getElementById('mobile-toggle');
+      const mobileNav = document.getElementById('mobile-nav');
+      const mobileProductsToggle = document.getElementById('mobile-products-toggle');
+      const mobileProducts = document.getElementById('mobile-products');
+
+      productsToggle.addEventListener('click', () => {
+        const isOpen = productsToggle.getAttribute('aria-expanded') === 'true';
+        productsToggle.setAttribute('aria-expanded', String(!isOpen));
+        productsDropdown.hidden = isOpen;
+      });
+      document.addEventListener('click', (event) => {
+        if (!event.target.closest('.nav-dropdown-wrap')) {
+          productsDropdown.hidden = true;
+          productsToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+      mobileToggle.addEventListener('click', () => {
+        const isOpen = mobileToggle.getAttribute('aria-expanded') === 'true';
+        mobileToggle.setAttribute('aria-expanded', String(!isOpen));
+        mobileNav.hidden = isOpen;
+        mobileToggle.setAttribute('aria-label', isOpen ? 'Open navigation' : 'Close navigation');
+        document.getElementById('menu-icon').innerHTML = isOpen
+          ? '<path d="M4 7h16M4 12h16M4 17h16" />'
+          : '<path d="m6 6 12 12M18 6 6 18" />';
+      });
+      mobileProductsToggle.addEventListener('click', () => {
+        const isOpen = mobileProductsToggle.getAttribute('aria-expanded') === 'true';
+        mobileProductsToggle.setAttribute('aria-expanded', String(!isOpen));
+        mobileProducts.hidden = isOpen;
+      });
+      mobileNav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+        mobileNav.hidden = true;
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        mobileToggle.setAttribute('aria-label', 'Open navigation');
+        document.getElementById('menu-icon').innerHTML = '<path d="M4 7h16M4 12h16M4 17h16" />';
+      }));
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          productsDropdown.hidden = true;
+          productsToggle.setAttribute('aria-expanded', 'false');
+          mobileNav.hidden = true;
+          mobileToggle.setAttribute('aria-expanded', 'false');
+          mobileToggle.setAttribute('aria-label', 'Open navigation');
+          document.getElementById('menu-icon').innerHTML = '<path d="M4 7h16M4 12h16M4 17h16" />';
+        }
+      });
+
+      // Lead-form loan type and amount preview
+      const amountSlider = document.getElementById('lead-amount');
+      const amountOutput = document.getElementById('lead-amount-output');
+      const selectedLoanType = document.getElementById('selected-loan-type');
+      amountSlider.addEventListener('input', () => {
+        amountOutput.textContent = money(amountSlider.value);
+        updateRangeFill(amountSlider);
+      });
+      document.querySelectorAll('.loan-type-btn').forEach((button) => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll('.loan-type-btn').forEach((item) => {
+            const active = item === button;
+            item.classList.toggle('is-active', active);
+            item.setAttribute('aria-pressed', String(active));
+          });
+          selectedLoanType.value = button.dataset.loanType;
+        });
+      });
+
+      // EMI calculator: reducing-balance formula.
+      const calcAmount = document.getElementById('calc-amount');
+      const calcRate = document.getElementById('calc-rate');
+      const calcTenure = document.getElementById('calc-tenure');
+      const calcAmountValue = document.getElementById('calc-amount-value');
+      const calcRateValue = document.getElementById('calc-rate-value');
+      const calcTenureValue = document.getElementById('calc-tenure-value');
+      const emiOutput = document.getElementById('emi-output');
+      const interestOutput = document.getElementById('interest-output');
+      const totalOutput = document.getElementById('total-output');
+      const principalBar = document.getElementById('principal-bar');
+      const interestBar = document.getElementById('interest-bar');
+      const interestShare = document.getElementById('interest-share');
+
+      const calculateEmi = (principal, annualRate, months) => {
+        const monthlyRate = annualRate / 1200;
+        if (!monthlyRate || !months) return principal / Math.max(months, 1);
+        const factor = (1 + monthlyRate) ** months;
+        return principal * monthlyRate * factor / (factor - 1);
+      };
+      const updateCalculator = () => {
+        const principal = Number(calcAmount.value);
+        const rate = Number(calcRate.value);
+        const years = Number(calcTenure.value);
+        const months = years * 12;
+        const emi = Math.round(calculateEmi(principal, rate, months));
+        const total = emi * months;
+        const interest = Math.max(0, total - principal);
+        const interestPercent = total ? Math.min(100, (interest / total) * 100) : 0;
+        calcAmountValue.textContent = money(principal);
+        calcRateValue.textContent = `${rate.toFixed(2)}%`;
+        calcTenureValue.textContent = `${years} ${years === 1 ? 'year' : 'years'}`;
+        emiOutput.innerHTML = `${money(emi)}<small>/ month</small>`;
+        interestOutput.textContent = money(interest);
+        totalOutput.textContent = money(total);
+        interestShare.textContent = `${interestPercent.toFixed(1)}% interest`;
+        principalBar.style.width = `${100 - interestPercent}%`;
+        interestBar.style.width = `${interestPercent}%`;
+        [calcAmount, calcRate, calcTenure].forEach(updateRangeFill);
+      };
+      [calcAmount, calcRate, calcTenure].forEach((input) => input.addEventListener('input', updateCalculator));
+      updateRangeFill(amountSlider);
+      updateCalculator();
+
+      // Lender directory: names are supplied examples, not an assertion of active contracts.
+      const lenderGroups = {
+        private: ['HDFC Bank', 'ICICI Bank', 'Axis Bank', 'Kotak Mahindra Bank', 'IDFC FIRST Bank', 'RBL Bank', 'IndusInd Bank', 'Federal Bank', 'YES Bank', 'Bandhan Bank', 'IDBI Bank', 'City Union Bank', 'Karnataka Bank', 'Dhanlaxmi Bank', 'DBS Bank'],
+        public: ['State Bank of India (SBI)', 'Bank of Baroda (BoB)', 'Canara Bank', 'Punjab National Bank (PNB)', 'Union Bank of India', 'Bank of India (BoI)', 'Central Bank of India', 'Indian Bank', 'Bank of Maharashtra', 'UCO Bank'],
+        nbfc: ['Piramal Finance', 'HDB Financial Services (HDBFS)', 'Tata Capital', 'Aditya Birla Finance', 'Bajaj Finserv', 'L&T Finance', 'InCred Financial Services', 'IIFL Finance', 'Godrej Capital', 'Mahindra Finance', 'Shriram Finance', 'Cholamandalam Investment and Finance (Chola DB)', 'Muthoot Finance', 'Manappuram Finance', 'Hero Fincorp'],
+        fintech: ['Fibe (EarlySalary)', 'ZipLoan', 'KreditBee', 'Moneyview', 'PaySense', 'CASHe', 'Navi Finserv', 'Finnable', 'mPokket']
+      };
+      const lenderList = document.getElementById('lender-list');
+      const lenderGroupTitles = { private: 'Private & other banks', public: 'Public sector banks', nbfc: 'Major NBFCs', fintech: 'Fintech & neo-lenders' };
+      const makeLenderChips = (names, target) => names.forEach((name) => {
+        const chip = document.createElement('span');
+        chip.className = 'lender-chip';
+        chip.textContent = name;
+        target.appendChild(chip);
+      });
+      const renderLenderGroup = (group) => {
+        lenderList.replaceChildren();
+        if (group === 'all') {
+          Object.entries(lenderGroups).forEach(([key, names]) => {
+            const section = document.createElement('section');
+            section.className = 'lender-category-group';
+            const heading = document.createElement('h3');
+            heading.className = 'lender-category-title';
+            heading.textContent = `${lenderGroupTitles[key]} · ${names.length}`;
+            const chips = document.createElement('div');
+            chips.className = 'lender-category-chips';
+            makeLenderChips(names, chips);
+            section.append(heading, chips);
+            lenderList.appendChild(section);
+          });
+        } else {
+          makeLenderChips(lenderGroups[group], lenderList);
+        }
+        document.querySelectorAll('.lender-tab').forEach((tab) => {
+          const active = tab.dataset.lenderGroup === group;
+          tab.classList.toggle('is-active', active);
+          tab.setAttribute('aria-selected', String(active));
+        });
+      };
+      document.querySelectorAll('.lender-tab').forEach((tab) => tab.addEventListener('click', () => renderLenderGroup(tab.dataset.lenderGroup)));
+      renderLenderGroup('all');
+
+      // Demo-only feedback dialog; never transmits form data.
+      const dialog = document.getElementById('dialog-overlay');
+      const dialogTitle = document.getElementById('dialog-title');
+      const dialogMessage = document.getElementById('dialog-message');
+      const dialogKicker = document.getElementById('dialog-kicker');
+      const closeDialog = () => { dialog.hidden = true; document.body.style.overflow = ''; };
+      const showDialog = (title, message, kicker = 'PREVIEW ONLY') => {
+        dialogTitle.textContent = title;
+        dialogMessage.textContent = message;
+        dialogKicker.textContent = kicker;
+        dialog.hidden = false;
+        document.body.style.overflow = 'hidden';
+        document.getElementById('dialog-ok').focus();
+      };
+      document.getElementById('dialog-close').addEventListener('click', closeDialog);
+      document.getElementById('dialog-ok').addEventListener('click', closeDialog);
+      dialog.addEventListener('mousedown', (event) => { if (event.target === dialog) closeDialog(); });
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !dialog.hidden) closeDialog(); });
+
+      const deliveryNotes = [document.getElementById('delivery-note'), document.getElementById('personal-delivery-note')];
+      const setDeliveryNote = (message) => deliveryNotes.forEach((node) => { if (node) node.textContent = message; });
+      fetch('/api/status', { headers: { 'Accept': 'application/json' } })
+        .then((response) => response.ok ? response.json() : Promise.reject(new Error('status unavailable')))
+        .then((status) => {
+          setDeliveryNote(status.notificationsConfigured
+            ? 'Email and WhatsApp delivery are configured. Details are sent only after your consent.'
+            : 'Email/WhatsApp setup is incomplete. No enquiry details will be sent yet.');
+        })
+        .catch(() => { setDeliveryNote('Notification server unavailable. No details will be sent.'); });
+
+      async function sendLead(payload, button, onSuccess) {
+        const originalButton = button.innerHTML;
+        button.disabled = true;
+        button.textContent = 'Sending securely…';
+        try {
+          const response = await fetch('/api/leads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            const message = result.message || 'Your enquiry was not sent. Please try again later.';
+            showDialog(result.partial ? 'One alert channel may have failed.' : 'Your enquiry was not sent.', message, result.partial ? 'DELIVERY ISSUE' : 'NOT SENT');
+            return false;
+          }
+          if (onSuccess) onSuccess();
+          showDialog('Your application has been received.', `Both notification providers accepted the details. Reference ${result.requestId || 'created'}. Nexa’s team can follow up; the lender makes the final approval decision.`, 'ALERTS ACCEPTED');
+          return true;
+        } catch (error) {
+          showDialog('Notification service unavailable.', 'Your application was not sent. Please try again later or contact Nexa directly.', 'NOT SENT');
+          return false;
+        } finally {
+          button.disabled = false;
+          button.innerHTML = originalButton;
+        }
+      }
+
+      const personalForm = document.getElementById('personal-loan-form');
+      const personalAmount = document.getElementById('personal-amount');
+      const personalAmountOutput = document.getElementById('personal-amount-output');
+      const personalMobile = document.getElementById('personal-mobile');
+      const personalPincode = document.getElementById('personal-pincode');
+      const personalPrefillNote = document.getElementById('personal-prefill-note');
+      const updatePersonalAmount = () => {
+        personalAmountOutput.textContent = money(personalAmount.value);
+        updateRangeFill(personalAmount);
+      };
+      personalAmount.addEventListener('input', updatePersonalAmount);
+      updatePersonalAmount();
+
+      document.getElementById('lead-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        if (!form.reportValidity()) return;
+        if (selectedLoanType.value === 'Personal Loan') {
+          personalAmount.value = amountSlider.value;
+          personalMobile.value = document.getElementById('mobile').value;
+          personalPincode.value = document.getElementById('pincode').value;
+          updatePersonalAmount();
+          personalPrefillNote.hidden = false;
+          document.getElementById('personal-application').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          window.setTimeout(() => document.getElementById('personal-name').focus({ preventScroll: true }), 450);
+          return;
+        }
+        const button = form.querySelector('button[type="submit"]');
+        const payload = {
+          applicationType: 'quick', loanType: selectedLoanType.value, amount: Number(amountSlider.value),
+          mobile: document.getElementById('mobile').value, pincode: document.getElementById('pincode').value,
+          consent: document.getElementById('consent').checked, website: document.getElementById('website').value
+        };
+        await sendLead(payload, button, () => {
+          document.getElementById('mobile').value = '';
+          document.getElementById('pincode').value = '';
+          document.getElementById('consent').checked = false;
+        });
+      });
+
+      personalForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!personalForm.reportValidity()) return;
+        const button = personalForm.querySelector('button[type="submit"]');
+        const payload = {
+          applicationType: 'personal-loan', loanType: 'Personal Loan',
+          fullName: document.getElementById('personal-name').value.trim(),
+          mobile: personalMobile.value, pincode: personalPincode.value,
+          monthlySalary: Number(document.getElementById('personal-salary').value),
+          amount: Number(personalAmount.value), tenureMonths: Number(document.getElementById('personal-tenure').value),
+          address: document.getElementById('personal-address').value.trim(), pan: document.getElementById('personal-pan').value.trim().toUpperCase(),
+          consent: document.getElementById('personal-consent').checked, website: document.getElementById('personal-website').value
+        };
+        await sendLead(payload, button, () => {
+          personalForm.reset();
+          personalAmount.value = '1000000';
+          updatePersonalAmount();
+          personalPrefillNote.hidden = true;
+        });
+      });
+      document.getElementById('track-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!event.currentTarget.reportValidity()) return;
+        event.currentTarget.reset();
+        showDialog('Tracking is not connected yet.', 'This concept page has no live application system. Your entered reference details were not transmitted or stored.', 'TRACKING DEMO');
+      });
+    })();
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a437690e3e5b3e33',t:'MTc5MDgxNTE2Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

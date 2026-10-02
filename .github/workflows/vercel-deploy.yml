@@ -1,0 +1,109 @@
+# Deploys the static homepage + serverless API (api/status.mjs, api/leads.mjs)
+# to Vercel production. Runs on every push to main and on demand.
+#
+# Required repository secret:
+#   VERCEL_TOKEN  — Vercel personal access token (https://vercel.com/account/tokens)
+#
+# Optional repository secrets (lead delivery, see .env.example). Any that are set are
+# pushed to the Vercel project before each deploy, so a redeploy picks them up:
+#   LEAD_EMAIL_TO, WHATSAPP_TO, RESEND_API_KEY, RESEND_FROM,
+#   WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID,
+#   WHATSAPP_TEMPLATE_NAME, WHATSAPP_TEMPLATE_LANG, META_GRAPH_VERSION
+
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: false
+
+env:
+  VERCEL_PROJECT: nexa-capital
+
+jobs:
+  deploy:
+    name: Deploy to Vercel (production)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Link Vercel project
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set -o pipefail
+          # First run only: create the project. Later runs are harmless (already exists).
+          vercel project create "$VERCEL_PROJECT" --token "$VERCEL_TOKEN" --non-interactive \
+            || echo "::notice::'$VERCEL_PROJECT' already exists or could not be created; continuing."
+          vercel link --project "$VERCEL_PROJECT" --yes --token "$VERCEL_TOKEN" --non-interactive
+
+      - name: Sync delivery environment variables
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          LEAD_EMAIL_TO: ${{ secrets.LEAD_EMAIL_TO }}
+          WHATSAPP_TO: ${{ secrets.WHATSAPP_TO }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM: ${{ secrets.RESEND_FROM }}
+          WHATSAPP_ACCESS_TOKEN: ${{ secrets.WHATSAPP_ACCESS_TOKEN }}
+          WHATSAPP_PHONE_NUMBER_ID: ${{ secrets.WHATSAPP_PHONE_NUMBER_ID }}
+          WHATSAPP_TEMPLATE_NAME: ${{ secrets.WHATSAPP_TEMPLATE_NAME }}
+          WHATSAPP_TEMPLATE_LANG: ${{ secrets.WHATSAPP_TEMPLATE_LANG }}
+          META_GRAPH_VERSION: ${{ secrets.META_GRAPH_VERSION }}
+        run: |
+          set -u
+          for key in LEAD_EMAIL_TO WHATSAPP_TO RESEND_API_KEY RESEND_FROM \
+                     WHATSAPP_ACCESS_TOKEN WHATSAPP_PHONE_NUMBER_ID \
+                     WHATSAPP_TEMPLATE_NAME WHATSAPP_TEMPLATE_LANG META_GRAPH_VERSION; do
+            value="${!key:-}"
+            if [ -z "$value" ]; then
+              echo "skip $key (no repository secret set)"
+              continue
+            fi
+            if vercel env add "$key" production --value "$value" --sensitive --force \
+                 --token "$VERCEL_TOKEN" --non-interactive; then
+              echo "synced $key"
+            else
+              echo "::warning::could not sync $key"
+            fi
+          done
+
+      - name: Deploy
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set -o pipefail
+          vercel deploy --prod --yes --token "$VERCEL_TOKEN" --non-interactive | tee deploy.log
+          url=$(grep -Eo 'https://[A-Za-z0-9._-]+\.vercel\.app' deploy.log | tail -1)
+          if [ -z "$url" ]; then
+            echo "::error::could not read the deployment URL from the CLI output"
+            exit 1
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "### ✅ Deployed to production" >> "$GITHUB_STEP_SUMMARY"
+          echo "$url" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Smoke test
+        env:
+          URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          set -o pipefail
+          echo "GET /            -> $(curl -s -o /dev/null -w '%{http_code}' "$URL/")"
+          echo "GET /api/status  -> $(curl -s -o /dev/null -w '%{http_code}' "$URL/api/status")"
+          curl -fsS "$URL/api/status"
+          echo
+          echo "POST /api/leads (invalid payload, expects 400) -> $(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d '{}' "$URL/api/leads")"

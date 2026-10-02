@@ -449,10 +449,7 @@
     .form-privacy-note svg, .personal-delivery-note svg{ width:13px; height:13px; flex:0 0 auto; color:var(--cyan); }
   </style>
   <style>
-    /* ---------- code strip (monospace terminal widgets) ---------- */
-    .code-strip{ padding:0 0 26px; position:relative; z-index:1; }
-    .code-strip-layout{ display:grid; grid-template-columns:1fr 64px 1fr; gap:18px; align-items:stretch; }
-    .term-window{ border-radius:18px; overflow:hidden; min-width:0; }
+    /* ---------- terminal bar header ---------- */
     .term-bar{
       display:flex; align-items:center; gap:12px; padding:11px 16px;
       border-bottom:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03);
@@ -463,18 +460,6 @@
     .term-dots i:nth-child(2){ background:var(--amber); box-shadow:0 0 8px rgba(255,180,84,.6); }
     .term-dots i:nth-child(3){ background:var(--mint); box-shadow:0 0 8px rgba(61,255,180,.6); }
     .term-title{ font-family:var(--font-mono); font-size:12.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .term-meta{ margin-left:auto; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.12em; color:var(--cyan); white-space:nowrap; }
-    .term-body{
-      margin:0; padding:20px 22px; overflow-x:auto;
-      font-family:var(--font-mono); font-size:13px; line-height:1.8; color:rgba(255,255,255,.80);
-      background:rgba(0,0,0,.35);
-    }
-    .tk-key{ color:var(--cyan); } .tk-str{ color:var(--magenta); } .tk-num{ color:#C4B5FD; }
-    .tk-bool{ color:var(--amber); } .tk-pun{ color:rgba(255,255,255,.42); } .tk-ok{ color:var(--mint); } .tk-dim{ color:var(--ghost); }
-    .term-arrow{ display:grid; place-items:center; color:var(--violet); }
-    .term-arrow svg{ width:26px; height:26px; filter:drop-shadow(0 0 10px rgba(139,92,246,.7)); animation:nudge 2.4s ease-in-out infinite; }
-    @keyframes nudge{ 0%,100%{ transform:translateX(-3px); opacity:.7; } 50%{ transform:translateX(3px); opacity:1; } }
-    .code-strip-note{ margin:14px auto 0; text-align:center; font-family:var(--font-mono); font-size:11px; color:var(--ghost); }
 
     /* ---------- network section ---------- */
     .network-section{ padding:78px 0 90px; position:relative; }
@@ -942,8 +927,6 @@
       .personal-application-layout{ grid-template-columns:1fr; gap:40px; }
       .personal-application-copy{ position:static; }
       .calculator-layout{ grid-template-columns:1fr; gap:44px; }
-      .code-strip-layout{ grid-template-columns:1fr; }
-      .term-arrow{ transform:rotate(90deg); padding:2px 0; }
     }
     @media (max-width:900px){
       .desktop-nav{ display:none; }
@@ -1121,36 +1104,6 @@
       </div>
     </section>
 
-    <section class="code-strip" aria-label="Illustrative application pipeline">
-      <div class="container">
-        <div class="code-strip-layout">
-          <div class="term-window glass">
-            <div class="term-bar"><span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-title">loan_request.json</span><span class="term-meta">POST /api/leads</span></div>
-            <pre class="term-body"><code><span class="tk-pun">{</span>
-  <span class="tk-key">"applicationType"</span><span class="tk-pun">:</span> <span class="tk-str">"quick"</span><span class="tk-pun">,</span>
-  <span class="tk-key">"loanType"</span><span class="tk-pun">:</span> <span class="tk-str">"Personal Loan"</span><span class="tk-pun">,</span>
-  <span class="tk-key">"amount"</span><span class="tk-pun">:</span> <span class="tk-num">1000000</span><span class="tk-pun">,</span>
-  <span class="tk-key">"mobile"</span><span class="tk-pun">:</span> <span class="tk-str">"+91 ••••• ••890"</span><span class="tk-pun">,</span>
-  <span class="tk-key">"pincode"</span><span class="tk-pun">:</span> <span class="tk-str">"411 •••"</span><span class="tk-pun">,</span>
-  <span class="tk-key">"consent"</span><span class="tk-pun">:</span> <span class="tk-bool">true</span>
-<span class="tk-pun">}</span></code></pre>
-          </div>
-          <div class="term-arrow" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </div>
-          <div class="term-window glass">
-            <div class="term-bar"><span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-title">response — delivery pipeline</span><span class="term-meta" style="color:var(--mint)">202 ACCEPTED</span></div>
-            <pre class="term-body"><code><span class="tk-dim">HTTP/1.1</span> <span class="tk-ok">202 Accepted</span>
-<span class="tk-key">content-type</span><span class="tk-pun">:</span> <span class="tk-str">application/json</span>
-
-<span class="tk-pun">{</span> <span class="tk-key">"status"</span><span class="tk-pun">:</span> <span class="tk-str">"queued"</span><span class="tk-pun">,</span>
-  <span class="tk-key">"channels"</span><span class="tk-pun">:</span> <span class="tk-pun">[</span><span class="tk-str">"email"</span><span class="tk-pun">,</span> <span class="tk-str">"whatsapp"</span><span class="tk-pun">]</span><span class="tk-pun">,</span>
-  <span class="tk-key">"reference"</span><span class="tk-pun">:</span> <span class="tk-str">"NX-2026-0001"</span> <span class="tk-pun">}</span></code></pre>
-          </div>
-        </div>
-        <p class="code-strip-note">// illustrative payload — real requests use only your inputs, sent after explicit consent</p>
-      </div>
-    </section>
     <div class="spectrum-sep" role="presentation"></div>
 
     <section class="network-section" id="partners" aria-labelledby="partner-title">

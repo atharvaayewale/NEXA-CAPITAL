@@ -1,6 +1,6 @@
 # Nexa Capital homepage + lead notifications
 
-`index.html` is a single-file responsive homepage with inline CSS/JavaScript, the requested Tailwind CDN and Google Fonts, and inline Lucide-style SVGs. Its **Lending Network** directory displays all 49 names supplied in the brief by default, grouped into banks, public-sector banks, NBFCs, and fintech lenders.
+`index.html` is a single-file responsive homepage with inline CSS/JavaScript, Google Fonts (Space Grotesk + JetBrains Mono), and inline Lucide-style SVGs. Its visual language follows the vgpu spectrum design: pitch-black (#000000) void background, stark-white (#FFFFFF) text, neon cyan/magenta/violet spectrum accents with rainbow dispersion, glassmorphism panels, animated glowing neon borders, monospace terminal-style code widgets, and a rotating CSS 3D prism hero that refracts a white beam into spectrum light rays (with pointer parallax, disabled under `prefers-reduced-motion`). Its **Lending Network** directory displays all 49 names supplied in the brief by default, grouped into banks, public-sector banks, NBFCs, and fintech lenders.
 
 The Personal Loan path links to a detailed application form: full name, mobile, pincode, monthly take-home salary, loan amount, requested tenure, residential address, and PAN. The quick hero form carries amount/mobile/pincode into the full application when Personal Loan is selected.
 

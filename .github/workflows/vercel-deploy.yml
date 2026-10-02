@@ -1,8 +1,10 @@
 # Deploys the static homepage + serverless API (api/status.mjs, api/leads.mjs)
 # to Vercel production. Runs on every push to main and on demand.
 #
-# Required repository secret:
+# Required: a repository secret (Settings → Secrets and variables → Actions):
 #   VERCEL_TOKEN  — Vercel personal access token (https://vercel.com/account/tokens)
+# A repository *variable* of the same name is used as a fallback if no secret is set.
+# Never commit the token: this repository is public.
 #
 # Optional repository secrets (lead delivery, see .env.example). Any that are set are
 # pushed to the Vercel project before each deploy, so a redeploy picks them up:
@@ -14,7 +16,7 @@ name: Deploy to Vercel
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'arena/**']
   workflow_dispatch:
 
 concurrency:
@@ -41,9 +43,21 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
-      - name: Link Vercel project
+      - name: Resolve Vercel token
         env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          SECRET_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VAR_TOKEN: ${{ vars.VERCEL_TOKEN }}
+        run: |
+          set -u
+          token="${SECRET_TOKEN:-${VAR_TOKEN:-}}"
+          if [ -z "$token" ]; then
+            echo "::error::VERCEL_TOKEN is not set. Add it under Settings → Secrets and variables → Actions → New repository secret."
+            exit 1
+          fi
+          echo "::add-mask::$token"
+          echo "VERCEL_TOKEN=$token" >> "$GITHUB_ENV"
+
+      - name: Link Vercel project
         run: |
           set -o pipefail
           # First run only: create the project. Later runs are harmless (already exists).
@@ -53,7 +67,6 @@ jobs:
 
       - name: Sync delivery environment variables
         env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           LEAD_EMAIL_TO: ${{ secrets.LEAD_EMAIL_TO }}
           WHATSAPP_TO: ${{ secrets.WHATSAPP_TO }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
@@ -83,8 +96,6 @@ jobs:
 
       - name: Deploy
         id: deploy
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           set -o pipefail
           vercel deploy --prod --yes --token "$VERCEL_TOKEN" --non-interactive | tee deploy.log

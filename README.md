@@ -30,7 +30,14 @@ The repo is Vercel-ready: `index.html` is served statically, and `api/status.mjs
 
 1. Import this repository in the Vercel dashboard (Framework Preset: **Other**, no build command needed), or run `vercel --prod` with a logged-in CLI.
 2. In **Project Settings → Environment Variables**, set the same variables used locally: `LEAD_EMAIL_TO`, `RESEND_FROM`, `RESEND_API_KEY`, `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_TO`, `WHATSAPP_TEMPLATE_NAME`, `WHATSAPP_TEMPLATE_LANG`, `META_GRAPH_VERSION`. Redeploy after changing them.
-3. Email and WhatsApp are independent: set up whichever you want. With only the Resend variables set, email delivery works on its own; WhatsApp is skipped and reported as "not configured" by `/api/status`. Until at least one channel is configured, `/api/leads` safely returns a 503 and the UI reports that delivery is not configured—no false successes.
+3. **One-off CLI deploy** (no dashboard needed):
+
+   ```bash
+   npx vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN" --project nexa-capital
+   ```
+
+4. **Continuous deploys** with `.github/workflows/vercel-deploy.yml`: add `VERCEL_TOKEN` under **Settings → Secrets and variables → Actions → New repository secret**. Every push to `main` then deploys to production, and any of the delivery variables above can be added as repository secrets too — the workflow pushes them to the Vercel project before deploying. Trigger manually via **Actions → Deploy to Vercel → Run workflow**. Never commit the token: this repository is public.
+5. Email and WhatsApp are independent: set up whichever you want. With only the Resend variables set, email delivery works on its own; WhatsApp is skipped and reported as "not configured" by `/api/status`. Until at least one channel is configured, `/api/leads` safely returns a 503 and the UI reports that delivery is not configured—no false successes.
 
 Note: the serverless rate limit is in-memory and best-effort (function instances are short-lived); add an external store for hard limits before launch. `server.mjs` remains the local development server (`npm run dev`).
 

@@ -35,7 +35,6 @@
       --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
       --radius:20px;
     }
-    @property --ring-angle{ syntax:'<angle>'; initial-value:0deg; inherits:false; }
 
     *{ box-sizing:border-box; }
     html{ scroll-behavior:smooth; scroll-padding-top:96px; background:var(--void); }
@@ -82,7 +81,7 @@
       background-size:860px 720px; background-repeat:repeat;
     }
     body::after{ /* film grain */
-      content:""; position:fixed; inset:-50%; z-index:70; pointer-events:none; opacity:.028;
+      content:""; position:fixed; inset:0; z-index:70; pointer-events:none; opacity:.028;
       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
     .spectrum-sep{ height:1px; border:0; margin:0;
@@ -94,20 +93,18 @@
     .glass{
       background:linear-gradient(158deg, rgba(255,255,255,.085), rgba(255,255,255,.028) 38%, rgba(255,255,255,.05));
       border:1px solid var(--line);
-      backdrop-filter:blur(20px) saturate(150%);
-      -webkit-backdrop-filter:blur(20px) saturate(150%);
+      backdrop-filter:blur(12px) saturate(140%);
+      -webkit-backdrop-filter:blur(12px) saturate(140%);
       box-shadow:0 30px 80px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.09);
     }
-    @keyframes ring-spin{ to{ --ring-angle:360deg; } }
     .neon-ring{ position:relative; }
     .neon-ring::before{
       content:""; position:absolute; inset:-1px; border-radius:inherit; padding:1px; pointer-events:none;
-      background:conic-gradient(from var(--ring-angle),
+      background:conic-gradient(from 36deg,
         rgba(0,229,255,0) 0deg, rgba(0,229,255,.95) 42deg, rgba(139,92,246,.95) 96deg,
         rgba(255,46,210,.95) 148deg, rgba(255,46,210,0) 210deg, rgba(0,229,255,0) 360deg);
       -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite:xor; mask-composite:exclude;
-      animation:ring-spin 7s linear infinite;
     }
     .gradient-text{
       background:var(--spec); -webkit-background-clip:text; background-clip:text; color:transparent;
@@ -123,13 +120,11 @@
     .section-heading p{ margin:0 auto; color:var(--muted); max-width:520px; }
     h1,h2,h3{ font-weight:700; letter-spacing:-.02em; margin:0; }
     .section{ padding:96px 0; position:relative; }
-    .stars svg{ width:15px; height:15px; fill:#FF2ED2; }
-    @supports (fill:url(#a)) { .stars svg{ fill:url(#star-grad); } }
 
     /* ---------- header ---------- */
     .site-header{
       position:sticky; top:0; z-index:80;
-      background:rgba(0,0,0,.58); backdrop-filter:blur(20px) saturate(150%); -webkit-backdrop-filter:blur(20px) saturate(150%);
+      background:rgba(0,0,0,.58); backdrop-filter:blur(12px) saturate(140%); -webkit-backdrop-filter:blur(12px) saturate(140%);
       border-bottom:1px solid rgba(255,255,255,.08);
     }
     .nav-shell{ display:flex; align-items:center; gap:26px; height:72px; }
@@ -199,16 +194,20 @@
 
     /* ---------- hero + prism scene ---------- */
     .hero{ position:relative; overflow:clip; padding:84px 0 34px; }
-    .hero::before{ /* pointer spotlight */
+    .hero::before{ /* static spotlight: no per-frame background repaint */
       content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
-      background:radial-gradient(560px circle at var(--mx,28%) var(--my,30%), rgba(0,229,255,.08), transparent 65%);
+      background:radial-gradient(560px circle at 28% 30%, rgba(0,229,255,.08), transparent 65%);
     }
     .hero-canvas{ position:absolute; inset:0; z-index:0; pointer-events:none; }
     .prism-scene{ position:absolute; inset:0; display:grid; place-items:center; perspective:1300px; }
     .prism-halo{
       position:absolute; width:560px; height:560px; border-radius:50%;
-      background:conic-gradient(from 0deg, #00E5FF, #4D7CFF, #8B5CF6, #FF2ED2, #FFB454, #00E5FF);
-      filter:blur(95px); opacity:.26; animation:halo-spin 26s linear infinite;
+      background:radial-gradient(ellipse at 25% 40%, rgba(0,229,255,.75), transparent 55%),
+        radial-gradient(ellipse at 75% 30%, rgba(139,92,246,.8), transparent 55%),
+        radial-gradient(ellipse at 65% 75%, rgba(255,46,210,.65), transparent 55%);
+      -webkit-mask-image:radial-gradient(closest-side, #000 35%, transparent 100%);
+      mask-image:radial-gradient(closest-side, #000 35%, transparent 100%);
+      opacity:.30; animation:halo-spin 26s linear infinite;
     }
     @keyframes halo-spin{ to{ transform:rotate(360deg); } }
     .prism-floor{
@@ -240,7 +239,8 @@
       animation:beam-breathe 5.2s ease-in-out infinite; animation-delay:var(--d,0s);
     }
     @keyframes beam-breathe{ 0%,100%{ opacity:.85; } 50%{ opacity:.5; } }
-    .prism-rig{ transform-style:preserve-3d; transform:rotateX(-10deg) rotateY(0deg); will-change:transform; }
+    .prism-rig{ transform-style:preserve-3d; transform:rotateX(-10deg) rotateY(0deg); will-change:auto; }
+    .prism-rig.parallax-active{ will-change:transform; }
     @keyframes prism-spin{ from{ transform:rotateY(0deg); } to{ transform:rotateY(360deg); } }
     .prism{ position:relative; width:200px; height:240px; transform-style:preserve-3d; animation:prism-spin 18s linear infinite; }
     .prism-face{
@@ -260,7 +260,8 @@
     }
     .prism-cap--top{ transform:rotateX(90deg) translateZ(120px); }
     .prism-cap--bottom{ transform:rotateX(90deg) translateZ(-120px); }
-    .hero-layout{ position:relative; z-index:1; display:grid; grid-template-columns:1.04fr .96fr; gap:58px; align-items:center; }
+    .hero-layout{ position:relative; z-index:1; display:grid; grid-template-columns:minmax(0, 1.04fr) minmax(0, .96fr); gap:58px; align-items:center; }
+    .hero-layout > *{ min-width:0; }
     .hero-copy{ max-width:600px; }
     .term-chip{
       display:inline-flex; align-items:center; gap:10px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
@@ -284,21 +285,11 @@
     }
     .hero-highlight svg{ color:var(--cyan); }
     .hero-highlight strong{ color:#fff; }
-    .hero-proof{ display:flex; align-items:center; gap:14px; margin-top:30px; }
-    .proof-avatars{ display:flex; }
-    .proof-avatars span{
-      width:36px; height:36px; border-radius:50%; display:grid; place-items:center; margin-left:-9px;
-      font-family:var(--font-mono); font-size:11.5px; font-weight:700; color:#fff;
-      background:linear-gradient(140deg, rgba(0,229,255,.45), rgba(139,92,246,.45));
-      border:2px solid #050508;
-    }
-    .proof-avatars span:first-child{ margin-left:0; }
-    .proof-avatars span:nth-child(2){ background:linear-gradient(140deg, rgba(139,92,246,.5), rgba(255,46,210,.45)); }
-    .proof-avatars span:nth-child(3){ background:linear-gradient(140deg, rgba(255,46,210,.5), rgba(255,180,84,.45)); }
-    .proof-avatars span:nth-child(4){ background:rgba(255,255,255,.12); }
-    .proof-copy{ font-size:13px; line-height:1.5; color:var(--faint); }
-    .proof-copy strong{ color:#fff; }
-    .proof-stars{ display:inline-flex; gap:2px; margin-right:6px; vertical-align:-2px; }
+    .hero-note{ display:flex; align-items:center; gap:14px; margin-top:30px; }
+    .hero-note-icon{ width:40px; height:40px; display:grid; place-items:center; flex:0 0 auto;
+      border-radius:12px; color:var(--cyan); background:rgba(0,229,255,.07); border:1px solid rgba(0,229,255,.24); }
+    .hero-note-copy{ font-size:13px; line-height:1.5; color:var(--faint); }
+    .hero-note-copy strong{ color:#fff; }
     .hero-footnote{ margin:26px 0 0; font-size:11.5px; line-height:1.6; color:var(--ghost); max-width:520px; }
     .hero-footnote a{ color:var(--cyan); text-decoration:underline; text-underline-offset:3px; }
     .hero-bottom{
@@ -390,15 +381,15 @@
     .input-shell .prefix{
       position:absolute; left:14px; font-family:var(--font-mono); font-size:13.5px; color:var(--faint); pointer-events:none;
     }
-    .input-shell input{ padding-left:52px; }
+    .input-shell .prefix + input{ padding-left:52px; }
     .input-shell > svg{ position:absolute; right:13px; width:16px; height:16px; color:var(--ghost); pointer-events:none; }
-    .input-shell input, .personal-field input, .personal-field select, .personal-field textarea, .track-form input{
+    .input-shell input, .personal-field input, .personal-field select, .personal-field textarea{
       width:100%; padding:12.5px 14px; border-radius:12px; font-size:14.5px; color:#fff;
       background:rgba(255,255,255,.045); border:1px solid var(--line);
       transition:border-color .2s, box-shadow .2s, background .2s;
     }
-    .input-shell input::placeholder, .personal-field input::placeholder, .personal-field textarea::placeholder, .track-form input::placeholder{ color:var(--ghost); }
-    .input-shell input:focus, .personal-field input:focus, .personal-field select:focus, .personal-field textarea:focus, .track-form input:focus{
+    .input-shell input::placeholder, .personal-field input::placeholder, .personal-field textarea::placeholder{ color:var(--ghost); }
+    .input-shell input:focus, .personal-field input:focus, .personal-field select:focus, .personal-field textarea:focus{
       outline:none; border-color:rgba(0,229,255,.7); background:rgba(0,229,255,.055);
       box-shadow:0 0 0 3px rgba(0,229,255,.14), 0 0 26px rgba(0,229,255,.16);
     }
@@ -694,13 +685,13 @@
     .result-breakdown span{ display:block; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.08em; color:var(--faint); }
     .result-breakdown strong{ display:block; margin-top:6px; font-family:var(--font-mono); font-size:16px; color:#fff; }
 
-    /* ---------- process + tracking ---------- */
+    /* ---------- process ---------- */
     .process-heading{ display:flex; align-items:flex-end; justify-content:space-between; gap:28px; flex-wrap:wrap; margin-bottom:44px; }
     .process-heading h2{ font-size:clamp(1.9rem, 3vw, 2.6rem); line-height:1.12; margin-top:16px; }
     .process-heading h2 span{ background:var(--spec); -webkit-background-clip:text; background-clip:text; color:transparent; }
     .process-heading > p{ margin:0; max-width:340px; color:var(--muted); font-size:14px; line-height:1.6; }
-    .process-layout{ display:grid; grid-template-columns:1.3fr .8fr; gap:22px; align-items:start; }
-    .process-steps{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .process-layout{ display:block; }
+    .process-steps{ display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; }
     .process-step{
       position:relative; overflow:hidden; padding:24px; border-radius:20px;
       display:flex; flex-direction:column; gap:10px;
@@ -725,74 +716,25 @@
       color:var(--mint); background:rgba(61,255,180,.07); border:1px solid rgba(61,255,180,.35);
     }
     .step-speed svg{ width:12px; height:12px; }
-    .tracking-card{ position:sticky; top:100px; border-radius:20px; overflow:hidden; }
-    .track-icon{ display:none; }
-    .tracking-card h3{ padding:20px 22px 6px; font-size:17px; }
-    .tracking-card > p{ margin:0; padding:0 22px; font-size:13px; color:var(--muted); }
-    .track-form{ display:grid; gap:11px; padding:18px 22px 6px; }
-    .track-submit{
-      display:flex; align-items:center; justify-content:center; gap:9px; padding:12.5px 14px; border-radius:12px;
-      font-weight:700; font-size:14px; color:#02040A;
-      background:linear-gradient(96deg, #7DF3FF, #00E5FF 40%, #8B5CF6);
-      box-shadow:0 8px 26px rgba(0,229,255,.3), inset 0 1px 0 rgba(255,255,255,.5);
-      transition:transform .18s, box-shadow .18s, filter .18s;
-    }
-    .track-submit:hover{ transform:translateY(-1px); filter:saturate(1.1); box-shadow:0 12px 32px rgba(0,229,255,.42); }
-    .track-privacy{ display:block; padding:12px 22px 20px; font-family:var(--font-mono); font-size:10px; line-height:1.6; color:var(--ghost); }
     .network-footnote{
       display:flex; align-items:flex-start; gap:9px; margin:26px 0 0;
       font-size:11.5px; line-height:1.6; color:var(--ghost);
     }
     .network-footnote svg{ width:14px; height:14px; flex:0 0 auto; margin-top:2px; color:var(--amber); }
 
-    /* ---------- reviews ---------- */
-    .reviews-heading{ display:flex; align-items:flex-start; justify-content:space-between; gap:28px; flex-wrap:wrap; margin-bottom:44px; }
-    .reviews-heading h2{ font-size:clamp(1.9rem, 3vw, 2.6rem); line-height:1.12; margin-top:16px; }
-    .reviews-heading h2 span{ background:var(--spec); -webkit-background-clip:text; background-clip:text; color:transparent; }
-    .reviews-heading > p{ margin:0; max-width:330px; color:var(--muted); font-size:14px; line-height:1.6; align-self:flex-end; }
-    .review-rating-badge{
-      display:flex; flex-direction:column; align-items:center; gap:5px; padding:16px 26px; border-radius:18px;
-      background:rgba(255,255,255,.04); border:1px solid var(--line);
-      box-shadow:0 0 34px rgba(255,46,210,.10);
-    }
-    .review-rating-badge strong{ font-size:26px; letter-spacing:-.02em; }
-    .review-rating-badge small{ font-family:var(--font-mono); font-size:9.5px; letter-spacing:.1em; color:var(--ghost); }
-    .review-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; }
-    .review-card{
-      padding:24px; border-radius:20px; display:flex; flex-direction:column; gap:16px;
-      transition:transform .22s, border-color .22s, box-shadow .22s;
-    }
-    .review-card:hover{ transform:translateY(-4px); border-color:rgba(255,46,210,.4);
-      box-shadow:0 20px 50px rgba(0,0,0,.5), 0 0 34px rgba(255,46,210,.12); }
-    .review-top{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
-    .sample-review{ font-family:var(--font-mono); font-size:9.5px; letter-spacing:.14em; color:var(--ghost); }
-    .review-type{
-      display:inline-flex; align-items:center; gap:8px; align-self:flex-start;
-      padding:7px 11px; border-radius:999px; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.08em;
-      color:var(--cyan); background:rgba(0,229,255,.07); border:1px solid rgba(0,229,255,.32);
-    }
-    .review-card:nth-child(2) .review-type{ color:#B39DFF; background:rgba(139,92,246,.09); border-color:rgba(139,92,246,.4); }
-    .review-card:nth-child(3) .review-type{ color:var(--magenta); background:rgba(255,46,210,.08); border-color:rgba(255,46,210,.35); }
-    .review-type svg{ width:12px; height:12px; }
-    .review-card blockquote{ margin:0; font-size:14.5px; line-height:1.65; color:rgba(255,255,255,.85); flex:1; }
-    .review-footer{ display:flex; align-items:center; gap:12px; padding-top:14px; border-top:1px solid rgba(255,255,255,.07); }
-    .review-avatar{
-      width:38px; height:38px; border-radius:50%; display:grid; place-items:center; flex:0 0 auto;
-      font-family:var(--font-mono); font-size:11.5px; font-weight:700; color:#fff;
-      background:linear-gradient(140deg, rgba(0,229,255,.5), rgba(139,92,246,.5));
-      border:1px solid rgba(255,255,255,.25);
-    }
-    .review-card:nth-child(2) .review-avatar{ background:linear-gradient(140deg, rgba(139,92,246,.55), rgba(255,46,210,.5)); }
-    .review-card:nth-child(3) .review-avatar{ background:linear-gradient(140deg, rgba(255,46,210,.5), rgba(255,180,84,.5)); }
-    .review-author{ flex:1; min-width:0; }
-    .review-author strong{ display:block; font-size:13.5px; }
-    .review-author small{ font-family:var(--font-mono); font-size:10px; color:var(--ghost); }
-    .disbursed-amount{ text-align:right; }
-    .disbursed-amount strong{ display:block; font-family:var(--font-mono); font-size:13.5px; color:var(--cyan); }
-    .review-card:nth-child(2) .disbursed-amount strong{ color:#B39DFF; }
-    .review-card:nth-child(3) .disbursed-amount strong{ color:var(--magenta); }
-    .disbursed-amount small{ font-family:var(--font-mono); font-size:9px; letter-spacing:.08em; color:var(--ghost); }
-    .review-note{ margin:22px 0 0; font-size:11px; line-height:1.6; color:var(--ghost); text-align:center; }
+    /* ---------- borrowing guide ---------- */
+    .guide-heading{ display:flex; align-items:flex-end; justify-content:space-between; gap:28px; flex-wrap:wrap; margin-bottom:44px; }
+    .guide-heading h2{ font-size:clamp(1.9rem, 3vw, 2.6rem); line-height:1.12; margin-top:16px; }
+    .guide-heading > p{ margin:0; max-width:350px; color:var(--muted); font-size:14px; line-height:1.6; }
+    .guide-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; }
+    .guide-card{ padding:26px; border-radius:20px; display:flex; flex-direction:column; gap:16px;
+      transition:transform .22s, border-color .22s; }
+    .guide-card:hover{ transform:translateY(-4px); border-color:rgba(0,229,255,.4); }
+    .guide-card h3{ font-size:19px; }
+    .guide-card p{ margin:0; font-size:14px; line-height:1.65; color:var(--muted); flex:1; }
+    .guide-card:nth-child(2) .step-icon-wrap{ border-color:rgba(139,92,246,.4); }
+    .guide-card:nth-child(3) .step-icon-wrap{ border-color:rgba(255,46,210,.4); }
+    .guide-link{ align-self:flex-start; font-size:13px; color:var(--cyan); text-decoration:underline; text-underline-offset:4px; }
 
     /* ---------- final CTA ---------- */
     .final-cta-section{ padding:30px 0 110px; }
@@ -833,14 +775,6 @@
     }
     .footer-contact-lines a:hover{ color:var(--cyan); text-shadow:0 0 16px rgba(0,229,255,.4); }
     .footer-contact-lines svg{ width:15px; height:15px; }
-    .footer-socials{ display:flex; gap:9px; margin-top:20px; }
-    .footer-socials a{
-      width:36px; height:36px; display:grid; place-items:center; border-radius:10px;
-      font-family:var(--font-mono); font-size:13px; color:var(--muted);
-      background:rgba(255,255,255,.045); border:1px solid var(--line);
-      transition:color .18s, border-color .18s, box-shadow .18s, transform .18s;
-    }
-    .footer-socials a:hover{ color:#fff; border-color:rgba(0,229,255,.55); box-shadow:0 0 18px rgba(0,229,255,.25); transform:translateY(-2px); }
     .footer-col h3{ font-family:var(--font-mono); font-size:11px; font-weight:600; letter-spacing:.22em; color:var(--faint); margin-bottom:16px; }
     .footer-col a{ display:block; padding:6px 0; font-size:13.5px; color:var(--muted); transition:color .18s, transform .18s; }
     .footer-col a:hover{ color:var(--cyan); transform:translateX(3px); }
@@ -869,8 +803,6 @@
       padding-top:24px; border-top:1px solid rgba(255,255,255,.07);
       font-family:var(--font-mono); font-size:11.5px; color:var(--ghost);
     }
-    .footer-demo{ display:inline-flex; align-items:center; gap:8px; }
-    .footer-demo i{ width:6px; height:6px; border-radius:50%; background:var(--amber); box-shadow:0 0 8px var(--amber); animation:pulse-dot 2.2s ease-in-out infinite; }
     .footer-bottom-links{ display:flex; gap:18px; }
     .footer-bottom-links a{ color:var(--ghost); transition:color .18s; }
     .footer-bottom-links a:hover{ color:var(--cyan); }
@@ -916,12 +848,11 @@
     @media (max-width:1120px){
       .advantage-grid{ grid-template-columns:repeat(2, 1fr); }
       .partner-logo-grid{ grid-template-columns:repeat(3, 1fr); }
-      .process-layout{ grid-template-columns:1fr; }
-      .tracking-card{ position:static; }
+      .process-steps{ grid-template-columns:repeat(2, 1fr); }
       .footer-main{ grid-template-columns:1fr 1fr; }
     }
     @media (max-width:980px){
-      .hero-layout{ grid-template-columns:1fr; gap:48px; }
+      .hero-layout{ grid-template-columns:minmax(0, 1fr); gap:48px; }
       .hero-copy{ max-width:660px; }
       .prism-scene{ transform:scale(.68) translateY(-90px); opacity:.8; }
       .personal-application-layout{ grid-template-columns:1fr; gap:40px; }
@@ -947,7 +878,7 @@
       .personal-form-grid{ grid-template-columns:1fr; }
       .advantage-grid{ grid-template-columns:1fr; }
       .process-steps{ grid-template-columns:1fr; }
-      .review-grid{ grid-template-columns:1fr; }
+      .guide-grid{ grid-template-columns:1fr; }
       .partner-logo-grid{ grid-template-columns:repeat(2, 1fr); }
       .footer-main{ grid-template-columns:1fr; gap:30px; }
       .final-cta{ padding:38px 26px; }
@@ -956,14 +887,20 @@
       .nav-shell .nav-cta span{ display:none; }
       .nav-shell .nav-cta{ padding:11px 13px; }
       .calculator-card{ padding:22px; }
+      /* Avoid overlapping backdrop filters during mobile scrolling. */
+      .glass, .final-cta{ backdrop-filter:none; -webkit-backdrop-filter:none;
+        background:linear-gradient(158deg, #131319, #07080e 65%, #0c0d13); }
+      body::after{ display:none; }
     }
 
     /* ---------- motion + scrollbar ---------- */
+    .motion-paused, .motion-paused *, .motion-paused::before, .motion-paused::after,
+    .page-paused *, .page-paused *::before, .page-paused *::after{ animation-play-state:paused !important; }
     @media (prefers-reduced-motion: reduce){
       *, *::before, *::after{
-        animation-duration:.01ms !important; animation-iteration-count:1 !important;
-        transition-duration:.01ms !important; scroll-behavior:auto !important;
+        animation:none !important; transition:none !important; scroll-behavior:auto !important;
       }
+      .prism-rig{ will-change:auto !important; }
     }
     ::-webkit-scrollbar{ width:10px; height:10px; }
     ::-webkit-scrollbar-track{ background:#000; }
@@ -974,9 +911,6 @@
 <body>
   <svg class="svg-defs" aria-hidden="true" focusable="false">
     <defs>
-      <linearGradient id="star-grad" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#00E5FF"/><stop offset=".55" stop-color="#8B5CF6"/><stop offset="1" stop-color="#FF2ED2"/>
-      </linearGradient>
       <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#FF2ED2"/>
       </linearGradient>
@@ -1007,7 +941,7 @@
         </div>
         <a class="nav-link" href="#partners">Network</a>
         <a class="nav-link" href="#calculator">EMI Calculator</a>
-        <a class="nav-link" href="#track">Track</a>
+
         <a class="nav-link" href="#contact">Contact</a>
       </nav>
       <a class="nav-cta" href="#lead-form"><span>Check Eligibility Now</span>
@@ -1020,7 +954,7 @@
     <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation" hidden>
       <button id="mobile-products-toggle" aria-expanded="false">Products <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
       <div class="mobile-subnav" id="mobile-products" hidden><a href="#personal-application">Personal loan</a><a href="#lead-form">Business loan</a><a href="#lead-form">Overdraft</a><a href="#lead-form">Home loan</a></div>
-      <a href="#partners">Lending network</a><a href="#calculator">EMI calculator</a><a href="#track">Track application</a><a href="#contact">Contact</a>
+      <a href="#partners">Lending network</a><a href="#calculator">EMI calculator</a><a href="#contact">Contact</a>
       <a class="mobile-cta" href="#lead-form">Check Eligibility Now <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
     </nav>
   </header>
@@ -1054,17 +988,17 @@
         <div class="hero-copy">
           <div class="term-chip"><span class="term-dot"></span><span class="term-path">nexa@ruconnect:~$</span> init loan-engine --lenders 49 --upfront-fees 0</div>
           <h1 id="hero-title">Instant Personal &amp; Business Loans from <span class="gradient-text">30+ Top Banks.</span></h1>
-          <p class="hero-subhead">Compare rates starting from <strong>10.49% p.a.</strong> Zero upfront fees, 100% digital process with Ruconnect network backing.</p>
+          <p class="hero-subhead">Compare rates starting from <strong>9.99% p.a.</strong> Zero upfront fees, 100% digital process with Ruconnect network backing.</p>
           <div class="hero-highlights">
             <span class="hero-highlight"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg><strong>30+</strong> bank &amp; NBFC options</span>
             <span class="hero-highlight"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg> No upfront Nexa fee*</span>
             <span class="hero-highlight"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg> 100% digital journey</span>
           </div>
-          <div class="hero-proof">
-            <div class="proof-avatars" aria-hidden="true"><span>AK</span><span>SM</span><span>RP</span><span>+30</span></div>
-            <div class="proof-copy"><span class="stars proof-stars" aria-label="5 out of 5 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg></span><strong>Borrowing made clearer.</strong><br />Illustrative experience for a connected lender network.</div>
+          <div class="hero-note">
+            <span class="hero-note-icon" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+            <div class="hero-note-copy"><strong>Your options. Your pace.</strong><br />Compare repayment, fees and lender terms before you decide.</div>
           </div>
-          <p class="hero-footnote">*Rates and fees are indicative and lender-specific. Offers and approvals depend on lender criteria. Partner names, claims and examples are concept placeholders until verified. <a href="#disclaimer">Important disclosures</a>.</p>
+          <p class="hero-footnote">*Rates and fees are indicative and lender-specific. Offers and approvals depend on lender criteria. Lender names are provided for reference, not proof of a direct partnership. <a href="#disclaimer">Important disclosures</a>.</p>
         </div>
 
         <div class="lead-card-wrap">
@@ -1099,7 +1033,7 @@
         </div>
       </div>
       <div class="container hero-bottom">
-        <div class="hero-bottom-left"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>Secure, consent-led experience <span>·</span> No hard credit enquiry in this demo</div>
+        <div class="hero-bottom-left"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>Secure, consent-led experience <span>·</span> No credit-bureau check at this stage</div>
         <div class="hero-bottom-right"><div class="partner-mini-stack" aria-hidden="true"><span>H</span><span>I</span><span>A</span><span>+</span></div><span><strong>One application.</strong> More lender options.</span></div>
       </div>
     </section>
@@ -1108,8 +1042,8 @@
 
     <section class="network-section" id="partners" aria-labelledby="partner-title">
       <div class="container">
-        <div class="network-heading"><span class="network-eyebrow" id="partner-title"><i></i> LENDING NETWORK</span><span class="network-subtext">Bank, NBFC &amp; digital lending names supplied for this concept</span></div>
-        <div class="partner-logo-grid" aria-label="Illustrative lender wordmarks">
+        <div class="network-heading"><span class="network-eyebrow" id="partner-title"><i></i> LENDING NETWORK</span><span class="network-subtext">Bank, NBFC &amp; digital lender directory</span></div>
+        <div class="partner-logo-grid" aria-label="Lender directory">
           <div class="partner-logo partner-logo--hdfc"><span class="partner-mark">H</span><span><strong>HDFC</strong><small>BANK</small></span></div>
           <div class="partner-logo partner-logo--icici"><span class="partner-mark">i</span><span><strong>ICICI</strong><small>BANK</small></span></div>
           <div class="partner-logo partner-logo--axis"><span class="partner-mark">A</span><span><strong>AXIS</strong><small>BANK</small></span></div>
@@ -1118,16 +1052,16 @@
           <div class="partner-logo partner-logo--tata"><span class="partner-mark">T</span><span><strong>TATA</strong><small>CAPITAL</small></span></div>
         </div>
         <div class="lender-browser glass">
-          <div class="lender-browser-head"><div><strong>Explore lender names</strong><span>Institution and product availability can change by location, eligibility and active channel authorisation.</span></div><span class="lender-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg>49 NAMES SUPPLIED</span></div>
+          <div class="lender-browser-head"><div><strong>Explore lender names</strong><span>Institution and product availability can change by location, eligibility and active channel authorisation.</span></div><span class="lender-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg>49 INSTITUTIONS</span></div>
           <div class="lender-tabs" role="tablist" aria-label="Filter lender directory">
-            <button class="lender-tab is-active" type="button" data-lender-group="all" role="tab" aria-selected="true">All supplied names <span>49</span></button>
+            <button class="lender-tab is-active" type="button" data-lender-group="all" role="tab" aria-selected="true">All institutions <span>49</span></button>
             <button class="lender-tab" type="button" data-lender-group="private" role="tab" aria-selected="false">Private &amp; other banks <span>15</span></button>
             <button class="lender-tab" type="button" data-lender-group="public" role="tab" aria-selected="false">Public sector banks <span>10</span></button>
             <button class="lender-tab" type="button" data-lender-group="nbfc" role="tab" aria-selected="false">Major NBFCs <span>15</span></button>
             <button class="lender-tab" type="button" data-lender-group="fintech" role="tab" aria-selected="false">Fintech &amp; neo-lenders <span>9</span></button>
           </div>
           <div class="lender-chip-grid" id="lender-list" role="tabpanel" aria-live="polite" aria-label="Lender names"></div>
-          <p class="lender-disclaimer">Names are illustrative, not confirmation of a current direct partnership or product availability. Verify lender/DSA authorisations before publication.</p>
+          <p class="lender-disclaimer">Institution names are for reference only—not confirmation of a direct partnership or product availability. Availability and eligibility depend on the lender.</p>
         </div>
       </div>
     </section>
@@ -1203,7 +1137,7 @@
           <div class="calculator-main">
             <div class="calc-controls">
               <div class="calc-control"><div class="calc-control-head"><label for="calc-amount">Loan amount</label><output id="calc-amount-value" for="calc-amount">₹15,00,000</output></div><input class="range" id="calc-amount" type="range" min="100000" max="10000000" step="100000" value="1500000" aria-label="Calculator loan amount" /><div class="calc-limits"><span>₹1 lakh</span><span>₹1 crore</span></div></div>
-              <div class="calc-control"><div class="calc-control-head"><label for="calc-rate">Interest rate (p.a.)</label><output id="calc-rate-value" for="calc-rate">10.49%</output></div><input class="range" id="calc-rate" type="range" min="8" max="24" step="0.25" value="10.49" aria-label="Annual interest rate" /><div class="calc-limits"><span>8%</span><span>24%</span></div></div>
+              <div class="calc-control"><div class="calc-control-head"><label for="calc-rate">Interest rate (p.a.)</label><output id="calc-rate-value" for="calc-rate">9.99%</output></div><input class="range" id="calc-rate" type="range" min="8" max="24" step="0.01" value="9.99" aria-label="Annual interest rate" /><div class="calc-limits"><span>8%</span><span>24%</span></div></div>
               <div class="calc-control"><div class="calc-control-head"><label for="calc-tenure">Loan tenure</label><output id="calc-tenure-value" for="calc-tenure">5 years</output></div><input class="range" id="calc-tenure" type="range" min="1" max="7" step="1" value="5" aria-label="Loan tenure in years" /><div class="calc-limits"><span>1 year</span><span>7 years</span></div></div>
             </div>
             <div class="calc-result" aria-live="polite">
@@ -1214,7 +1148,7 @@
               <div class="amount-composition" aria-hidden="true"><span class="principal-bar" id="principal-bar"></span><span class="interest-bar" id="interest-bar"></span></div>
               <div class="calc-legend"><span><i></i>Principal</span><span><i></i>Interest payable</span></div>
               <div class="result-breakdown"><div><span>Total interest payable</span><strong id="interest-output">₹4,33,980</strong></div><div><span>Total payable</span><strong id="total-output">₹19,33,980</strong></div></div>
-              <p class="calculator-disclaimer">Illustration only. Actual lender EMI, eligibility, fees and repayment schedule may differ. Interest is calculated on a reducing balance.</p>
+              <p class="calculator-disclaimer">Estimate only. Actual lender EMI, eligibility, fees and repayment schedule may differ. Interest is calculated on a reducing balance.</p>
             </div>
           </div>
         </div>
@@ -1231,27 +1165,20 @@
             <article class="process-step glass"><span class="step-icon-wrap"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h6M9 15h3M16 17l1.5 1.5L21 15"/></svg></span><span class="step-count">STEP 03</span><h3>Complete digital KYC.</h3><p>Finish the lender’s verification and document checks.</p></article>
             <article class="process-step glass"><span class="step-icon-wrap"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v13H3zM3 11h18M7 16h3"/><path d="m15 4 2 2 4-4"/></svg></span><span class="step-count">STEP 04</span><h3>Funds to your account.</h3><p>After sanction and complete checks, the lender disburses directly.</p><span class="step-speed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Within 24 hrs in eligible cases*</span></article>
           </div>
-          <aside class="tracking-card glass neon-ring" id="track">
-            <div class="term-bar"><span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-title">nexa — status lookup</span></div>
-            <h3>Already applied?</h3><p>Check your application status in one quick step.</p>
-            <form class="track-form" id="track-form"><label class="sr-only" for="application-id">Application ID</label><input id="application-id" name="applicationId" type="text" placeholder="Application ID" required /><label class="sr-only" for="track-mobile">Mobile number last 4 digits</label><input id="track-mobile" name="lastFour" type="text" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="Mobile last 4 digits" required /><button class="track-submit" type="submit">Track status <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></form>
-            <small class="track-privacy">Prototype only—application tracking is not connected and these details are not transmitted.</small>
-          </aside>
         </div>
         <p class="network-footnote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 11v5M12 8h.01"/></svg>*24-hour disbursal timing is not guaranteed; it depends on lender approval, verification, documents, cut-off times and other conditions.</p>
       </div>
     </section>
 
     <div class="spectrum-sep" role="presentation"></div>
-    <section class="section reviews-section" id="reviews">
+    <section class="section guide-section" id="borrower-guide">
       <div class="container">
-        <div class="reviews-heading"><div><span class="section-kicker">REAL PEOPLE. CLEARER CHOICES.</span><h2>Confidence looks<br /><span>good on everyone.</span></h2></div><div class="review-rating-badge"><span class="stars" aria-label="5 star rating"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg></span><strong>4.9</strong><small>illustrative satisfaction score</small></div><p>Every loan journey is personal. These sample stories show how a clearer comparison could feel.</p></div>
-        <div class="review-grid">
-          <article class="review-card glass"><div class="review-top"><span class="stars" aria-label="5 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg></span><span class="sample-review">Illustrative review</span></div><span class="review-type"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>Personal loan</span><blockquote>“Seeing the fees and repayment next to each other helped me ask better questions and choose with confidence.”</blockquote><div class="review-footer"><span class="review-avatar">AM</span><span class="review-author"><strong>Aarav M.</strong><small>Mumbai · sample borrower</small></span><span class="disbursed-amount"><strong>₹8,00,000</strong><small>sample amount</small></span></div></article>
-          <article class="review-card glass"><div class="review-top"><span class="stars" aria-label="5 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg></span><span class="sample-review">Illustrative review</span></div><span class="review-type"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>Business finance</span><blockquote>“I had a few routes to consider for my business. A dedicated point of contact made the process feel much more manageable.”</blockquote><div class="review-footer"><span class="review-avatar">NR</span><span class="review-author"><strong>Neha R.</strong><small>Pune · sample borrower</small></span><span class="disbursed-amount"><strong>₹12,00,000</strong><small>sample amount</small></span></div></article>
-          <article class="review-card glass"><div class="review-top"><span class="stars" aria-label="5 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.16l-5.63 2.97 1.08-6.28L2.9 9.4l6.3-.9L12 2.8Z"/></svg></span><span class="sample-review">Illustrative review</span></div><span class="review-type"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>Personal loan</span><blockquote>“The monthly estimate made it easier to see what felt comfortable. I could compare options without feeling rushed.”</blockquote><div class="review-footer"><span class="review-avatar">SK</span><span class="review-author"><strong>Sana K.</strong><small>Bengaluru · sample borrower</small></span><span class="disbursed-amount"><strong>₹5,50,000</strong><small>sample amount</small></span></div></article>
+        <div class="guide-heading"><div><span class="section-kicker">BEFORE YOU APPLY</span><h2>Borrow with a plan.<br /><span class="gradient-text">Choose with clarity.</span></h2></div><p>A few simple checks can help you understand the commitment before accepting a loan.</p></div>
+        <div class="guide-grid">
+          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2M8 18h2M14 18h2"/></svg></span><h3>Plan a comfortable EMI.</h3><p>Compare your estimated repayment with regular expenses and savings. Leave room for unexpected costs.</p><a class="guide-link" href="#calculator">Explore the EMI calculator →</a></article>
+          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v6h6M8 13h8M8 17h8"/></svg></span><h3>Read the full lender terms.</h3><p>Check the Key Facts Statement, annual percentage rate, processing fees and prepayment conditions—not just the headline interest rate.</p><a class="guide-link" href="#disclaimer">Read the important disclosures →</a></article>
+          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg></span><h3>Keep your information safe.</h3><p>Use your lender’s official secure KYC process. Never share an OTP, password or PIN with anyone offering a loan.</p><a class="guide-link" href="#privacy">Understand how enquiries are handled →</a></article>
         </div>
-        <p class="review-note">These are illustrative design samples, not actual customer testimonials or verified disbursals. Publish only consented, substantiated reviews.</p>
       </div>
     </section>
 
@@ -1263,21 +1190,21 @@
   <footer class="site-footer" id="contact">
     <div class="container">
       <div class="footer-main">
-        <div class="footer-brand"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="url(#brand-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 5.5 26.5 25h-21L16 5.5Z"/><path d="M4.5 15.5h6.5"/><path d="M19.5 15.5l2.6-2M19.8 15.5h3.4M19.5 15.5l2.6 2" stroke-width="1.6"/></svg></span><span class="brand-name">NEXA<span class="brand-dim">_CAPITAL</span></span></a><p class="footer-tagline">Smarter Loans.<br />Fast Approvals. Powered by Top Banks.</p><p class="footer-brand-copy">A connected marketplace for personal and business borrowing, built to make comparison easier.</p><div class="footer-contact-lines"><a href="mailto:atharvaayewale102@gmail.com" aria-label="Email Atharva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>atharvaayewale102@gmail.com</a><a href="tel:+919325324711" aria-label="Call +91 93253 24711"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 19a19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.4 2.8a2 2 0 0 1-.6 1.7L7.5 9.6a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 1.7-.6l2.8.4a2 2 0 0 1 1.6 1.9Z"/></svg>+91 93253 24711</a></div><div class="footer-socials"><a href="#contact" aria-label="LinkedIn preview link">in</a><a href="#contact" aria-label="X preview link">𝕏</a><a href="#contact" aria-label="Instagram preview link">◎</a></div></div>
+        <div class="footer-brand"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="url(#brand-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 5.5 26.5 25h-21L16 5.5Z"/><path d="M4.5 15.5h6.5"/><path d="M19.5 15.5l2.6-2M19.8 15.5h3.4M19.5 15.5l2.6 2" stroke-width="1.6"/></svg></span><span class="brand-name">NEXA<span class="brand-dim">_CAPITAL</span></span></a><p class="footer-tagline">Smarter Loans.<br />Fast Approvals. Powered by Top Banks.</p><p class="footer-brand-copy">A connected marketplace for personal and business borrowing, built to make comparison easier.</p><div class="footer-contact-lines"><a href="mailto:atharvaayewale102@gmail.com" aria-label="Email Atharva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>atharvaayewale102@gmail.com</a><a href="tel:+919325324711" aria-label="Call +91 93253 24711"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 19a19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.4 2.8a2 2 0 0 1-.6 1.7L7.5 9.6a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 1.7-.6l2.8.4a2 2 0 0 1 1.6 1.9Z"/></svg>+91 93253 24711</a></div></div>
         <div class="footer-col"><h3>PRODUCTS</h3><a href="#personal-application">Personal loan</a><a href="#lead-form">Business loan</a><a href="#lead-form">Overdraft</a><a href="#lead-form">Home loan</a><a href="#calculator">EMI calculator</a></div>
-        <div class="footer-col"><h3>COMPANY</h3><a href="#advantages">Why Nexa Capital</a><a href="#partners">Lending network</a><a href="#process">How it works</a><a href="#reviews">Customer stories</a><a href="#track">Track application</a></div>
+        <div class="footer-col"><h3>COMPANY</h3><a href="#advantages">Why Nexa Capital</a><a href="#partners">Lending network</a><a href="#process">How it works</a><a href="#borrower-guide">Borrowing guide</a></div>
         <div class="footer-col"><h3>HELP &amp; COMPLIANCE</h3><a class="footer-icon-link" href="#privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>Privacy policy</a><a class="footer-icon-link" href="#terms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v6h6M8 13h8M8 17h8"/></svg>Terms &amp; conditions</a><a class="footer-icon-link" href="#grievance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 4.3 1.7c-1.2 1.1-1.9 1.4-1.9 3M12 17h.01"/></svg>Grievance redressal</a><a class="footer-icon-link" href="https://www.rbi.org.in/scripts/FS_Notification.aspx?Id=12848" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg>RBI Digital Lending Directions</a></div>
       </div>
       <div class="footer-disclaimer" id="disclaimer">
         <div class="disclaimer-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg>Important partner, rate &amp; regulatory disclosure</div>
         <p id="terms"><strong>Nexa Capital is an authorized Direct Selling Agent (DSA) / Channel Partner operating in partnership with bank-accredited networks (including Ruconnect). We do not directly lend money; all loans are approved and disbursed by partner Banks/NBFCs.</strong> Loan offers remain subject to the relevant partner lender’s independent assessment, eligibility rules, KYC, approval, terms and disbursal process. Nexa Capital does not guarantee approval or funding.</p>
-        <p>Rates starting from 10.49% p.a., “zero upfront fees”, digital processing, any 24-hour timeline, partner names, ratings, amounts and testimonials displayed on this concept are illustrative and must be verified before use. Rates, interest, fees and other terms vary by lender and customer profile; review the lender’s Key Facts Statement and loan agreement before acceptance. Any fee charged by a bank/NBFC must be disclosed by that lender.</p>
-        <p id="privacy">Personal information should be collected only for a clear purpose, with informed consent, and shared only with relevant parties as permitted by applicable law. When configured, this prototype’s notification backend forwards the submitted lead fields to Nexa’s nominated email and WhatsApp recipients; it does not save them in a lead database or connect to a lender or credit bureau. Do not enable collection until the privacy notice, retention policy and consent wording are approved.</p>
+        <p>Rates starting from 9.99% p.a. are indicative, not a personalised offer. Any zero-upfront-fee or processing-time claim is subject to the applicable lender and service terms. Rates, interest, fees and other terms vary by lender and customer profile; review the lender’s Key Facts Statement and loan agreement before acceptance. Any fee charged by a bank/NBFC must be disclosed by that lender.</p>
+        <p id="privacy">Personal information should be collected only for a clear purpose, with informed consent, and shared only with relevant parties as permitted by applicable law. When configured, this site’s enquiry backend forwards the submitted lead fields to Nexa’s nominated email and WhatsApp recipients; it does not save them in a lead database or connect to a lender or credit bureau. Do not enable collection until the privacy notice, retention policy and consent wording are approved.</p>
         <p id="digital-lending">Live digital lending journeys must comply with applicable Indian law and RBI requirements, including the <a href="https://www.rbi.org.in/scripts/FS_Notification.aspx?Id=12848" target="_blank" rel="noopener noreferrer">Reserve Bank of India (Digital Lending) Directions, 2025</a>, as amended or replaced. No RBI or government endorsement is implied.</p>
         <p id="grievance"><strong>Grievance redressal:</strong> Before launch, publish Nexa Capital’s grievance officer name, contact information and escalation timeline, along with each lending partner’s applicable grievance mechanism. <a href="#contact">Contact details must be completed before going live.</a></p>
-        <span class="authorization-note">Launch checklist: independently verify Nexa Capital’s DSA/channel-partner authorisations, Ruconnect relationship, each lender’s permission to be displayed, all pricing/fee claims, and customer-review evidence before publishing this copy.</span>
+        <span class="authorization-note">Lender names do not imply endorsement. Direct partner relationships, DSA/channel-partner authorisations, product availability and pricing must be independently verified.</span>
       </div>
-      <div class="footer-bottom"><span>© 2026 Nexa Capital · Concept landing page</span><span class="footer-demo"><i></i> Demo only—no loan application is submitted</span><div class="footer-bottom-links"><a href="#privacy">Privacy</a><a href="#terms">Terms</a><a href="#disclaimer">Disclosures</a><a href="#top">Back to top ↑</a></div></div>
+      <div class="footer-bottom"><span>© 2026 Nexa Capital. All rights reserved.</span><div class="footer-bottom-links"><a href="#privacy">Privacy</a><a href="#terms">Terms</a><a href="#disclaimer">Disclosures</a><a href="#top">Back to top ↑</a></div></div>
     </div>
   </footer>
 
@@ -1285,12 +1212,13 @@
     <section class="dialog-box" role="dialog" aria-modal="true" aria-labelledby="dialog-title" aria-describedby="dialog-message">
       <button class="dialog-close" id="dialog-close" aria-label="Close dialog"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m18 6-12 12M6 6l12 12"/></svg></button>
       <span class="dialog-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M17 7.5c0-1.4-1.8-2.5-5-2.5S7 6.1 7 7.5 8.8 10 12 10s5 1.1 5 2.5-1.8 2.5-5 2.5-5-1.1-5-2.5"/><path d="M5 3h14M5 21h14"/></svg></span>
-      <span class="dialog-kicker" id="dialog-kicker">PREVIEW ONLY</span><h2 id="dialog-title">Your next step starts here.</h2><p id="dialog-message">This is a concept experience. Your information is not sent or stored.</p><button class="dialog-action" id="dialog-ok">Got it</button>
+      <span class="dialog-kicker" id="dialog-kicker">ENQUIRY UPDATE</span><h2 id="dialog-title">Your next step starts here.</h2><p id="dialog-message">Your enquiry status will appear here. Details are sent only after your consent.</p><button class="dialog-action" id="dialog-ok">Got it</button>
     </section>
   </div>
 
   <script>
     (() => {
+      const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
       const numberFormat = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
       const money = (value) => `₹${numberFormat.format(Math.round(Number(value) || 0))}`;
       const updateRangeFill = (input) => {
@@ -1456,13 +1384,13 @@
       document.querySelectorAll('.lender-tab').forEach((tab) => tab.addEventListener('click', () => renderLenderGroup(tab.dataset.lenderGroup)));
       renderLenderGroup('all');
 
-      // Demo-only feedback dialog; never transmits form data.
+      // Enquiry feedback dialog. Only sendLead transmits consented form data.
       const dialog = document.getElementById('dialog-overlay');
       const dialogTitle = document.getElementById('dialog-title');
       const dialogMessage = document.getElementById('dialog-message');
       const dialogKicker = document.getElementById('dialog-kicker');
       const closeDialog = () => { dialog.hidden = true; document.body.style.overflow = ''; };
-      const showDialog = (title, message, kicker = 'PREVIEW ONLY') => {
+      const showDialog = (title, message, kicker = 'ENQUIRY UPDATE') => {
         dialogTitle.textContent = title;
         dialogMessage.textContent = message;
         dialogKicker.textContent = kicker;
@@ -1544,8 +1472,8 @@
           personalPincode.value = document.getElementById('pincode').value;
           updatePersonalAmount();
           personalPrefillNote.hidden = false;
-          document.getElementById('personal-application').scrollIntoView({ behavior: 'smooth', block: 'start' });
-          window.setTimeout(() => document.getElementById('personal-name').focus({ preventScroll: true }), 450);
+          document.getElementById('personal-application').scrollIntoView({ behavior: motionPreference.matches ? 'auto' : 'smooth', block: 'start' });
+          window.setTimeout(() => document.getElementById('personal-name').focus({ preventScroll: true }), motionPreference.matches ? 0 : 450);
           return;
         }
         const button = form.querySelector('button[type="submit"]');
@@ -1581,40 +1509,83 @@
           personalPrefillNote.hidden = true;
         });
       });
-      document.getElementById('track-form').addEventListener('submit', (event) => {
-        event.preventDefault();
-        if (!event.currentTarget.reportValidity()) return;
-        event.currentTarget.reset();
-        showDialog('Tracking is not connected yet.', 'This concept page has no live application system. Your entered reference details were not transmitted or stored.', 'TRACKING DEMO');
-      });
+      // Pause decorative animation outside the viewport and in background tabs.
+      const syncPageMotion = () => document.documentElement.classList.toggle('page-paused', document.hidden);
+      document.addEventListener('visibilitychange', syncPageMotion);
+      syncPageMotion();
+      if ('IntersectionObserver' in window) {
+        const motionObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => entry.target.classList.toggle('motion-paused', !entry.isIntersecting));
+        });
+        document.querySelectorAll('.hero-canvas, .term-dot, .lead-card-overline i, .network-eyebrow i, .result-live i')
+          .forEach((element) => motionObserver.observe(element));
+      }
 
-      // Prism parallax + hero spotlight (pointer-driven; respects reduced motion).
+      // Frame-batched, time-based prism parallax: no layout work on pointer events.
       const heroEl = document.getElementById('hero');
       const prismRig = document.getElementById('prism-rig');
-      const finePointer = window.matchMedia('(pointer: fine)').matches;
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (heroEl && prismRig && finePointer && !reducedMotion) {
-        let targetX = 0, targetY = 0, curX = 0, curY = 0, rafId = null;
-        const tick = () => {
-          curX += (targetX - curX) * 0.08;
-          curY += (targetY - curY) * 0.08;
+      const finePointer = window.matchMedia('(pointer: fine)');
+      if (heroEl && prismRig) {
+        let targetX = 0, targetY = 0, curX = 0, curY = 0;
+        let rafId = null, lastTime = null, pendingPointer = null, heroVisible = true;
+        const canAnimate = () => heroVisible && !document.hidden && finePointer.matches && !motionPreference.matches;
+        const stopParallax = () => {
+          if (rafId !== null) cancelAnimationFrame(rafId);
+          rafId = null;
+          lastTime = null;
+          pendingPointer = null;
+          targetX = targetY = curX = curY = 0;
+          prismRig.classList.remove('parallax-active');
+          prismRig.style.removeProperty('transform');
+        };
+        const tick = (time) => {
+          if (!canAnimate()) { stopParallax(); return; }
+          if (pendingPointer) {
+            const rect = heroEl.getBoundingClientRect();
+            targetX = ((pendingPointer.x - rect.left) / rect.width - 0.5) * 16;
+            targetY = ((pendingPointer.y - rect.top) / rect.height - 0.5) * -10;
+            pendingPointer = null;
+          }
+          const delta = lastTime === null ? 16 : Math.min(time - lastTime, 64);
+          const easing = 1 - Math.exp(-delta / 120);
+          curX += (targetX - curX) * easing;
+          curY += (targetY - curY) * easing;
+          lastTime = time;
           prismRig.style.transform = `rotateX(${-10 + curY}deg) rotateY(${curX}deg)`;
           if (Math.abs(targetX - curX) > 0.01 || Math.abs(targetY - curY) > 0.01) {
             rafId = requestAnimationFrame(tick);
           } else {
             rafId = null;
+            lastTime = null;
+            prismRig.classList.remove('parallax-active');
+          }
+        };
+        const requestTick = () => {
+          if (canAnimate() && rafId === null) {
+            prismRig.classList.add('parallax-active');
+            rafId = requestAnimationFrame(tick);
           }
         };
         heroEl.addEventListener('pointermove', (event) => {
-          const rect = heroEl.getBoundingClientRect();
-          const px = (event.clientX - rect.left) / rect.width - 0.5;
-          const py = (event.clientY - rect.top) / rect.height - 0.5;
-          targetX = px * 16;
-          targetY = py * -10;
-          heroEl.style.setProperty('--mx', `${event.clientX - rect.left}px`);
-          heroEl.style.setProperty('--my', `${event.clientY - rect.top}px`);
-          if (rafId === null) rafId = requestAnimationFrame(tick);
+          if (!canAnimate()) return;
+          pendingPointer = { x: event.clientX, y: event.clientY };
+          requestTick();
+        }, { passive: true });
+        heroEl.addEventListener('pointerleave', () => {
+          pendingPointer = null;
+          targetX = targetY = 0;
+          requestTick();
         });
+        document.addEventListener('visibilitychange', () => { if (document.hidden) stopParallax(); });
+        motionPreference.addEventListener('change', stopParallax);
+        finePointer.addEventListener('change', stopParallax);
+        if ('IntersectionObserver' in window) {
+          const heroObserver = new IntersectionObserver(([entry]) => {
+            heroVisible = entry.isIntersecting;
+            if (!heroVisible) stopParallax();
+          });
+          heroObserver.observe(heroEl);
+        }
       }
     })();
   </script>

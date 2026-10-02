@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0A0F1D" />
+  <meta name="theme-color" content="#09090B" />
   <meta name="description" content="Compare personal and business loan options from 30+ banks and NBFCs with Nexa Capital and the Ruconnect network." />
   <title>Nexa Capital — Smarter Loans. Fast Approvals.</title>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -12,13 +12,13 @@
       theme: {
         extend: {
           colors: {
-            nexa: { navy: '#0A0F1D', emerald: '#10B981', cyan: '#06B6D4', mist: '#F4F8FA' }
+            nexa: { onyx: '#09090B', zinc: '#18181B', gold: '#D4AF37', goldBright: '#EAB308', white: '#FAFAFA' }
           },
           fontFamily: {
-            sans: ['Inter', 'Plus Jakarta Sans', 'ui-sans-serif', 'system-ui', 'sans-serif']
+            sans: ['Plus Jakarta Sans', 'ui-sans-serif', 'system-ui', 'sans-serif']
           },
           boxShadow: {
-            glow: '0 0 28px rgba(16, 185, 129, .3)'
+            glow: '0 0 24px rgba(212, 175, 55, .14)'
           }
         }
       }
@@ -26,30 +26,34 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --navy: #0A0F1D;
-      --navy-2: #111a2a;
-      --navy-3: #18243a;
-      --emerald: #10B981;
-      --emerald-deep: #078963;
-      --cyan: #06B6D4;
-      --ink: #101a2c;
-      --muted: #687789;
-      --line: #e5ebef;
-      --surface: #f5f8fa;
-      --white: #fff;
+      color-scheme: dark;
+      --navy: #09090B;
+      --navy-2: #18181B;
+      --navy-3: #27272A;
+      --gold: #D4AF37;
+      --gold-bright: #EAB308;
+      --emerald: var(--gold);
+      --emerald-deep: #B89124;
+      --cyan: var(--gold-bright);
+      --ink: #FAFAFA;
+      --muted: #A1A1AA;
+      --line: #3F3F46;
+      --surface: #18181B;
+      --surface-tint: #09090B;
+      --white: #FAFAFA;
     }
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; scroll-padding-top: 82px; }
-    body { margin: 0; min-width: 320px; color: var(--ink); background: #f7f9fb; font-family: Inter, "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-    button, input, select { font: inherit; }
+    html { scroll-behavior: smooth; scroll-padding-top: 82px; background: var(--surface-tint); }
+    body { margin: 0; min-width: 320px; color: var(--ink); background: var(--surface-tint); font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    button, input, select, textarea { font: inherit; }
     button, a { -webkit-tap-highlight-color: transparent; }
-    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid rgba(6,182,212,.45); outline-offset: 3px; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(212,175,55,.48); outline-offset: 3px; }
     a { color: inherit; text-decoration: none; }
     button { color: inherit; }
-    ::selection { background: rgba(16,185,129,.22); }
+    ::selection { background: rgba(212,175,55,.3); color: #09090B; }
     .container { width: min(1190px, calc(100% - 48px)); margin: 0 auto; }
     .icon { width: 18px; height: 18px; display: inline-block; flex: 0 0 auto; vertical-align: middle; }
     .icon-sm { width: 15px; height: 15px; }
@@ -660,9 +664,287 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
+    /* Ultra-minimal onyx black and champagne gold theme */
+    body { color: #FAFAFA; background: #09090B; font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    button, input, select, textarea { font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif; }
+    input, select, textarea { color-scheme: dark; }
+    ::selection { background: rgba(212,175,55,.32); color: #09090B; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(212,175,55,.52); outline-offset: 3px; }
+
+    /* Onyx navigation */
+    .site-header { border-bottom-color: rgba(250,250,250,.09); background: rgba(9,9,11,.96); color: #FAFAFA; }
+    .brand-mark { border-color: rgba(212,175,55,.55); background: #18181B; box-shadow: 0 5px 18px rgba(0,0,0,.32),inset 0 1px 0 rgba(250,250,250,.08); }
+    .brand-mark::after { border-color: rgba(212,175,55,.2); }
+    .brand-mark svg { color: #D4AF37; }
+    .brand-name { color: #FAFAFA; }
+    .brand-name span { color: #A1A1AA; }
+    .nav-link { color: #D4D4D8; }
+    .nav-link:hover, .nav-link[aria-expanded="true"] { color: #D4AF37; }
+    .products-dropdown { border-color: #3F3F46; background: #18181B; color: #FAFAFA; box-shadow: 0 20px 48px rgba(0,0,0,.48); }
+    .products-dropdown::before { border-color: #3F3F46; background: #18181B; }
+    .product-option:hover { background: #27272A; }
+    .product-option-icon { background: rgba(212,175,55,.12); color: #D4AF37; }
+    .product-option strong { color: #FAFAFA; }
+    .product-option small { color: #A1A1AA; }
+    .product-option > svg { color: #A1A1AA; }
+    .nav-cta, .mobile-nav .mobile-cta, .apply-button, .personal-submit, .track-submit, .dialog-action {
+      border: 1px solid #D4AF37;
+      border-radius: 11px;
+      background: #D4AF37;
+      color: #09090B;
+      box-shadow: 0 7px 18px rgba(212,175,55,.14);
+      font-weight: 800;
+      transition: transform .2s ease,background .2s ease,box-shadow .2s ease,border-color .2s ease;
+    }
+    .nav-cta:hover, .apply-button:hover, .personal-submit:hover, .track-submit:hover, .dialog-action:hover, .mobile-nav .mobile-cta:hover, .final-cta-action .nav-cta:hover { transform: translateY(-2px); border-color: #EAB308; background: #EAB308; box-shadow: 0 10px 22px rgba(212,175,55,.2); filter: none; }
+    .mobile-toggle { border-color: #3F3F46; background: #18181B; color: #FAFAFA; }
+    .mobile-nav { border-color: #3F3F46; background: rgba(9,9,11,.98); }
+    .mobile-nav > a, .mobile-nav > button { color: #FAFAFA; }
+    .mobile-nav .mobile-subnav { border-left-color: rgba(212,175,55,.42); }
+    .mobile-nav .mobile-subnav a { color: #A1A1AA; }
+    .final-cta-action .nav-cta { border-color: #D4AF37; background: #D4AF37; color: #09090B; box-shadow: 0 7px 18px rgba(212,175,55,.14); }
+    .final-cta-action .nav-cta:hover { border-color: #EAB308; background: #EAB308; }
+    .nav-cta svg, .apply-button svg, .personal-submit svg, .track-submit svg { transition: transform .18s ease; }
+    .nav-cta:hover svg, .apply-button:hover svg, .personal-submit:hover svg, .track-submit:hover svg { transform: translateX(3px); }
+
+    /* Quiet onyx hero with restrained gold light */
+    .hero { background: radial-gradient(ellipse at 78% 24%,rgba(212,175,55,.055),transparent 32%),#09090B; color: #FAFAFA; }
+    .hero::before { opacity: .1; background-image: linear-gradient(rgba(250,250,250,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(250,250,250,.045) 1px,transparent 1px); }
+    .hero::after { border-color: rgba(212,175,55,.12); box-shadow: 0 0 0 36px rgba(212,175,55,.018),0 0 0 82px rgba(212,175,55,.012),0 0 0 130px rgba(250,250,250,.006); }
+    .hero-eyebrow { border-color: rgba(212,175,55,.3); background: rgba(212,175,55,.075); color: #D4AF37; }
+    .eyebrow-pulse { background: #D4AF37; box-shadow: 0 0 0 4px rgba(212,175,55,.14),0 0 10px rgba(212,175,55,.2); }
+    .hero h1 { color: #FAFAFA; }
+    .hero h1 .gradient-text { color: #D4AF37; background: none; -webkit-background-clip: initial; background-clip: initial; }
+    .hero-subhead { color: #A1A1AA; }
+    .hero-subhead strong { color: #FAFAFA; }
+    .hero-highlight { border-color: #3F3F46; background: rgba(24,24,27,.82); color: #D4D4D8; }
+    .hero-highlight svg, .hero-highlight strong { color: #D4AF37; }
+    .proof-avatars span, .proof-avatars span:nth-child(2), .proof-avatars span:nth-child(3), .proof-avatars span:nth-child(4) { border-color: #09090B; background: #27272A; color: #FAFAFA; }
+    .proof-copy { color: #A1A1AA; }
+    .proof-copy strong { color: #FAFAFA; }
+    .proof-stars { color: #D4AF37; }
+    .hero-footnote { color: #71717A; }
+    .hero-footnote a { color: #D4AF37; text-decoration-color: rgba(212,175,55,.42); }
+    .hero-bottom { border-top-color: rgba(250,250,250,.1); }
+    .hero-bottom-left, .hero-bottom-right { color: #A1A1AA; }
+    .hero-bottom-left svg, .hero-bottom-right strong { color: #D4AF37; }
+    .partner-mini-stack span, .partner-mini-stack span:nth-child(2), .partner-mini-stack span:nth-child(3), .partner-mini-stack span:nth-child(4) { border-color: #09090B; background: #27272A; color: #FAFAFA; }
+
+    /* Private-banking enquiry card, with dark zinc surfaces */
+    .lead-card-wrap::before { border-color: rgba(212,175,55,.2); background: rgba(212,175,55,.025); }
+    .lead-card { border-color: #3F3F46; background: #18181B; color: #FAFAFA; box-shadow: 0 26px 60px rgba(0,0,0,.48),0 1px 0 rgba(250,250,250,.025) inset; }
+    .lead-card-symbol { border-color: rgba(212,175,55,.32); background: rgba(212,175,55,.1); color: #D4AF37; }
+    .lead-card-overline { color: #D4AF37; }
+    .lead-card-overline i { background: #D4AF37; box-shadow: 0 0 0 3px rgba(212,175,55,.13); }
+    .lead-card h2 { color: #FAFAFA; }
+    .lead-card-side { border-color: rgba(212,175,55,.28); background: rgba(212,175,55,.08); color: #D4AF37; }
+    .form-section-label, .field-wrap label, .amount-head label { color: #A1A1AA; }
+    .loan-type-btn { border-color: #3F3F46; background: #09090B; color: #A1A1AA; }
+    .loan-type-btn svg { color: #A1A1AA; }
+    .loan-type-btn:hover { border-color: rgba(212,175,55,.62); background: #27272A; }
+    .loan-type-btn.is-active { border-color: #D4AF37; background: rgba(212,175,55,.1); color: #FAFAFA; box-shadow: inset 0 0 0 1px rgba(212,175,55,.12); }
+    .loan-type-btn.is-active svg { color: #D4AF37; }
+    .loan-amount-panel, .personal-amount-field { border-color: #3F3F46; background: #09090B; }
+    .amount-head label { color: #A1A1AA; }
+    .amount-output { color: #FAFAFA; }
+    .amount-output small, .range-limit { color: #71717A; }
+    .range { background: linear-gradient(90deg,#D4AF37 0%,#D4AF37 var(--progress,20%),#3F3F46 var(--progress,20%),#3F3F46 100%); }
+    .range::-webkit-slider-thumb { border-color: #18181B; background: #D4AF37; box-shadow: 0 1px 7px rgba(212,175,55,.3); }
+    .range::-moz-range-thumb { border-color: #18181B; background: #D4AF37; box-shadow: 0 1px 7px rgba(212,175,55,.3); }
+    .input-shell { border-color: #3F3F46; background: #09090B; }
+    .input-shell:focus-within { border-color: #D4AF37; box-shadow: 0 0 0 3px rgba(212,175,55,.13); }
+    .input-shell .prefix, .input-shell > svg { color: #A1A1AA; }
+    .input-shell input { color: #FAFAFA; }
+    .input-shell input::placeholder { color: #71717A; }
+    .consent-row { color: #A1A1AA; }
+    .consent-row input, .personal-consent input, input[type="checkbox"] { accent-color: #D4AF37; }
+    .consent-row a, .personal-consent a { color: #D4AF37; }
+    .apply-button, .personal-submit, .track-submit, .dialog-action { border-color: #D4AF37; background: #D4AF37; color: #09090B; }
+    .apply-button:hover, .personal-submit:hover, .track-submit:hover, .dialog-action:hover { border-color: #EAB308; background: #EAB308; box-shadow: 0 10px 22px rgba(212,175,55,.2); }
+    .form-privacy-note, .personal-delivery-note { color: #71717A; }
+    .form-privacy-note svg, .personal-delivery-note svg { color: #D4AF37; }
+
+    /* Site sections share onyx backgrounds and dark-zinc surfaces */
+    .network-section, .personal-application-section, .advantages-section, .process-section, .reviews-section, .final-cta-section { background: #09090B; color: #FAFAFA; }
+    .network-heading, .section-heading, .process-heading, .reviews-heading { color: #FAFAFA; }
+    .network-eyebrow, .section-kicker, .lender-category-title { color: #D4AF37; }
+    .network-eyebrow i, .section-kicker::before { background: #D4AF37; box-shadow: 0 0 0 4px rgba(212,175,55,.13); }
+    .network-subtext, .network-footnote, .section-heading p, .personal-application-copy > p, .process-heading > p, .reviews-heading > p { color: #A1A1AA; }
+    .network-footnote svg, .lender-count svg { color: #D4AF37; }
+    .partner-logo { border-color: #3F3F46; background: #18181B; color: #D4D4D8; filter: grayscale(1); }
+    .partner-logo:hover { border-color: rgba(212,175,55,.45); box-shadow: 0 10px 26px rgba(0,0,0,.38); }
+    .partner-logo--hdfc .partner-mark, .partner-logo--bajaj .partner-mark { border-color: #D4AF37; background: #D4AF37; color: #09090B; }
+    .partner-logo--icici .partner-mark { background: #D4AF37; color: #09090B; }
+    .lender-browser { border-color: #3F3F46; background: #18181B; }
+    .lender-browser-head strong { color: #FAFAFA; }
+    .lender-browser-head div > span, .lender-disclaimer { color: #A1A1AA; }
+    .lender-count { border-color: #3F3F46; background: #09090B; color: #D4D4D8; }
+    .lender-tabs { border-bottom-color: #3F3F46; }
+    .lender-tab { color: #A1A1AA; }
+    .lender-tab span { background: #27272A; color: #A1A1AA; }
+    .lender-tab:hover { background: rgba(212,175,55,.08); color: #D4AF37; }
+    .lender-tab.is-active { border-color: rgba(212,175,55,.48); background: rgba(212,175,55,.1); color: #D4AF37; }
+    .lender-tab.is-active span { background: rgba(212,175,55,.17); color: #D4AF37; }
+    .lender-category-group + .lender-category-group { border-top-color: #3F3F46; }
+    .lender-chip { border-color: #3F3F46; background: #09090B; color: #D4D4D8; box-shadow: none; }
+    .lender-chip::before { background: #D4AF37; }
+
+    /* Personal application form */
+    .personal-application-copy h2, .section-heading h2, .process-heading h2, .reviews-heading h2 { color: #FAFAFA; }
+    .personal-application-copy h2 span, .section-heading h2 span, .process-heading h2 span, .reviews-heading h2 span { color: #A1A1AA; }
+    .personal-safety-card { border-color: #3F3F46; background: #18181B; }
+    .personal-safety-icon { background: rgba(212,175,55,.12); color: #D4AF37; }
+    .personal-safety-card p { color: #A1A1AA; }
+    .personal-safety-card strong { color: #FAFAFA; }
+    .personal-steps-mini > span { color: #D4D4D8; }
+    .personal-steps-mini i { border-color: rgba(212,175,55,.38); background: rgba(212,175,55,.08); color: #D4AF37; }
+    .personal-form-card { border-color: #3F3F46; background: #18181B; box-shadow: 0 18px 48px rgba(0,0,0,.38); }
+    .personal-form-head { border-bottom-color: #3F3F46; }
+    .personal-form-head small { color: #D4AF37; }
+    .personal-form-head h3 { color: #FAFAFA; }
+    .personal-prefill-note { border-color: rgba(212,175,55,.34); background: rgba(212,175,55,.08); color: #E7D59A; }
+    .personal-form-badge { border-color: #3F3F46; background: #09090B; color: #A1A1AA; }
+    .personal-form-badge svg { color: #D4AF37; }
+    .personal-field label { color: #D4D4D8; }
+    .personal-field label span, .pan-hint { color: #71717A; }
+    .personal-field input, .personal-field select, .personal-field textarea { border-color: #3F3F46; background: #09090B; color: #FAFAFA; }
+    .personal-field input::placeholder, .personal-field textarea::placeholder { color: #71717A; }
+    .personal-field input:focus, .personal-field select:focus, .personal-field textarea:focus { border-color: #D4AF37; box-shadow: 0 0 0 3px rgba(212,175,55,.13); }
+    .personal-amount-head output { color: #FAFAFA; }
+    .personal-consent { color: #A1A1AA; }
+
+    /* Advantages: dark-zinc cards with minimal gold detailing */
+    .section-kicker { color: #D4AF37; }
+    .section-kicker::before { background: #D4AF37; box-shadow: 0 0 0 4px rgba(212,175,55,.13); }
+    .advantage-grid { color: #FAFAFA; }
+    .advantage-card { border-color: #3F3F46; background: #18181B; box-shadow: 0 8px 26px rgba(0,0,0,.28); }
+    .advantage-card:hover { border-color: rgba(212,175,55,.48); box-shadow: 0 16px 34px rgba(0,0,0,.42); }
+    .advantage-card::after { border-color: rgba(212,175,55,.1); box-shadow: 0 0 0 13px rgba(212,175,55,.018),0 0 0 27px rgba(212,175,55,.01); }
+    .adv-icon, .advantage-card:nth-child(2) .adv-icon, .advantage-card:nth-child(3) .adv-icon, .advantage-card:nth-child(4) .adv-icon { border-color: rgba(212,175,55,.34); background: rgba(212,175,55,.09); color: #D4AF37; }
+    .adv-number { color: #71717A; }
+    .advantage-card h3 { color: #FAFAFA; }
+    .advantage-card p { color: #A1A1AA; }
+    .advantage-tag { border-color: #3F3F46; background: #09090B; color: #D4D4D8; }
+    .advantage-tag svg { color: #D4AF37; }
+
+    /* Onyx calculator with dark-zinc results */
+    .calculator-section { background: #09090B; color: #FAFAFA; }
+    .calculator-section::before { opacity: .06; }
+    .calculator-section::after { background: radial-gradient(circle,rgba(212,175,55,.055),transparent 70%); }
+    .section-kicker--light { color: #D4AF37; }
+    .section-kicker--light::before { background: #D4AF37; box-shadow: 0 0 0 4px rgba(212,175,55,.12); }
+    .calc-copy h2 { color: #FAFAFA; }
+    .calc-copy h2 span { color: #D4AF37; }
+    .calc-copy > p, .calc-bullets li { color: #A1A1AA; }
+    .calc-bullets svg { border-color: rgba(212,175,55,.32); background: rgba(212,175,55,.08); color: #D4AF37; }
+    .calc-copy-note { border-color: #3F3F46; color: #A1A1AA; }
+    .calc-copy-note svg { color: #D4AF37; }
+    .calculator-card { border-color: #3F3F46; background: #18181B; color: #FAFAFA; box-shadow: 0 24px 58px rgba(0,0,0,.42); }
+    .calculator-card-head { border-bottom-color: #3F3F46; }
+    .calculator-card-head > span { color: #D4AF37; }
+    .calculator-card-head h3 { color: #FAFAFA; }
+    .calc-free-badge { border-color: rgba(212,175,55,.3); background: rgba(212,175,55,.08); color: #D4AF37; }
+    .calc-free-badge svg { color: #D4AF37; }
+    .calc-control-head label { color: #A1A1AA; }
+    .calc-control-head output { color: #FAFAFA; }
+    .calc-limits { color: #71717A; }
+    .calc-result { border-color: #3F3F46; background: #09090B; }
+    .result-label, .amount-composition-label, .calc-legend { color: #A1A1AA; }
+    .result-live { color: #D4AF37; }
+    .result-live i { background: #D4AF37; box-shadow: 0 0 0 3px rgba(212,175,55,.13); }
+    .emi-amount { color: #FAFAFA; }
+    .emi-amount small { color: #A1A1AA; }
+    .result-divider { background: #3F3F46; }
+    .amount-composition { background: #27272A; }
+    .amount-composition .principal-bar { background: #D4AF37; }
+    .amount-composition .interest-bar { background: #EAB308; }
+    .calc-legend i { background: #D4AF37; }
+    .calc-legend span:nth-child(2) i { background: #EAB308; }
+    .result-breakdown > div { border-color: #3F3F46; background: #18181B; }
+    .result-breakdown span { color: #A1A1AA; }
+    .result-breakdown strong { color: #FAFAFA; }
+    .calculator-disclaimer { color: #71717A; }
+
+    /* Process and application tracking */
+    .process-heading h2 { color: #FAFAFA; }
+    .process-heading h2 span, .process-heading > p { color: #A1A1AA; }
+    .process-steps { border-color: #3F3F46; background: #18181B; }
+    .process-steps::before { background: linear-gradient(90deg,rgba(212,175,55,.42),rgba(212,175,55,.18),rgba(63,63,70,.65)); }
+    .step-icon-wrap, .process-step:nth-child(2) .step-icon-wrap, .process-step:nth-child(3) .step-icon-wrap, .process-step:nth-child(4) .step-icon-wrap { border-color: rgba(212,175,55,.32); background: #09090B; color: #D4AF37; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+    .step-count { color: #D4AF37; }
+    .process-step h3 { color: #FAFAFA; }
+    .process-step p { color: #A1A1AA; }
+    .step-speed { border-color: #3F3F46; background: #09090B; color: #D4AF37; }
+    .tracking-card { border-color: #3F3F46; background: #18181B; color: #FAFAFA; box-shadow: 0 14px 34px rgba(0,0,0,.34); }
+    .track-icon { border-color: rgba(212,175,55,.34); background: rgba(212,175,55,.09); color: #D4AF37; }
+    .tracking-card h3 { color: #FAFAFA; }
+    .tracking-card > p { color: #A1A1AA; }
+    .track-form input { border-color: #3F3F46; background: #09090B; color: #FAFAFA; }
+    .track-form input::placeholder { color: #71717A; }
+    .track-form input:focus { border-color: #D4AF37; box-shadow: 0 0 0 3px rgba(212,175,55,.13); }
+    .track-privacy { color: #71717A; }
+    .track-submit { border-color: #D4AF37; background: #D4AF37; color: #09090B; }
+
+    /* Onyx testimonials */
+    .reviews-heading h2 { color: #FAFAFA; }
+    .reviews-heading h2 span, .reviews-heading > p { color: #A1A1AA; }
+    .review-rating-badge { border-color: #3F3F46; background: #18181B; }
+    .stars { color: #D4AF37; }
+    .review-rating-badge strong { color: #FAFAFA; }
+    .review-rating-badge small { color: #A1A1AA; }
+    .review-card { border-color: #3F3F46; background: #18181B; box-shadow: 0 8px 26px rgba(0,0,0,.27); }
+    .review-card:hover { border-color: rgba(212,175,55,.42); box-shadow: 0 16px 36px rgba(0,0,0,.42); }
+    .sample-review { border-color: #3F3F46; background: #09090B; color: #A1A1AA; }
+    .review-type { background: rgba(212,175,55,.1); color: #D4AF37; }
+    .review-card blockquote { color: #D4D4D8; }
+    .review-footer { border-top-color: #3F3F46; }
+    .review-avatar, .review-card:nth-child(2) .review-avatar, .review-card:nth-child(3) .review-avatar { background: rgba(212,175,55,.12); color: #D4AF37; }
+    .review-author strong { color: #FAFAFA; }
+    .review-author small, .disbursed-amount small, .review-note { color: #71717A; }
+    .disbursed-amount strong { color: #D4AF37; }
+
+    /* Gold-accented final call to action and onyx footer */
+    .final-cta-section { background: #09090B; }
+    .final-cta { border-color: rgba(212,175,55,.32); background: #18181B; color: #FAFAFA; }
+    .final-cta::after { border-color: rgba(212,175,55,.18); box-shadow: 0 0 0 29px rgba(212,175,55,.02),0 0 0 58px rgba(212,175,55,.012); }
+    .final-cta-overline, .final-cta-action small svg { color: #D4AF37; }
+    .final-cta h2 { color: #FAFAFA; }
+    .final-cta p { color: #A1A1AA; }
+    .final-cta-action small { color: #A1A1AA; }
+    .site-footer { background: #09090B; color: #D4D4D8; }
+    .footer-tagline { color: #FAFAFA; }
+    .footer-brand-copy, .footer-disclaimer p { color: #A1A1AA; }
+    .footer-contact-lines a, .footer-col a { color: #D4D4D8; }
+    .footer-contact-lines a:hover, .footer-col a:hover, .footer-bottom a:hover { color: #D4AF37; }
+    .footer-contact-lines svg, .footer-icon-link svg, .disclaimer-title svg { color: #D4AF37; }
+    .footer-socials a { border-color: #3F3F46; color: #D4D4D8; }
+    .footer-socials a:hover { border-color: rgba(212,175,55,.55); background: rgba(212,175,55,.08); color: #D4AF37; }
+    .footer-col h3 { color: #A1A1AA; }
+    .disclaimer-title { color: #FAFAFA; }
+    .footer-disclaimer { border-color: #3F3F46; }
+    .footer-disclaimer p strong { color: #D4D4D8; }
+    .footer-disclaimer a { color: #D4AF37; text-decoration-color: rgba(212,175,55,.42); }
+    .authorization-note { border-color: rgba(212,175,55,.28); background: rgba(212,175,55,.06); color: #D4D4D8; }
+    .footer-bottom { color: #71717A; }
+    .footer-demo { color: #A1A1AA; }
+    .footer-demo i { background: #D4AF37; }
+
+    /* Dark modal and browser-native controls */
+    .dialog-overlay { background: rgba(0,0,0,.78); }
+    .dialog-box { border-color: #3F3F46; background: #18181B; color: #FAFAFA; box-shadow: 0 28px 80px rgba(0,0,0,.58); }
+    .dialog-close { border-color: #3F3F46; background: #09090B; color: #A1A1AA; }
+    .dialog-icon { border-color: rgba(212,175,55,.34); background: rgba(212,175,55,.1); color: #D4AF37; box-shadow: 0 0 0 8px rgba(212,175,55,.035); }
+    .dialog-kicker { color: #D4AF37; }
+    .dialog-box h2 { color: #FAFAFA; }
+    .dialog-box p { color: #A1A1AA; }
+    select option { background: #18181B; color: #FAFAFA; }
+    ::-webkit-scrollbar { width: 10px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #09090B; }
+    ::-webkit-scrollbar-thumb { border: 2px solid #09090B; border-radius: 999px; background: #3F3F46; }
+    ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
   </style>
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-900">
+<body class="min-h-screen">
   <header class="site-header" id="top">
     <div class="container nav-shell">
       <a class="brand" href="#top" aria-label="Nexa Capital home">

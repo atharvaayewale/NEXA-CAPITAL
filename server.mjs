@@ -38,7 +38,8 @@ const META_GRAPH_VERSION = process.env.META_GRAPH_VERSION || '';
 
 const emailConfigured = Boolean(RESEND_API_KEY && EMAIL_FROM && EMAIL_TO);
 const whatsappConfigured = Boolean(WA_ACCESS_TOKEN && WA_PHONE_NUMBER_ID && WA_TO && WA_TEMPLATE_NAME && META_GRAPH_VERSION);
-const notificationsConfigured = emailConfigured && whatsappConfigured;
+// Email and WhatsApp are independent channels: whichever one is configured is used.
+const notificationsConfigured = emailConfigured || whatsappConfigured;
 const allowedLoanTypes = new Set(['Personal Loan', 'Business Loan', 'Overdraft', 'Home Loan']);
 const rateLimit = new Map();
 const RATE_WINDOW_MS = 10 * 60 * 1000;
@@ -252,7 +253,7 @@ async function handleLead(request, response) {
     request.resume();
     return json(response, 503, {
       ok: false,
-      message: 'Email and WhatsApp delivery are not configured yet. Your details were not sent. Please contact the site owner.'
+      message: 'Email/WhatsApp delivery is not configured yet. Your details were not sent. Please contact the site owner.'
     });
   }
   if (!String(request.headers['content-type'] || '').includes('application/json')) {
@@ -275,28 +276,37 @@ async function handleLead(request, response) {
     timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short'
   }).format(new Date());
   const lead = validation.lead;
-  const [emailResult, whatsappResult] = await Promise.allSettled([
-    sendEmail(lead, requestId, timestamp),
-    sendWhatsApp(lead, requestId, timestamp)
-  ]);
-  const emailSent = emailResult.status === 'fulfilled';
-  const whatsappSent = whatsappResult.status === 'fulfilled';
+  // Only the channels that are actually configured are attempted, so email works on its own.
+  const channels = [];
+  if (emailConfigured) channels.push({ name: 'email', send: sendEmail });
+  if (whatsappConfigured) channels.push({ name: 'whatsapp', send: sendWhatsApp });
+  const results = await Promise.allSettled(channels.map((channel) => channel.send(lead, requestId, timestamp)));
+  const delivered = channels.filter((_, index) => results[index].status === 'fulfilled').map((channel) => channel.name);
+  const failed = channels.filter((_, index) => results[index].status === 'rejected').map((channel) => channel.name);
+  const label = (names) => names.map((name) => (name === 'whatsapp' ? 'WhatsApp' : 'email')).join(' and ');
 
-  if (emailSent && whatsappSent) {
-    return json(response, 200, { ok: true, requestId, message: 'Notifications accepted by both delivery providers.' });
+  if (!failed.length) {
+    return json(response, 200, {
+      ok: true,
+      requestId,
+      channels: delivered,
+      message: `Notification accepted by ${label(delivered)}.`
+    });
   }
 
   // Do not log the submitted lead or provider payloads. A partial send may already have reached one channel.
-  console.error('[lead notification] One or more delivery providers failed.', { emailSent, whatsappSent, requestId });
-  if (emailSent || whatsappSent) {
+  console.error('[lead notification] One or more delivery providers failed.', { delivered, failed, requestId });
+  if (delivered.length) {
     return json(response, 502, {
       ok: false,
       partial: true,
       requestId,
-      message: 'One notification channel may already have received this enquiry. Check both inboxes before retrying to avoid duplicates.'
+      channels: delivered,
+      failedChannels: failed,
+      message: `Sent by ${label(delivered)}, but ${label(failed)} delivery failed. Check before retrying to avoid duplicates.`
     });
   }
-  return json(response, 502, { ok: false, message: 'Neither notification provider accepted the enquiry. Your details were not stored; please try again later.' });
+  return json(response, 502, { ok: false, message: 'The notification provider did not accept the enquiry. Your details were not stored; please try again later.' });
 }
 
 const server = http.createServer(async (request, response) => {
@@ -332,5 +342,5 @@ const server = http.createServer(async (request, response) => {
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`Nexa Capital server listening on port ${PORT}`);
-  console.log(`Lead notifications: ${notificationsConfigured ? 'configured' : 'not configured (lead submissions will be rejected safely)'}`);
+  console.log(`Lead notifications: email ${emailConfigured ? 'configured' : 'not configured'}, WhatsApp ${whatsappConfigured ? 'configured' : 'not configured'}`);
 });

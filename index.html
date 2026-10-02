@@ -1480,9 +1480,12 @@
       fetch('/api/status', { headers: { 'Accept': 'application/json' } })
         .then((response) => response.ok ? response.json() : Promise.reject(new Error('status unavailable')))
         .then((status) => {
-          setDeliveryNote(status.notificationsConfigured
-            ? 'Email and WhatsApp delivery are configured. Details are sent only after your consent.'
-            : 'Email/WhatsApp setup is incomplete. No enquiry details will be sent yet.');
+          const emailReady = status.emailConfigured === true;
+          const whatsappReady = status.whatsappConfigured === true;
+          if (emailReady && whatsappReady) setDeliveryNote('Email and WhatsApp delivery are configured. Details are sent only after your consent.');
+          else if (emailReady) setDeliveryNote('Email delivery is configured. Details are sent only after your consent.');
+          else if (whatsappReady) setDeliveryNote('WhatsApp delivery is configured. Details are sent only after your consent.');
+          else setDeliveryNote('Email/WhatsApp setup is incomplete. No enquiry details will be sent yet.');
         })
         .catch(() => { setDeliveryNote('Notification server unavailable. No details will be sent.'); });
 
@@ -1503,7 +1506,11 @@
             return false;
           }
           if (onSuccess) onSuccess();
-          showDialog('Your application has been received.', `Both notification providers accepted the details. Reference ${result.requestId || 'created'}. Nexa’s team can follow up; the lender makes the final approval decision.`, 'ALERTS ACCEPTED');
+          const channels = Array.isArray(result.channels) ? result.channels : [];
+          const channelLabel = channels.length
+            ? channels.map((channel) => (channel === 'whatsapp' ? 'WhatsApp' : 'Email')).join(' and ')
+            : 'Notification';
+          showDialog('Your application has been received.', `${channelLabel} delivery accepted the details. Reference ${result.requestId || 'created'}. Nexa’s team can follow up; the lender makes the final approval decision.`, 'ALERTS ACCEPTED');
           return true;
         } catch (error) {
           showDialog('Notification service unavailable.', 'Your application was not sent. Please try again later or contact Nexa directly.', 'NOT SENT');

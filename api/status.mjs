@@ -21,7 +21,7 @@ export default function handler(request, response) {
   response.setHeader('Cache-Control', 'no-store');
   response.setHeader('X-Content-Type-Options', 'nosniff');
   return response.status(200).json({
-    notificationsConfigured: emailConfigured && whatsappConfigured,
+    notificationsConfigured: emailConfigured || whatsappConfigured,
     emailConfigured,
     whatsappConfigured
   });

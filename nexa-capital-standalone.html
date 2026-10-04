@@ -241,7 +241,7 @@
        including 8K canvases: a glass triangle, a cyan beam and a white beam entering it,
        and the rainbow fan leaving the lower edge. Sits under the copy and the lead card. */
     .prism-scene{ position:absolute; inset:0; display:grid; place-items:center; }
-    .prism-rig{ position:relative; width:min(700px, 58vw); aspect-ratio:9 / 8; transform:translateX(-1%) translateY(-1%); }
+    .prism-rig{ position:relative; width:min(880px, 68vw); aspect-ratio:9 / 8; transform:translateX(-3%) translateY(-2%); }
     .prism-rig .scene{ width:100%; height:100%; display:block; overflow:visible; }
     .scene .spectrum{ animation:spectrum-breathe 7.5s ease-in-out infinite; transform-origin:50% 62%; }
     .scene .beam-cyan{ animation:beam-breathe 5.6s ease-in-out infinite; }
@@ -1051,90 +1051,101 @@
             <svg class="scene" viewBox="0 0 900 800" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <radialGradient id="px-halo" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#0E7490" stop-opacity=".34"/>
-                  <stop offset="55%" stop-color="#10B981" stop-opacity=".10"/>
+                  <stop offset="0%" stop-color="#22D3EE" stop-opacity=".46"/>
+                  <stop offset="45%" stop-color="#0E7490" stop-opacity=".22"/>
                   <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
                 </radialGradient>
-                <linearGradient id="px-glass" x1="300" y1="140" x2="820" y2="650" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity=".14"/>
-                  <stop offset="35%" stop-color="#BFF0FF" stop-opacity=".07"/>
-                  <stop offset="70%" stop-color="#FFFFFF" stop-opacity=".04"/>
-                  <stop offset="100%" stop-color="#7FD8F5" stop-opacity=".12"/>
+                <linearGradient id="px-glass" x1="200" y1="120" x2="820" y2="680" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#6EE7F5" stop-opacity=".14"/>
+                  <stop offset="30%" stop-color="#0B2530" stop-opacity=".55"/>
+                  <stop offset="62%" stop-color="#06131A" stop-opacity=".62"/>
+                  <stop offset="100%" stop-color="#7FD8F5" stop-opacity=".10"/>
                 </linearGradient>
-                <linearGradient id="px-glass-inner" x1="560" y1="140" x2="560" y2="640" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity=".18"/>
+                <linearGradient id="px-glass-inner" x1="470" y1="150" x2="470" y2="660" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#EAFDFF" stop-opacity=".18"/>
+                  <stop offset="45%" stop-color="#9BE8FF" stop-opacity=".07"/>
                   <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
                 </linearGradient>
                 <linearGradient id="px-beam-cyan" x1="0" y1="0" x2="1" y2="1">
                   <stop offset="0%" stop-color="#00E5FF" stop-opacity="0"/>
-                  <stop offset="50%" stop-color="#22D3EE" stop-opacity=".5"/>
-                  <stop offset="100%" stop-color="#67E8F9" stop-opacity=".92"/>
+                  <stop offset="45%" stop-color="#22D3EE" stop-opacity=".75"/>
+                  <stop offset="100%" stop-color="#A5F3FC" stop-opacity="1"/>
                 </linearGradient>
                 <linearGradient id="px-beam-white" x1="1" y1="0" x2="0" y2="1">
                   <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
-                  <stop offset="50%" stop-color="#FFFFFF" stop-opacity=".46"/>
-                  <stop offset="100%" stop-color="#FFFFFF" stop-opacity=".9"/>
+                  <stop offset="45%" stop-color="#FFFFFF" stop-opacity=".65"/>
+                  <stop offset="100%" stop-color="#FFFFFF" stop-opacity="1"/>
                 </linearGradient>
                 <linearGradient id="px-spectrum" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="#10B981" stop-opacity="0"/>
-                  <stop offset="18%" stop-color="#22C55E" stop-opacity=".8"/>
-                  <stop offset="40%" stop-color="#A3E635" stop-opacity=".9"/>
-                  <stop offset="62%" stop-color="#FACC15" stop-opacity=".9"/>
-                  <stop offset="82%" stop-color="#FB923C" stop-opacity=".9"/>
-                  <stop offset="100%" stop-color="#EF4444" stop-opacity=".9"/>
+                  <stop offset="0%" stop-color="#059669" stop-opacity="0"/>
+                  <stop offset="12%" stop-color="#10B981" stop-opacity="1"/>
+                  <stop offset="30%" stop-color="#4ADE80" stop-opacity="1"/>
+                  <stop offset="48%" stop-color="#FDE047" stop-opacity="1"/>
+                  <stop offset="68%" stop-color="#FB923C" stop-opacity="1"/>
+                  <stop offset="86%" stop-color="#F43F5E" stop-opacity="1"/>
+                  <stop offset="100%" stop-color="#DC2626" stop-opacity="1"/>
                 </linearGradient>
-                <!-- the fan dissolves as it travels, so it never smears over the section below -->
-                <radialGradient id="px-fan-fade" cx="62%" cy="80%" r="70%">
-                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity=".95"/>
-                  <stop offset="45%" stop-color="#FFFFFF" stop-opacity=".55"/>
+                <radialGradient id="px-fan-fade" cx="68%" cy="78%" r="72%">
+                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+                  <stop offset="52%" stop-color="#FFFFFF" stop-opacity=".6"/>
                   <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
                 </radialGradient>
                 <mask id="px-fan-mask">
-                  <rect x="0" y="560" width="900" height="240" fill="url(#px-fan-fade)"/>
+                  <rect x="0" y="580" width="900" height="220" fill="url(#px-fan-fade)"/>
                 </mask>
                 <linearGradient id="px-floor" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity=".09"/>
+                  <stop offset="0%" stop-color="#E0FBFF" stop-opacity=".16"/>
                   <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
                 </linearGradient>
-                <filter id="px-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="12"/></filter>
-                <filter id="px-soft-sm" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="5"/></filter>
-                <filter id="px-soft-lg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="26"/></filter>
-                <filter id="px-glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.4"/></filter>
+                <filter id="px-soft" x="-45%" y="-45%" width="190%" height="190%"><feGaussianBlur stdDeviation="13"/></filter>
+                <filter id="px-soft-sm" x="-45%" y="-45%" width="190%" height="190%"><feGaussianBlur stdDeviation="5"/></filter>
+                <filter id="px-soft-lg" x="-55%" y="-55%" width="210%" height="210%"><feGaussianBlur stdDeviation="30"/></filter>
+                <filter id="px-glow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="3.6"/></filter>
+                <filter id="px-crisp" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.1"/></filter>
               </defs>
 
-              <ellipse class="glow-halo" cx="560" cy="400" rx="360" ry="320" fill="url(#px-halo)" filter="url(#px-soft-lg)"/>
+              <ellipse class="glow-halo" cx="470" cy="430" rx="400" ry="350" fill="url(#px-halo)" filter="url(#px-soft-lg)"/>
 
-              <!-- beams arriving from the far corners, meeting inside the glass -->
+              <!-- beams arriving from the far corners -->
               <g class="beam-cyan" style="mix-blend-mode:screen">
-                <path d="M-60 10 L512 392" stroke="url(#px-beam-cyan)" stroke-width="20" stroke-linecap="round" filter="url(#px-soft)"/>
-                <path d="M-60 10 L512 392" stroke="#C9F7FF" stroke-width="3.4" stroke-linecap="round" opacity=".88"/>
+                <path d="M-70 40 L330 412" stroke="url(#px-beam-cyan)" stroke-width="30" stroke-linecap="round" filter="url(#px-soft)"/>
+                <path d="M-70 40 L330 412" stroke="#22D3EE" stroke-width="9" stroke-linecap="round" opacity=".55" filter="url(#px-soft-sm)"/>
+                <path d="M-70 40 L330 412" stroke="#E6FDFF" stroke-width="3.6" stroke-linecap="round"/>
               </g>
               <g class="beam-white" style="mix-blend-mode:screen">
-                <path d="M960 20 L648 384" stroke="url(#px-beam-white)" stroke-width="18" stroke-linecap="round" filter="url(#px-soft)"/>
-                <path d="M960 20 L648 384" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+                <path d="M980 30 L660 400" stroke="url(#px-beam-white)" stroke-width="28" stroke-linecap="round" filter="url(#px-soft)"/>
+                <path d="M980 30 L660 400" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" opacity=".5" filter="url(#px-soft-sm)"/>
+                <path d="M980 30 L660 400" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
               </g>
-              <ellipse cx="580" cy="388" rx="30" ry="20" fill="#EAFBFF" opacity=".30" filter="url(#px-soft)"/>
 
-              <!-- glass prism: body, inner facets, lit edges -->
+              <!-- glass prism -->
               <g>
-                <ellipse cx="560" cy="648" rx="240" ry="18" fill="url(#px-floor)" filter="url(#px-soft-sm)"/>
-                <polygon points="560,120 250,640 870,640" fill="url(#px-glass)"/>
-                <polygon points="560,120 408,520 712,520" fill="url(#px-glass-inner)" opacity=".8"/>
-                <path d="M560 120 L560 640" stroke="rgba(255,255,255,.16)" stroke-width="1.6"/>
-                <path d="M408 420 L712 420" stroke="rgba(255,255,255,.09)" stroke-width="1.3"/>
-                <polygon points="560,120 250,640 870,640" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2.2"/>
-                <path d="M560 120 L250 640" stroke="rgba(255,255,255,.95)" stroke-width="3" filter="url(#px-glow)"/>
-                <path d="M560 120 L870 640" stroke="rgba(255,255,255,.62)" stroke-width="2.4" filter="url(#px-glow)"/>
-                <path d="M250 640 L870 640" stroke="rgba(255,255,255,.42)" stroke-width="2.2"/>
-                <polygon points="560,120 494,268 626,268" fill="#FFFFFF" opacity=".09"/>
-                <polygon points="770,640 870,640 846,548" fill="#FFFFFF" opacity=".07"/>
+                <ellipse cx="470" cy="662" rx="330" ry="24" fill="url(#px-floor)" filter="url(#px-soft)"/>
+                <polygon points="470,132 150,652 790,652" fill="url(#px-glass)"/>
+                <polygon points="470,132 330,540 610,540" fill="url(#px-glass-inner)" opacity=".85"/>
+                <path d="M470 132 L470 652" stroke="rgba(255,255,255,.22)" stroke-width="1.8"/>
+                <path d="M330 400 L610 400" stroke="rgba(255,255,255,.12)" stroke-width="1.4"/>
+                <path d="M400 520 L640 520" stroke="rgba(255,255,255,.09)" stroke-width="1.2"/>
+                <polygon points="470,132 150,652 790,652" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2.4"/>
+                <path d="M470 132 L150 652" stroke="#FFFFFF" stroke-width="3.6" filter="url(#px-glow)"/>
+                <path d="M470 132 L790 652" stroke="rgba(255,255,255,.8)" stroke-width="3" filter="url(#px-glow)"/>
+                <path d="M150 652 L790 652" stroke="rgba(255,255,255,.55)" stroke-width="2.6" filter="url(#px-crisp)"/>
+                <polygon points="470,132 386,300 556,300" fill="#FFFFFF" opacity=".14"/>
+                <polygon points="470,132 386,300 470,300" fill="#FFFFFF" opacity=".08"/>
+                <polygon points="660,652 790,652 764,540" fill="#FFFFFF" opacity=".10"/>
               </g>
 
-              <!-- rainbow leaving the lower edge, fading as it fans away -->
+              <!-- light travelling through the glass and leaving the base -->
+              <g style="mix-blend-mode:screen">
+                <path d="M330 412 L560 652" stroke="#FFFFFF" stroke-width="2.6" opacity=".55" filter="url(#px-crisp)"/>
+                <ellipse cx="560" cy="652" rx="40" ry="16" fill="#FFFFFF" opacity=".5" filter="url(#px-soft-sm)"/>
+              </g>
+
+              <!-- rainbow fan leaving the lower edge -->
               <g class="spectrum" style="mix-blend-mode:screen" mask="url(#px-fan-mask)">
-                <polygon points="560,620 90,760 620,772" fill="url(#px-spectrum)" opacity=".8" filter="url(#px-soft-lg)"/>
-                <polygon points="560,620 150,738 520,752" fill="url(#px-spectrum)" opacity=".75" filter="url(#px-soft)"/>
-                <polygon points="560,620 240,716 470,730" fill="url(#px-spectrum)" opacity=".6" filter="url(#px-soft-sm)"/>
+                <polygon points="560,640 -40,812 700,806" fill="url(#px-spectrum)" opacity=".9" filter="url(#px-soft-lg)"/>
+                <polygon points="555,644 20,796 600,792" fill="url(#px-spectrum)" opacity=".95" filter="url(#px-soft)"/>
+                <polygon points="550,648 120,776 520,780" fill="url(#px-spectrum)" opacity=".85" filter="url(#px-soft-sm)"/>
               </g>
             </svg>
           </div>

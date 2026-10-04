@@ -1,0 +1,71 @@
+# Deploys the site to Vercel production.
+# Needs one repository secret: VERCEL_TOKEN (Vercel → Account Settings → Tokens).
+# Optional lead-delivery secrets are forwarded to the deployment when present:
+#   RESEND_API_KEY, RESEND_FROM, LEAD_EMAIL_TO,
+#   WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID, WHATSAPP_TO,
+#   WHATSAPP_TEMPLATE_NAME, WHATSAPP_TEMPLATE_LANG, META_GRAPH_VERSION
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [main, arena/01a10659-nexa-capital]
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to Vercel (production)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check the token secret is present
+        run: |
+          if [ -z "${VERCEL_TOKEN}" ]; then
+            echo "::error::Add a repository secret named VERCEL_TOKEN (Vercel → Account Settings → Tokens) and re-run this workflow."
+            exit 1
+          fi
+          echo "token present"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Link or create the Vercel project
+        run: npx --yes vercel@latest link --yes --project nexa-capital --token="$VERCEL_TOKEN" || true
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy to production
+        id: deploy
+        run: |
+          url=$(npx --yes vercel@latest deploy --prod --yes --token="$VERCEL_TOKEN" 2>&1 | tee /tmp/deploy.log | grep -oE 'https://[a-zA-Z0-9.-]+\.vercel\.app' | tail -1)
+          if [ -z "$url" ]; then echo "::error::Deploy did not return a URL"; tail -20 /tmp/deploy.log; exit 1; fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Deployed: $url"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM: ${{ secrets.RESEND_FROM }}
+          LEAD_EMAIL_TO: ${{ secrets.LEAD_EMAIL_TO }}
+          WHATSAPP_ACCESS_TOKEN: ${{ secrets.WHATSAPP_ACCESS_TOKEN }}
+          WHATSAPP_PHONE_NUMBER_ID: ${{ secrets.WHATSAPP_PHONE_NUMBER_ID }}
+          WHATSAPP_TO: ${{ secrets.WHATSAPP_TO }}
+          WHATSAPP_TEMPLATE_NAME: ${{ secrets.WHATSAPP_TEMPLATE_NAME }}
+          WHATSAPP_TEMPLATE_LANG: ${{ secrets.WHATSAPP_TEMPLATE_LANG }}
+          META_GRAPH_VERSION: ${{ secrets.META_GRAPH_VERSION }}
+
+      - name: Smoke test the deployment
+        run: |
+          url="${{ steps.deploy.outputs.url }}"
+          code=$(curl -s -o /tmp/page.html -w '%{http_code}' "$url")
+          echo "GET $url -> $code"
+          [ "$code" = "200" ] || { echo "::error::Homepage did not return 200"; exit 1; }
+          grep -qi "Nexa Capital" /tmp/page.html || { echo "::error::Homepage content looks wrong"; exit 1; }
+          curl -s -o /dev/null -w 'hero artwork: %{http_code}\n' "$url/assets/hero-prism-mono-v2.webp"
+          echo "smoke test passed"

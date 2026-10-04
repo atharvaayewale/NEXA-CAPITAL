@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 import { Script } from 'node:vm';
 
@@ -85,4 +85,57 @@ test('mobile hero can shrink without clipping and the phone prefix has reserved 
   assert.match(html, /\.hero-layout > \*\{ min-width:0; \}/);
   assert.match(html, /grid-template-columns:minmax\(0, 1fr\)/);
   assert.match(html, /\.input-shell \.prefix \+ input\{ padding-left:52px; \}/);
+});
+
+test('one self-hosted Inter family covers every heading, label, tag and paragraph', () => {
+  assert.doesNotMatch(html, /fonts\.googleapis\.com|fonts\.gstatic\.com/);
+  assert.doesNotMatch(html, /Space Grotesk|JetBrains Mono/);
+  assert.match(html, /--font-display:"Inter Variable"/);
+  assert.match(html, /--font-mono:"Inter Variable"/);
+
+  const families = [...html.matchAll(/font-family:([^;]+);/g)].map((match) => match[1].trim());
+  assert.ok(families.length > 10, 'Expected the stylesheet to declare its typeface');
+  for (const family of families) {
+    assert.ok(/^(?:var\(--font-(?:display|mono)\)|"Inter Variable")/.test(family),
+      `Unexpected font family: ${family}`);
+  }
+
+  assert.match(html, /url\("assets\/fonts\/inter-latin-wght-normal\.woff2"\)/);
+  assert.match(html, /url\("assets\/fonts\/inter-currency\.woff2"\)/);
+});
+
+test('the lending network shows official lender marks in uniform cards, not text initials', () => {
+  assert.doesNotMatch(html, /partner-mark|partner-logo--/);
+  assert.equal((html.match(/<div class="partner-logo glass">/g) || []).length, 12);
+  assert.equal((html.match(/class="partner-logo-plate"/g) || []).length, 12);
+
+  const marks = [...body.matchAll(/<img src="assets\/brands\/([a-z0-9-]+)\.svg" alt="" width="(\d+)" height="(\d+)"/g)];
+  assert.equal(marks.length, 12, 'Every card needs an official vector mark');
+  for (const [, slug, width, height] of marks) {
+    assert.ok(existsSync(new URL(`../assets/brands/${slug}.svg`, import.meta.url)), `Missing lender logo: ${slug}`);
+    assert.ok(Number(width) > 0 && Number(height) > 0, `Logo ${slug} needs intrinsic dimensions`);
+  }
+
+  for (const name of ['HDFC Bank', 'ICICI Bank', 'Axis Bank', 'Kotak Mahindra Bank', 'State Bank of India', 'Bajaj Finserv', 'Tata Capital']) {
+    assert.ok(body.includes(name), `Lender card missing: ${name}`);
+  }
+});
+
+test('self-hosted fonts and lender marks are present on disk', () => {
+  // Catches markup attributes, CSS url() references and paths built inside the inline script.
+  const refs = new Set([...html.matchAll(/assets\/[\w./-]+\.(?:svg|woff2?|png|jpe?g|webp)/g)].map((match) => match[0]));
+  assert.ok(refs.size >= 12, 'Expected self-hosted fonts and lender marks to be referenced');
+  for (const ref of refs) {
+    assert.ok(existsSync(new URL(`../${ref}`, import.meta.url)), `Missing asset: ${ref}`);
+  }
+});
+
+test('hero mark stack and directory chips use vector marks instead of letter tiles', () => {
+  const stack = body.match(/<div class="partner-mini-stack"[\s\S]*?<\/div>/)?.[0];
+  assert.ok(stack, 'Hero lender stack must exist');
+  assert.equal((stack.match(/<img /g) || []).length, 5);
+  assert.equal((stack.match(/<span>[HIA+]<\/span>/g) || []).length, 0);
+  assert.match(html, /icon\.className = 'lender-chip-mark'/);
+  assert.match(html, /\.lender-chip\.has-mark::before\{ display:none; \}/);
+  assert.match(html, /lenderMarks/);
 });

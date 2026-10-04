@@ -68,6 +68,52 @@ function html(response, status, body) {
   response.end(body);
 }
 
+// Static homepage assets (self-hosted Inter fonts and official lender marks).
+const ASSET_TYPES = new Map([
+  ['.svg', 'image/svg+xml'],
+  ['.woff2', 'font/woff2'],
+  ['.woff', 'font/woff'],
+  ['.png', 'image/png'],
+  ['.jpg', 'image/jpeg'],
+  ['.jpeg', 'image/jpeg'],
+  ['.webp', 'image/webp'],
+  ['.ico', 'image/x-icon'],
+  ['.css', 'text/css; charset=utf-8'],
+  ['.js', 'text/javascript; charset=utf-8'],
+  ['.json', 'application/json; charset=utf-8'],
+  ['.txt', 'text/plain; charset=utf-8']
+]);
+
+function serveAsset(request, response, pathname) {
+  const root = path.join(ROOT, 'assets');
+  let relative;
+  try {
+    relative = decodeURIComponent(pathname.slice('/assets/'.length));
+  } catch {
+    return json(response, 404, { ok: false, message: 'Not found.' });
+  }
+  const target = path.resolve(root, relative);
+  const type = ASSET_TYPES.get(path.extname(target).toLowerCase());
+  // Anything outside assets/, or with an unrecognised extension, stays unserved.
+  if (!type || (target !== root && !target.startsWith(root + path.sep))) {
+    return json(response, 404, { ok: false, message: 'Not found.' });
+  }
+  let body;
+  try {
+    body = fs.readFileSync(target);
+  } catch {
+    return json(response, 404, { ok: false, message: 'Not found.' });
+  }
+  response.writeHead(200, {
+    'Content-Type': type,
+    'Content-Length': body.length,
+    'Cache-Control': 'public, max-age=86400',
+    'X-Content-Type-Options': 'nosniff',
+    'Referrer-Policy': 'strict-origin-when-cross-origin'
+  });
+  return response.end(request.method === 'HEAD' ? undefined : body);
+}
+
 function isSameOrigin(request) {
   const origin = request.headers.origin;
   if (!origin) return true;
@@ -321,6 +367,9 @@ const server = http.createServer(async (request, response) => {
       console.error('[lead notification] Unexpected delivery error.');
       return json(response, 500, { ok: false, message: 'A server error prevented delivery. Your details were not stored.' });
     }
+  }
+  if ((request.method === 'GET' || request.method === 'HEAD') && url.pathname.startsWith('/assets/')) {
+    return serveAsset(request, response, url.pathname);
   }
   if ((request.method === 'GET' || request.method === 'HEAD') && (url.pathname === '/' || url.pathname === '/index.html')) {
     try {

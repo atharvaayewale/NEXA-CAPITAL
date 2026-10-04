@@ -87,6 +87,37 @@ test('mobile hero can shrink without clipping and the phone prefix has reserved 
   assert.match(html, /\.input-shell \.prefix \+ input\{ padding-left:52px; \}/);
 });
 
+test('the hero cube is replaced by a 3D glass rupee with mobile-safe rendering', () => {
+  // The CSS-3D prism/cube is gone from markup, styles and scripts.
+  assert.doesNotMatch(html, /prism-scene|prism-rig|prism-face|prism-cap|prism-spin|beam-out|beam-spread/);
+  assert.ok(idSet.has('rupee-stage'), 'Glass rupee stage must exist');
+  assert.ok(idSet.has('rupee-canvas'), 'WebGL canvas must exist');
+  assert.match(html, /<canvas class="rupee-gl" id="rupee-canvas"><\/canvas>/);
+  // Dependency-free static mark when WebGL is unavailable.
+  assert.match(html, /class="rupee-static"><span>&#8377;<\/span>/);
+  assert.match(html, /is-fallback/);
+  // Transparent canvas, capped pixel ratio and continuous rAF auto-rotation.
+  assert.match(html, /const contextAttributes = \{ alpha: true, antialias: false/);
+  assert.match(html, /renderer\.setPixelRatio\(Math\.min\(window\.devicePixelRatio, 2\)\)/);
+  assert.match(html, /maxPixelRatio: 2/);
+  assert.match(html, /rafId = requestAnimationFrame\(step\)/);
+  assert.match(html, /autoYaw \+= delta \* 0\.42;/);
+  // Mouse and touch both tilt the mark; vertical page scroll stays intact.
+  assert.match(html, /addEventListener\('touchstart'/);
+  assert.match(html, /addEventListener\('touchmove'/);
+  assert.match(html, /addEventListener\('touchend'/);
+  assert.match(html, /addEventListener\('mousemove'/);
+  assert.match(html, /\.rupee-stage\{[^}]*touch-action:pan-y/s);
+  // Per-device quality budget keeps phones at 60fps.
+  assert.match(html, /steps: coarsePointer \? 28 : 44/);
+  assert.match(html, /maxSide = coarsePointer \? 620 : 980/);
+  assert.match(html, /renderScale: coarsePointer \? 0\.8 : 1/);
+  // Palette: electric emerald (#10B981 / #00F5A0) and cyan on dark onyx.
+  assert.match(html, /EMERALD = vec3\(0\.063, 0\.725, 0\.506\)/);
+  assert.match(html, /MINT = vec3\(0\.0, 0\.961, 0\.627\)/);
+  assert.match(html, /CYAN = vec3\(0\.0, 0\.898, 1\.0\)/);
+});
+
 test('SBI is removed from the lending network and all remaining lenders have real SVG logos', () => {
   assert.doesNotMatch(html, /State Bank of India|\bSBI\b/i);
   assert.match(html, /48 INSTITUTIONS/);

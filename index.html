@@ -192,74 +192,55 @@
     .mobile-cta{ margin-top:16px; justify-content:center !important; border-radius:999px !important; border:1px solid rgba(0,229,255,.5) !important;
       background:linear-gradient(120deg, rgba(0,229,255,.22), rgba(255,46,210,.22)); color:#fff !important; font-weight:600; }
 
-    /* ---------- hero + prism scene ---------- */
+    /* ---------- hero + 3D glass rupee stage ---------- */
     .hero{ position:relative; overflow:clip; padding:84px 0 34px; }
-    .hero::before{ /* static spotlight: no per-frame background repaint */
+    .hero::before{ /* static onyx spotlight: no per-frame background repaint */
       content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
-      background:radial-gradient(560px circle at 28% 30%, rgba(0,229,255,.08), transparent 65%);
+      background:radial-gradient(640px circle at 74% 34%, rgba(16,185,129,.10), transparent 66%),
+        radial-gradient(520px circle at 22% 26%, rgba(0,229,255,.07), transparent 64%);
     }
     .hero-canvas{ position:absolute; inset:0; z-index:0; pointer-events:none; }
-    .prism-scene{ position:absolute; inset:0; display:grid; place-items:center; perspective:1300px; }
-    .prism-halo{
-      position:absolute; width:560px; height:560px; border-radius:50%;
-      background:radial-gradient(ellipse at 25% 40%, rgba(0,229,255,.75), transparent 55%),
-        radial-gradient(ellipse at 75% 30%, rgba(139,92,246,.8), transparent 55%),
-        radial-gradient(ellipse at 65% 75%, rgba(255,46,210,.65), transparent 55%);
-      -webkit-mask-image:radial-gradient(closest-side, #000 35%, transparent 100%);
-      mask-image:radial-gradient(closest-side, #000 35%, transparent 100%);
-      opacity:.30; animation:halo-spin 26s linear infinite;
+    .rupee-scene{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; }
+    /* Only the square itself is interactive, so the copy and form keep normal hit testing. */
+    .rupee-stage{
+      position:relative; width:min(33vw, 400px); aspect-ratio:1 / 1;
+      justify-self:center; align-self:center; transform:translate3d(-17%, -7%, 0);
+      pointer-events:auto; opacity:.95;
+      touch-action:pan-y; -webkit-user-select:none; user-select:none; cursor:grab;
+      contain:layout paint style;
     }
-    @keyframes halo-spin{ to{ transform:rotate(360deg); } }
-    .prism-floor{
-      position:absolute; left:50%; bottom:2%; width:980px; height:420px; opacity:.14;
-      transform:translateX(-50%) perspective(900px) rotateX(72deg); transform-origin:50% 100%;
-      background-image:linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px);
-      background-size:46px 46px;
-      -webkit-mask-image:radial-gradient(closest-side, #000 20%, transparent 78%);
-      mask-image:radial-gradient(closest-side, #000 20%, transparent 78%);
+    .rupee-stage.is-grabbing{ cursor:grabbing; }
+    .rupee-glow{
+      position:absolute; inset:8%; border-radius:50%; pointer-events:none; z-index:0;
+      background:radial-gradient(closest-side, rgba(16,185,129,.30), rgba(0,245,160,.12) 46%, transparent 76%);
+      filter:blur(16px); animation:rupee-breathe 7.5s ease-in-out infinite;
     }
-    .beam-in{
-      position:absolute; right:50%; top:41%; width:47%; height:96px; transform-origin:100% 50%;
-      transform:rotate(16deg);
-      background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.05) 32%, rgba(255,255,255,.4) 88%, rgba(255,255,255,.85) 100%);
-      filter:blur(9px); mix-blend-mode:screen; animation:beam-breathe 6s ease-in-out infinite;
+    @keyframes rupee-breathe{ 0%,100%{ opacity:.55; transform:scale(.94); } 50%{ opacity:.95; transform:scale(1.06); } }
+    .rupee-grid{
+      position:absolute; left:50%; bottom:-3%; width:152%; height:42%; opacity:.13; pointer-events:none; z-index:0;
+      transform:translateX(-50%) perspective(700px) rotateX(74deg); transform-origin:50% 100%;
+      background-image:linear-gradient(rgba(16,185,129,.55) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,.45) 1px, transparent 1px);
+      background-size:40px 40px;
+      -webkit-mask-image:radial-gradient(closest-side, #000 12%, transparent 74%);
+      mask-image:radial-gradient(closest-side, #000 12%, transparent 74%);
     }
-    .beam-spread{
-      position:absolute; left:50%; top:50%; width:58%; height:340px; transform:translateY(-50%);
-      background:linear-gradient(90deg, rgba(0,229,255,.16), rgba(77,124,255,.14) 25%, rgba(139,92,246,.14) 48%, rgba(255,46,210,.14) 72%, rgba(255,180,84,.10));
-      clip-path:polygon(0 47%, 100% 4%, 100% 96%, 0 53%);
-      filter:blur(16px); mix-blend-mode:screen; opacity:.8;
+    .rupee-gl{ position:relative; z-index:1; display:block; width:100%; height:100%; }
+    /* Dependency-free static fallback for browsers without WebGL. */
+    .rupee-static{ display:none; position:absolute; inset:0; z-index:1; place-items:center; pointer-events:none; }
+    .rupee-static span{
+      font-family:var(--font-display); font-weight:700; line-height:1; color:rgba(255,255,255,.92);
+      font-size:clamp(120px, 22vw, 286px); transform:perspective(900px) rotateY(-18deg) rotateX(8deg);
+      text-shadow:0 0 30px rgba(0,245,160,.55), 0 0 74px rgba(16,185,129,.34), 0 2px 0 rgba(255,255,255,.22);
     }
-    .beam-out{
-      position:absolute; left:50%; top:calc(50% - 4px); width:52%; height:8px; border-radius:999px;
-      transform-origin:0 50%; transform:rotate(var(--a,0deg));
-      background:linear-gradient(90deg, var(--c,#fff) 0%, transparent 82%);
-      filter:blur(6px); mix-blend-mode:screen; opacity:.8;
-      animation:beam-breathe 5.2s ease-in-out infinite; animation-delay:var(--d,0s);
+    .rupee-stage.is-fallback .rupee-gl{ display:none; }
+    .rupee-stage.is-fallback .rupee-static{ display:grid; }
+    .rupee-hint{
+      position:absolute; left:50%; bottom:1%; transform:translateX(-50%); pointer-events:none; z-index:2;
+      font-family:var(--font-mono); font-size:9.5px; letter-spacing:.2em; color:var(--ghost); white-space:nowrap;
     }
-    @keyframes beam-breathe{ 0%,100%{ opacity:.85; } 50%{ opacity:.5; } }
-    .prism-rig{ transform-style:preserve-3d; transform:rotateX(-10deg) rotateY(0deg); will-change:auto; }
-    .prism-rig.parallax-active{ will-change:transform; }
-    @keyframes prism-spin{ from{ transform:rotateY(0deg); } to{ transform:rotateY(360deg); } }
-    .prism{ position:relative; width:200px; height:240px; transform-style:preserve-3d; animation:prism-spin 18s linear infinite; }
-    .prism-face{
-      position:absolute; inset:0; border:1px solid rgba(255,255,255,.4);
-      background:linear-gradient(172deg, rgba(255,255,255,.20), rgba(255,255,255,.03) 34%, var(--tint) 130%);
-      box-shadow:inset 0 0 46px rgba(255,255,255,.07);
-    }
-    .prism-face--a{ --tint:rgba(0,229,255,.34); transform:rotateY(0deg) translateZ(58px); }
-    .prism-face--b{ --tint:rgba(139,92,246,.36); transform:rotateY(120deg) translateZ(58px); }
-    .prism-face--c{ --tint:rgba(255,46,210,.34); transform:rotateY(240deg) translateZ(58px); }
-    .prism-cap{
-      position:absolute; left:50%; top:50%; width:200px; height:173px; margin:-86.5px 0 0 -100px;
-      clip-path:polygon(50% 0, 100% 100%, 0 100%);
-      transform-origin:50% 66.7%;
-      background:linear-gradient(120deg, rgba(0,229,255,.30), rgba(139,92,246,.30) 50%, rgba(255,46,210,.30));
-      border:1px solid rgba(255,255,255,.3);
-    }
-    .prism-cap--top{ transform:rotateX(90deg) translateZ(120px); }
-    .prism-cap--bottom{ transform:rotateX(90deg) translateZ(-120px); }
+    .rupee-hint::after{ content:"DRAG TO TILT"; }
+    @media (hover:none){ .rupee-hint::after{ content:"SWIPE TO TILT"; } }
     .hero-layout{ position:relative; z-index:1; display:grid; grid-template-columns:minmax(0, 1.04fr) minmax(0, .96fr); gap:58px; align-items:center; }
     .hero-layout > *{ min-width:0; }
     .hero-copy{ max-width:600px; }
@@ -863,7 +844,8 @@
     @media (max-width:980px){
       .hero-layout{ grid-template-columns:minmax(0, 1fr); gap:48px; }
       .hero-copy{ max-width:660px; }
-      .prism-scene{ transform:scale(.68) translateY(-90px); opacity:.8; }
+      .rupee-scene{ place-items:start end; padding:44px -7% 0 0; }
+      .rupee-stage{ width:min(58vw, 300px); transform:none; opacity:.6; }
       .personal-application-layout{ grid-template-columns:1fr; gap:40px; }
       .personal-application-copy{ position:static; }
       .calculator-layout{ grid-template-columns:1fr; gap:44px; }
@@ -878,7 +860,9 @@
     @media (max-width:640px){
       .container{ width:calc(100% - 36px); }
       .hero{ padding-top:56px; }
-      .prism-scene{ transform:scale(.52) translateY(-150px); opacity:.62; }
+      .rupee-scene{ padding:30px -16% 0 0; }
+      .rupee-stage{ width:min(72vw, 244px); opacity:.5; }
+      .rupee-hint{ display:none; }
       .section{ padding:72px 0; }
       .loan-type-grid{ grid-template-columns:repeat(2, 1fr); }
       .lead-fields{ grid-template-columns:1fr; }
@@ -909,7 +893,7 @@
       *, *::before, *::after{
         animation:none !important; transition:none !important; scroll-behavior:auto !important;
       }
-      .prism-rig{ will-change:auto !important; }
+      .rupee-stage{ will-change:auto !important; }
     }
     ::-webkit-scrollbar{ width:10px; height:10px; }
     ::-webkit-scrollbar-track{ background:#000; }
@@ -971,26 +955,14 @@
   <main>
     <section class="hero" id="hero" aria-labelledby="hero-title">
       <div class="hero-canvas" aria-hidden="true">
-        <div class="prism-scene" id="prism-scene">
-          <div class="prism-halo"></div>
-          <div class="prism-floor"></div>
-          <div class="beam-in"></div>
-          <div class="beam-spread"></div>
-          <div class="beam-out" style="--a:-22deg; --c:#00E5FF; --d:0s"></div>
-          <div class="beam-out" style="--a:-13deg; --c:#4D7CFF; --d:.7s"></div>
-          <div class="beam-out" style="--a:-4deg; --c:#8B5CF6; --d:1.4s"></div>
-          <div class="beam-out" style="--a:5deg; --c:#B39DFF; --d:2.1s"></div>
-          <div class="beam-out" style="--a:14deg; --c:#FF2ED2; --d:2.8s"></div>
-          <div class="beam-out" style="--a:23deg; --c:#FFB454; --d:3.5s"></div>
-          <div class="prism-rig" id="prism-rig">
-            <div class="prism">
-              <div class="prism-face prism-face--a"></div>
-              <div class="prism-face prism-face--b"></div>
-              <div class="prism-face prism-face--c"></div>
-              <div class="prism-cap prism-cap--top"></div>
-              <div class="prism-cap prism-cap--bottom"></div>
-            </div>
-          </div>
+        <div class="rupee-scene">
+        <div class="rupee-stage" id="rupee-stage">
+          <div class="rupee-glow"></div>
+          <div class="rupee-grid"></div>
+          <canvas class="rupee-gl" id="rupee-canvas"></canvas>
+          <div class="rupee-static"><span>&#8377;</span></div>
+          <span class="rupee-hint"></span>
+        </div>
         </div>
       </div>
       <div class="container hero-layout">
@@ -1587,72 +1559,452 @@
           .forEach((element) => motionObserver.observe(element));
       }
 
-      // Frame-batched, time-based prism parallax: no layout work on pointer events.
+      // ============================================================
+      // Hero visual — responsive 3D glassmorphic ₹.
+      // Rendered with raw WebGL (no library, no CDN, no asset route): the
+      // mark is an exact distance field of the ₹ outline generated on the CPU
+      // — cross-section SDF + gradient packed into one RGBA texture — then
+      // extruded, filleted and shaded in a single fragment pass.
+      // ============================================================
+      const RUPEE_FIELD_RANGE = 1.0;
+      const RUPEE_STROKE_HALF = 0.055;
+      const rupeeStage = document.getElementById('rupee-stage');
+      const rupeeCanvas = document.getElementById('rupee-canvas');
       const heroEl = document.getElementById('hero');
-      const prismRig = document.getElementById('prism-rig');
-      const finePointer = window.matchMedia('(pointer: fine)');
-      if (heroEl && prismRig) {
-        let targetX = 0, targetY = 0, curX = 0, curY = 0;
-        let rafId = null, lastTime = null, pendingPointer = null, heroVisible = true;
-        const canAnimate = () => heroVisible && !document.hidden && finePointer.matches && !motionPreference.matches;
-        const stopParallax = () => {
-          if (rafId !== null) cancelAnimationFrame(rafId);
-          rafId = null;
-          lastTime = null;
-          pendingPointer = null;
-          targetX = targetY = curX = curY = 0;
-          prismRig.classList.remove('parallax-active');
-          prismRig.style.removeProperty('transform');
+      const heroOverlay = document.querySelector('.hero-canvas');
+
+      // ₹ = two headline bars, the descending leg and the R-bowl (cubic curve).
+      const rupeeSegments = () => {
+        const segments = [
+          [[-0.3, -0.34], [0.3, -0.34]],
+          [[-0.3, -0.16], [0.3, -0.16]],
+          [[-0.3, -0.16], [0.27, 0.37]]
+        ];
+        const p0 = [0.3, -0.16], p1 = [0.47, -0.11], p2 = [0.4, 0.05], p3 = [0.04, 0.04];
+        const at = (t) => {
+          const u = 1 - t;
+          return [
+            u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0],
+            u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1]
+          ];
         };
-        const tick = (time) => {
-          if (!canAnimate()) { stopParallax(); return; }
-          if (pendingPointer) {
-            const rect = heroEl.getBoundingClientRect();
-            targetX = ((pendingPointer.x - rect.left) / rect.width - 0.5) * 16;
-            targetY = ((pendingPointer.y - rect.top) / rect.height - 0.5) * -10;
-            pendingPointer = null;
-          }
-          const delta = lastTime === null ? 16 : Math.min(time - lastTime, 64);
-          const easing = 1 - Math.exp(-delta / 120);
-          curX += (targetX - curX) * easing;
-          curY += (targetY - curY) * easing;
-          lastTime = time;
-          prismRig.style.transform = `rotateX(${-10 + curY}deg) rotateY(${curX}deg)`;
-          if (Math.abs(targetX - curX) > 0.01 || Math.abs(targetY - curY) > 0.01) {
-            rafId = requestAnimationFrame(tick);
-          } else {
-            rafId = null;
-            lastTime = null;
-            prismRig.classList.remove('parallax-active');
-          }
-        };
-        const requestTick = () => {
-          if (canAnimate() && rafId === null) {
-            prismRig.classList.add('parallax-active');
-            rafId = requestAnimationFrame(tick);
-          }
-        };
-        heroEl.addEventListener('pointermove', (event) => {
-          if (!canAnimate()) return;
-          pendingPointer = { x: event.clientX, y: event.clientY };
-          requestTick();
-        }, { passive: true });
-        heroEl.addEventListener('pointerleave', () => {
-          pendingPointer = null;
-          targetX = targetY = 0;
-          requestTick();
-        });
-        document.addEventListener('visibilitychange', () => { if (document.hidden) stopParallax(); });
-        motionPreference.addEventListener('change', stopParallax);
-        finePointer.addEventListener('change', stopParallax);
-        if ('IntersectionObserver' in window) {
-          const heroObserver = new IntersectionObserver(([entry]) => {
-            heroVisible = entry.isIntersecting;
-            if (!heroVisible) stopParallax();
-          });
-          heroObserver.observe(heroEl);
+        let previous = at(0);
+        for (let i = 1; i <= 24; i += 1) {
+          const next = at(i / 24);
+          segments.push([previous, next]);
+          previous = next;
         }
-      }
+        return segments;
+      };
+
+      const buildRupeeField = (size) => {
+        const segments = rupeeSegments();
+        const span = RUPEE_FIELD_RANGE * 2;
+        const data = new Uint8Array(size * size * 4);
+        for (let row = 0; row < size; row += 1) {
+          const gy = (0.5 - (row + 0.5) / size) * span;
+          for (let col = 0; col < size; col += 1) {
+            const gx = ((col + 0.5) / size - 0.5) * span;
+            let bestSquared = Infinity;
+            let normalX = 0;
+            let normalY = 0;
+            for (let s = 0; s < segments.length; s += 1) {
+              const a = segments[s][0];
+              const b = segments[s][1];
+              const edgeX = b[0] - a[0];
+              const edgeY = b[1] - a[1];
+              const lengthSquared = edgeX * edgeX + edgeY * edgeY || 1e-9;
+              let t = ((gx - a[0]) * edgeX + (gy - a[1]) * edgeY) / lengthSquared;
+              t = t < 0 ? 0 : t > 1 ? 1 : t;
+              const dx = gx - (a[0] + edgeX * t);
+              const dy = gy - (a[1] + edgeY * t);
+              const squared = dx * dx + dy * dy;
+              if (squared < bestSquared) { bestSquared = squared; normalX = dx; normalY = dy; }
+            }
+            const distance = Math.sqrt(bestSquared);
+            const signed = distance - RUPEE_STROKE_HALF;
+            const inverse = distance > 1e-6 ? 1 / distance : 0;
+            const encoded = 0.5 - (signed / span) * 0.5;
+            const index = (row * size + col) * 4;
+            data[index] = Math.round(Math.min(1, Math.max(0, encoded)) * 255);
+            data[index + 1] = Math.round((0.5 + normalX * inverse * 0.5) * 255);
+            data[index + 2] = Math.round((0.5 + normalY * inverse * 0.5) * 255);
+            data[index + 3] = 255;
+          }
+        }
+        return data;
+      };
+
+      const createGlassRupee = ({ stage, canvas, hero, overlay }) => {
+        if (!stage || !canvas || !canvas.getContext) return null;
+        const contextAttributes = { alpha: true, antialias: false, depth: false, stencil: false, premultipliedAlpha: true, preserveDrawingBuffer: false, powerPreference: 'high-performance' };
+        let gl = canvas.getContext('webgl2', contextAttributes);
+        if (!gl) gl = canvas.getContext('webgl', contextAttributes) || canvas.getContext('experimental-webgl', contextAttributes);
+        if (!gl) { stage.classList.add('is-fallback'); return null; }
+
+        const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+        const renderer = {
+          alpha: true,
+          pixelRatio: 1,
+          maxPixelRatio: 2,
+          renderScale: coarsePointer ? 0.8 : 1,
+          steps: coarsePointer ? 28 : 44,
+          fieldSize: coarsePointer ? 192 : 256,
+          depth: 0.17,
+          fillet: 0.045,
+          glow: coarsePointer ? 0.85 : 1,
+          width: 0,
+          height: 0,
+          // Cap the backing store so high-DPI phones never shade 3x pixels.
+          setPixelRatio(value) {
+            const capped = Math.max(1, Math.min(value || 1, this.maxPixelRatio));
+            this.pixelRatio = capped;
+            this.resize();
+          },
+          resize() {
+            const rect = stage.getBoundingClientRect();
+            const css = Math.max(140, Math.min(rect.width || 320, rect.height || 320));
+            const maxSide = coarsePointer ? 620 : 980;
+            const side = Math.max(140, Math.min(Math.round(css * this.pixelRatio * this.renderScale), maxSide));
+            if (side === this.width) return;
+            this.width = side;
+            this.height = side;
+            canvas.width = side;
+            canvas.height = side;
+            gl.viewport(0, 0, side, side);
+          }
+        };
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.resize();
+
+        const vertexSource = [
+          'attribute vec2 aPos;',
+          'varying vec2 vUv;',
+          'void main() {',
+          '  vUv = aPos * 0.5 + 0.5;',
+          '  gl_Position = vec4(aPos, 0.0, 1.0);',
+          '}'
+        ].join('\n');
+
+        const fragmentSource = [
+          'precision highp float;',
+          'varying vec2 vUv;',
+          'uniform sampler2D uField;',
+          'uniform mat3 uRot;',
+          'uniform float uTime;',
+          'uniform float uDepth;',
+          'uniform float uFillet;',
+          'uniform float uGlow;',
+          'uniform float uPixel;',
+          'uniform float uAspect;',
+          'const float RANGE = 1.0;',
+          'const vec3 EMERALD = vec3(0.063, 0.725, 0.506);',
+          'const vec3 MINT = vec3(0.0, 0.961, 0.627);',
+          'const vec3 CYAN = vec3(0.0, 0.898, 1.0);',
+          'vec4 field4(vec2 g) {',
+          '  return texture2D(uField, clamp(g * 0.5 + 0.5, 0.002, 0.998));',
+          '}',
+          'float section(vec2 g) { return (0.5 - field4(g).r) * 2.0 * RANGE; }',
+          // Extruded cross-section with a rounded (metallic) rim.
+          'float map(vec3 p) {',
+          '  vec2 q = vec2(section(p.xy), abs(p.z) - uDepth);',
+          '  return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - uFillet;',
+          '}',
+          'vec3 environment(vec3 d) {',
+          '  vec3 n = normalize(d);',
+          '  float sky = clamp(n.y * 0.5 + 0.5, 0.0, 1.0);',
+          '  vec3 col = mix(vec3(0.012, 0.017, 0.024), vec3(0.05, 0.062, 0.075), sky);',
+          '  col += EMERALD * pow(max(dot(n, normalize(vec3(-0.55, 0.32, -0.78))), 0.0), 7.0) * 1.6;',
+          '  col += CYAN * pow(max(dot(n, normalize(vec3(0.80, 0.12, -0.58))), 0.0), 11.0) * 1.25;',
+          '  return col;',
+          '}',
+          'void main() {',
+          '  vec2 p = (vUv - 0.5) * 2.0;',
+          '  p.x *= uAspect;',
+          '  vec3 ro = uRot * vec3(0.0, 0.0, 2.5);',
+          '  vec3 rd = uRot * normalize(vec3(p, -1.95));',
+          '  float pulse = 0.78 + 0.22 * sin(uTime * 1.35);',
+          '  vec3 col = vec3(0.0);',
+          '  float cover = 0.0;',
+          '  vec3 safe = mix(vec3(-1.0), vec3(1.0), step(0.0, rd)) * max(abs(rd), vec3(1e-4));',
+          '  float tz = -ro.z / safe.z;',
+          '  if (tz > 0.0) {',
+          '    float outside = max(section((ro + rd * tz).xy), 0.0);',
+          '    float halo = exp(-outside * 7.0) + 0.45 * exp(-outside * 2.2);',
+          '    col += (mix(EMERALD, MINT, 0.45) * halo * 0.55 + CYAN * pow(halo, 2.0) * 0.3) * pulse * uGlow;',
+          '  }',
+          '  vec3 bmin = vec3(-0.74, -0.74, -uDepth - uFillet);',
+          '  vec3 bmax = vec3(0.74, 0.74, uDepth + uFillet);',
+          '  vec3 ta = (bmin - ro) / safe;',
+          '  vec3 tb = (bmax - ro) / safe;',
+          '  vec3 tlo = min(ta, tb);',
+          '  vec3 thi = max(ta, tb);',
+          '  float tn = max(max(tlo.x, tlo.y), tlo.z);',
+          '  float tf = min(min(thi.x, thi.y), thi.z);',
+          '  if (tf > max(tn, 0.0)) {',
+          '    float t = max(tn, 0.0);',
+          '    float hit = -1.0;',
+          '    float dmin = 1.0;',
+          '    for (int i = 0; i < %STEPS%; i += 1) {',
+          '      float d = map(ro + rd * t);',
+          '      dmin = min(dmin, d);',
+          '      if (d < 0.0015) { hit = t; break; }',
+          '      t += max(d * 0.9, 0.0025);',
+          '      if (t > tf) break;',
+          '    }',
+          '    float soft = 1.0 - smoothstep(0.0, uPixel, dmin);',
+          '    if (hit > 0.0 || soft > 0.002) {',
+          '      vec3 q = ro + rd * max(t, 0.0);',
+          '      vec4 f = field4(q.xy);',
+          '      vec2 grad = (f.gb - 0.5) * 2.0;',
+          '      vec2 qq = vec2((0.5 - f.r) * 2.0 * RANGE, abs(q.z) - uDepth);',
+          '      vec2 above = max(qq, 0.0);',
+          '      vec2 dn = above / max(length(above), 1e-5);',
+          '      float axis = step(qq.y, qq.x);',
+          '      dn += step(max(qq.x, qq.y), 0.0) * vec2(axis, 1.0 - axis);',
+          '      float zSign = mix(-1.0, 1.0, step(0.0, q.z));',
+          '      vec3 n = normalize(dn.x * vec3(grad, 0.0) + dn.y * vec3(0.0, 0.0, zSign));',
+          '      if (dot(n, rd) > 0.0) n = -n;',
+          '      vec3 v = -rd;',
+          '      float fres = pow(1.0 - clamp(dot(n, v), 0.0, 1.0), 3.0);',
+          '      float rim = 1.0 - smoothstep(0.0, uFillet * 2.4, abs(section(q.xy)));',
+          '      vec3 l1 = normalize(vec3(-0.42, 0.72, 0.55));',
+          '      vec3 l2 = normalize(vec3(0.86, -0.26, 0.40));',
+          '      vec3 l3 = normalize(vec3(-0.18, -0.52, -0.82));',
+          '      float k1 = max(dot(n, l1), 0.0);',
+          '      float k2 = max(dot(n, l2), 0.0);',
+          '      float k3 = max(dot(n, l3), 0.0);',
+          '      float s1 = pow(max(dot(n, normalize(v + l1)), 0.0), 110.0);',
+          '      float s2 = pow(max(dot(n, normalize(v + l2)), 0.0), 44.0);',
+          '      vec3 glass = mix(EMERALD, CYAN, clamp(n.x * 0.5 + 0.5, 0.0, 1.0)) * (0.12 + 0.42 * k1 + 0.26 * k2);',
+          '      glass += environment(reflect(rd, n)) * (0.30 + 0.70 * fres);',
+          '      glass += EMERALD * k3 * 0.55;',
+          '      glass += vec3(1.0) * (s1 * 0.9 + s2 * 0.4);',
+          '      vec3 refr = refract(rd, n, 0.7);',
+          '      float inner = clamp(1.0 - max(section((q + refr * 0.6).xy), 0.0) * 3.0, 0.0, 1.0);',
+          '      glass += MINT * inner * (0.18 + 0.5 * pulse);',
+          '      glass += mix(MINT, vec3(1.0), 0.35) * rim * 0.85;',
+          '      float alpha = clamp(0.34 + 0.52 * fres + 0.55 * rim, 0.0, 0.95) * soft;',
+          '      col = col * (1.0 - alpha * 0.6) + glass * alpha;',
+          '      cover = max(cover, alpha);',
+          '    }',
+          '  }',
+          '  gl_FragColor = vec4(min(col, vec3(2.0)), clamp(cover, 0.0, 1.0));',
+          '}'
+        ].join('\n');
+
+        const compile = (type, source) => {
+          const shader = gl.createShader(type);
+          gl.shaderSource(shader, source.replace('%STEPS%', String(renderer.steps)));
+          gl.compileShader(shader);
+          if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            gl.deleteShader(shader);
+            return null;
+          }
+          return shader;
+        };
+        const vs = compile(gl.VERTEX_SHADER, vertexSource);
+        const fs = compile(gl.FRAGMENT_SHADER, fragmentSource);
+        const program = vs && fs ? gl.createProgram() : null;
+        if (!program) {
+          stage.classList.add('is-fallback');
+          return null;
+        }
+        gl.attachShader(program, vs);
+        gl.attachShader(program, fs);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+          stage.classList.add('is-fallback');
+          return null;
+        }
+        gl.useProgram(program);
+
+        const buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+        const positionLocation = gl.getAttribLocation(program, 'aPos');
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+        const texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, renderer.fieldSize, renderer.fieldSize, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildRupeeField(renderer.fieldSize));
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.uniform1i(gl.getUniformLocation(program, 'uField'), 0);
+        gl.uniform1f(gl.getUniformLocation(program, 'uDepth'), renderer.depth);
+        gl.uniform1f(gl.getUniformLocation(program, 'uFillet'), renderer.fillet);
+        gl.uniform1f(gl.getUniformLocation(program, 'uGlow'), renderer.glow);
+        gl.disable(gl.DEPTH_TEST);
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+        const rotationLocation = gl.getUniformLocation(program, 'uRot');
+        const timeLocation = gl.getUniformLocation(program, 'uTime');
+        const pixelLocation = gl.getUniformLocation(program, 'uPixel');
+        const aspectLocation = gl.getUniformLocation(program, 'uAspect');
+        const columnMajorProduct = (a, b) => {
+          const out = new Float32Array(9);
+          for (let col = 0; col < 3; col += 1) {
+            for (let row = 0; row < 3; row += 1) {
+              out[col * 3 + row] = a[row] * b[col * 3] + a[3 + row] * b[col * 3 + 1] + a[6 + row] * b[col * 3 + 2];
+            }
+          }
+          return out;
+        };
+        const rotation = (yaw, pitch) => {
+          const cy = Math.cos(yaw), sy = Math.sin(yaw), cx = Math.cos(pitch), sx = Math.sin(pitch);
+          return columnMajorProduct(
+            new Float32Array([cy, 0, -sy, 0, 1, 0, sy, 0, cy]),
+            new Float32Array([1, 0, 0, 0, cx, sx, 0, -sx, cx])
+          );
+        };
+
+        // Auto-rotation is time based and pointer independent, so the mark
+        // keeps spinning on every screen; drag/touch only biases the pose.
+        let rafId = null, lastTime = 0, autoYaw = -0.5, spinYaw = 0, spinPitch = 0;
+        let velocityYaw = 0, velocityPitch = 0, pointerYaw = 0, pointerPitch = 0;
+        let targetYaw = 0, targetPitch = 0, dragging = false;
+        let stageVisible = true, lastPointerX = 0, lastPointerY = 0;
+
+        const canRun = () => !document.hidden && stageVisible && !motionPreference.matches
+          && !(overlay && overlay.classList.contains('motion-paused'));
+        const glHealthy = () => !gl.isContextLost();
+
+        const drawFrame = (time) => {
+          if (!glHealthy()) return;
+          const delta = lastTime ? Math.min((time - lastTime) / 1000, 0.05) : 0.016;
+          lastTime = time;
+          if (!motionPreference.matches) {
+            autoYaw += delta * 0.42;
+            if (!dragging) {
+              spinYaw += velocityYaw * delta;
+              spinPitch += velocityPitch * delta;
+              const friction = Math.pow(0.1, delta);
+              velocityYaw *= friction;
+              velocityPitch *= friction;
+              const settle = Math.pow(0.45, delta);
+              spinYaw *= settle;
+              spinPitch *= settle;
+            }
+            const ease = 1 - Math.exp(-delta / 0.18);
+            pointerYaw += (targetYaw - pointerYaw) * ease;
+            pointerPitch += (targetPitch - pointerPitch) * ease;
+          }
+          const pitch = Math.max(-0.85, Math.min(0.85, 0.16 + spinPitch + pointerPitch));
+          gl.uniformMatrix3fv(rotationLocation, false, rotation(autoYaw + spinYaw + pointerYaw, pitch));
+          gl.uniform1f(timeLocation, time / 1000);
+          gl.uniform1f(pixelLocation, (2.56 / Math.max(renderer.width, 1)) * 1.6);
+          gl.uniform1f(aspectLocation, renderer.width / Math.max(renderer.height, 1));
+          gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        };
+
+        const step = (time) => {
+          rafId = null;
+          drawFrame(time);
+          if (canRun() && glHealthy()) rafId = requestAnimationFrame(step);
+        };
+        const requestFrame = () => { if (rafId === null) rafId = requestAnimationFrame(step); };
+        const render = () => {
+          if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+          lastTime = 0;
+          if (canRun()) requestFrame();
+          else if (glHealthy()) drawFrame(performance.now());
+        };
+
+        const setDragOrigin = (x, y) => {
+          dragging = true;
+          lastPointerX = x;
+          lastPointerY = y;
+          velocityYaw = 0;
+          velocityPitch = 0;
+          stage.classList.add('is-grabbing');
+        };
+        const dragTo = (x, y) => {
+          if (!dragging) return;
+          const dx = x - lastPointerX;
+          const dy = y - lastPointerY;
+          lastPointerX = x;
+          lastPointerY = y;
+          spinYaw += dx * 0.0075;
+          spinPitch = Math.max(-0.8, Math.min(0.8, spinPitch + dy * 0.005));
+          velocityYaw = velocityYaw * 0.6 + (dx * 0.0075 / 0.016) * 0.4;
+          velocityPitch = velocityPitch * 0.6 + (dy * 0.005 / 0.016) * 0.4;
+          requestFrame();
+        };
+        const endDrag = () => {
+          if (!dragging) return;
+          dragging = false;
+          stage.classList.remove('is-grabbing');
+        };
+
+        canvas.addEventListener('mousedown', (event) => { event.preventDefault(); setDragOrigin(event.clientX, event.clientY); });
+        window.addEventListener('mousemove', (event) => {
+          if (dragging) { dragTo(event.clientX, event.clientY); return; }
+          if (!hero || !hero.getBoundingClientRect) return;
+          const rect = hero.getBoundingClientRect();
+          targetYaw = ((event.clientX - rect.left) / Math.max(rect.width, 1) - 0.5) * 0.55;
+          targetPitch = ((event.clientY - rect.top) / Math.max(rect.height, 1) - 0.5) * -0.34;
+          requestFrame();
+        }, { passive: true });
+        window.addEventListener('mouseup', endDrag, { passive: true });
+        hero && hero.addEventListener('mouseleave', () => {
+          if (dragging) return;
+          targetYaw = 0;
+          targetPitch = 0;
+          requestFrame();
+        }, { passive: true });
+
+        // Touch: tilt with a swipe while vertical page scrolling stays intact.
+        const firstTouch = (event) => (event.touches && event.touches.length ? event.touches[0] : null);
+        canvas.addEventListener('touchstart', (event) => {
+          const touch = firstTouch(event);
+          if (touch) setDragOrigin(touch.clientX, touch.clientY);
+        }, { passive: true });
+        canvas.addEventListener('touchmove', (event) => {
+          const touch = firstTouch(event);
+          if (touch) dragTo(touch.clientX, touch.clientY);
+        }, { passive: true });
+        canvas.addEventListener('touchend', endDrag, { passive: true });
+        canvas.addEventListener('touchcancel', endDrag, { passive: true });
+
+        canvas.addEventListener('webglcontextlost', (event) => {
+          event.preventDefault();
+          if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+          stage.classList.add('is-fallback');
+        }, false);
+        canvas.addEventListener('webglcontextrestored', () => {
+          stage.classList.remove('is-fallback');
+          render();
+        }, false);
+
+        // Browser zoom changes devicePixelRatio, so re-cap it on every resize.
+        const relayout = () => {
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          renderer.resize();
+          render();
+        };
+        if ('ResizeObserver' in window) new ResizeObserver(relayout).observe(stage);
+        window.addEventListener('resize', relayout, { passive: true });
+        window.addEventListener('orientationchange', () => window.setTimeout(relayout, 260), { passive: true });
+        document.addEventListener('visibilitychange', render);
+        motionPreference.addEventListener('change', render);
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(([entry]) => {
+            stageVisible = entry.isIntersecting;
+            if (stageVisible) render();
+          }, { rootMargin: '160px' }).observe(stage);
+        }
+        renderer.resize();
+        render();
+
+        return { renderer, gl, canvas, stage, render, drawFrame, isPaused: () => !canRun(), get running() { return rafId !== null; } };
+      };
+
+      window.NexaRupee = createGlassRupee({ stage: rupeeStage, canvas: rupeeCanvas, hero: heroEl, overlay: heroOverlay });
     })();
   </script>
 </body>

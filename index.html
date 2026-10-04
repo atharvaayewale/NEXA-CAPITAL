@@ -1571,7 +1571,6 @@
       const rupeeStage = document.getElementById('rupee-stage');
       const rupeeCanvas = document.getElementById('rupee-canvas');
       const heroEl = document.getElementById('hero');
-      const heroOverlay = document.querySelector('.hero-canvas');
 
       // ₹ = two headline bars, the descending leg and the R-bowl (cubic curve).
       const rupeeSegments = () => {
@@ -1635,7 +1634,7 @@
         return data;
       };
 
-      const createGlassRupee = ({ stage, canvas, hero, overlay }) => {
+      const createGlassRupee = ({ stage, canvas, hero }) => {
         if (!stage || !canvas || !canvas.getContext) return null;
         const contextAttributes = { alpha: true, antialias: false, depth: false, stencil: false, premultipliedAlpha: true, preserveDrawingBuffer: false, powerPreference: 'high-performance' };
         let gl = canvas.getContext('webgl2', contextAttributes);
@@ -1687,7 +1686,11 @@
         ].join('\n');
 
         const fragmentSource = [
+          '#ifdef GL_FRAGMENT_PRECISION_HIGH',
           'precision highp float;',
+          '#else',
+          'precision mediump float;',
+          '#endif',
           'varying vec2 vUv;',
           'uniform sampler2D uField;',
           'uniform mat3 uRot;',
@@ -1870,8 +1873,10 @@
         let targetYaw = 0, targetPitch = 0, dragging = false;
         let stageVisible = true, lastPointerX = 0, lastPointerY = 0;
 
-        const canRun = () => !document.hidden && stageVisible && !motionPreference.matches
-          && !(overlay && overlay.classList.contains('motion-paused'));
+        // Visibility and tab state only: the matching IntersectionObserver below owns
+        // resuming, so this must not read a class another observer toggles, or a
+        // re-entry race would strand the loop (frozen mark) until the next resize.
+        const canRun = () => !document.hidden && stageVisible && !motionPreference.matches;
         const glHealthy = () => !gl.isContextLost();
 
         const drawFrame = (time) => {
@@ -2004,7 +2009,7 @@
         return { renderer, gl, canvas, stage, render, drawFrame, isPaused: () => !canRun(), get running() { return rafId !== null; } };
       };
 
-      window.NexaRupee = createGlassRupee({ stage: rupeeStage, canvas: rupeeCanvas, hero: heroEl, overlay: heroOverlay });
+      window.NexaRupee = createGlassRupee({ stage: rupeeStage, canvas: rupeeCanvas, hero: heroEl });
     })();
   </script>
 </body>

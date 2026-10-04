@@ -120,8 +120,10 @@ test('the hero shows the glass-prism artwork as a local image', () => {
   assert.match(html, /\.hero-scene\{ position:absolute; inset:0; overflow:hidden; \}/);
   assert.match(html, /\.hero-scene img\{[\s\S]*?object-fit:cover; object-position:62% 50%/);
   assert.match(html, /\.hero-scene::after\{[\s\S]*?linear-gradient\(90deg, rgba\(0,0,0,\.95\) 0%, rgba\(0,0,0,\.86\) 26%/);
-  assert.match(html, /animation:prism-spin 48s linear infinite;/);
-  assert.match(html, /@keyframes prism-spin\{[\s\S]*?rotate\(-360deg\) scale\(1\.5\)/);
+  assert.match(html, /animation:prism-flip 20s cubic-bezier\(\.45,0,\.55,1\) infinite alternate;/);
+  assert.match(html, /@keyframes prism-flip\{\s*from\{ transform:scale\(1\.5\) scaleX\(1\); \}\s*to\{ transform:scale\(1\.5\) scaleX\(-1\); \}/);
+  // a strict horizontal flip only: no rotation and no vertical mirroring anywhere
+  assert.doesNotMatch(html, /prism-spin|rotate\(|rotateX|rotateY|scaleY\(-1\)/);
   assert.match(html, /-webkit-mask-image:radial-gradient\(118% 118% at 50% 50%, #000 52%, transparent 88%\)/);
   // the page-wide colour wheels and the hero colour discs were explicitly rolled back
   assert.doesNotMatch(html, /hero-spectrum|void-spin|page-spectrum|prism-drift/);

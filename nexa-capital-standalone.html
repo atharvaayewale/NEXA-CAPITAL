@@ -249,10 +249,12 @@
        white beam. Colour-free on purpose: the prism is the only subject. Gradient
        overlays feather it into the black void so type stays readable. */
     .hero-scene{ position:absolute; inset:0; overflow:hidden; }
-    /* the artwork itself turns, a full slow revolution running right to left
-       (counter-clockwise): the prism and its beams sweep round with it. It is scaled
-       up and feathered at the rim (mask) so the bitmap's edges never show while it
-       spins. Transform only, so the browser keeps it on the compositor. */
+    /* the artwork mirrors strictly left-right: a horizontal flip (scaleX 1 -> -1)
+       that swings out to the mirrored pose and back, so the left and right sides keep
+       reversing while the top always stays on top. There is no rotation and no
+       vertical flip anywhere. It is scaled up and feathered at the rim (mask) so the
+       bitmap's edges never show while it swings. Transform only, so the browser keeps
+       it on the compositor. */
     .hero-scene img{
       position:absolute; inset:0; width:100%; height:100%;
       object-fit:cover; object-position:62% 50%;
@@ -260,11 +262,11 @@
       will-change:transform;
       -webkit-mask-image:radial-gradient(118% 118% at 50% 50%, #000 52%, transparent 88%);
       mask-image:radial-gradient(118% 118% at 50% 50%, #000 52%, transparent 88%);
-      animation:prism-spin 48s linear infinite;
+      animation:prism-flip 20s cubic-bezier(.45,0,.55,1) infinite alternate;
     }
-    @keyframes prism-spin{
-      from{ transform:rotate(0deg) scale(1.5); }
-      to{ transform:rotate(-360deg) scale(1.5); }
+    @keyframes prism-flip{
+      from{ transform:scale(1.5) scaleX(1); }
+      to{ transform:scale(1.5) scaleX(-1); }
     }
     /* show the whole artwork, as large as the hero allows; only a left wash for the
        copy column and gentle top/bottom fades keep it melting into the void */

@@ -86,3 +86,95 @@ test('mobile hero can shrink without clipping and the phone prefix has reserved 
   assert.match(html, /grid-template-columns:minmax\(0, 1fr\)/);
   assert.match(html, /\.input-shell \.prefix \+ input\{ padding-left:52px; \}/);
 });
+
+test('the hero cube is replaced by a 3D glass rupee with mobile-safe rendering', () => {
+  // The CSS-3D prism/cube is gone from markup, styles and scripts.
+  assert.doesNotMatch(html, /prism-scene|prism-rig|prism-face|prism-cap|prism-spin|beam-out|beam-spread/);
+  assert.ok(idSet.has('rupee-stage'), 'Glass rupee stage must exist');
+  assert.ok(idSet.has('rupee-canvas'), 'WebGL canvas must exist');
+  assert.match(html, /<canvas class="rupee-gl" id="rupee-canvas"><\/canvas>/);
+  // Dependency-free static mark when WebGL is unavailable.
+  // A blank canvas is never the answer: the fallback is an extruded SVG mesh that keeps spinning.
+  assert.match(html, /class="rupee-static"[\s\S]*?<svg class="rupee-coin-mark" viewBox="0 0 100 100"/);
+  assert.match(html, /rupee-strokes" stroke="url\(#rupee-face-grad\)"/);
+  assert.match(html, /is-fallback/);
+  // Canvas box cannot collapse, and the mark is above the decorative layers.
+  assert.match(html, /\.rupee-gl\{ position:relative; z-index:2; display:block; width:100%; height:100%; min-height:300px; \}/);
+  assert.match(html, /camera: \{ position: \{ z: 5 \} \}/);
+  assert.match(html, /renderer\.setScale\(Math\.min\(window\.innerWidth \/ 500, 1\.2\)\)/);
+  assert.match(html, /this\.scale = Math\.max\(1\.0, Math\.min\(value \|\| 1, 1\.4\)\);/);
+  assert.match(html, /gl\.clear\(gl\.COLOR_BUFFER_BIT\)/);
+  // Transparent canvas, capped pixel ratio and continuous rAF auto-rotation.
+  assert.match(html, /const contextAttributes = \{ alpha: true, antialias: false/);
+  assert.match(html, /renderer\.setPixelRatio\(Math\.min\(window\.devicePixelRatio, 2\)\)/);
+  assert.match(html, /maxPixelRatio: 2/);
+  assert.match(html, /rafId = requestAnimationFrame\(step\)/);
+  // The orbit is unconditional: reduced motion slows it, it never freezes it,
+  // and the no-WebGL fallback spins in CSS for the same reason.
+  assert.match(html, /autoYaw \+= delta \* \(calm \? 0\.2 : 0\.65\);/);
+  // 1. Placement: the mark owns a slot inside the hero grid - copy, then .hero-visual
+  //    (with the canvas), then the lead form - instead of an absolute layer that let the
+  //    frosted .lead-card glass paint over it.
+  const heroSection = html.match(/<section class="hero"[\s\S]*?<\/section>/)[0];
+  const iCopy = heroSection.indexOf('class="hero-copy"');
+  const iVisual = heroSection.indexOf('class="hero-visual rupee-stage"');
+  const iCanvas = heroSection.indexOf('id="rupee-canvas"');
+  const iForm = heroSection.indexOf('class="lead-card-wrap"');
+  assert.ok(iCopy > -1 && iVisual > iCopy && iCanvas > iVisual && iForm > iCanvas,
+    'canvas must live inside .hero-visual, which must sit between the copy and the lead form');
+  assert.match(heroSection, /<div class="hero-visual rupee-stage" id="rupee-stage" aria-hidden="true">\s*<div class="rupee-glow"><\/div>\s*<div class="rupee-grid"><\/div>\s*<canvas class="rupee-gl" id="rupee-canvas"><\/canvas>/);
+  assert.match(html, /\.hero-layout\{[^}]*grid-template-columns:minmax\(0, 1fr\) minmax\(0, 400px\) minmax\(0, \.96fr\)/);
+  assert.doesNotMatch(html, /hero-canvas|rupee-scene/);
+  // 2. Explicit stacking context so it floats above the hero background, and stays interactive.
+  assert.match(html, /\.hero-visual\{ position:relative; z-index:10; pointer-events:auto; display:grid; place-items:center; \}/);
+  // 3. Explicit canvas box: the WebGL viewport can never collapse to 0px height.
+  assert.match(html, /#rupee-canvas\{ width:100%; height:420px; min-height:350px; display:block; \}/);
+  assert.match(html, /position:relative; width:100%; max-width:420px; height:420px; min-height:350px;/);
+  assert.match(html, /#rupee-canvas\{ height:360px; min-height:320px; \}/);
+  assert.match(html, /#rupee-canvas\{ height:330px; min-height:300px; \}/);
+  assert.match(html, /@media \(max-width:1200px\)[\s\S]*?\.hero-layout\{ grid-template-columns:minmax\(0, 1fr\); gap:48px; \}/);
+  assert.match(html, /\.hero-visual\{ justify-items:center; order:-1; \}/);
+  assert.doesNotMatch(html, /padding:44px -7%|padding:30px -16%/);
+  assert.doesNotMatch(html, /translate3d\(-17%, -7%, 0\)/);
+  assert.match(html, /const height = Math.max\(140, Math.round\(cssH \* factor\)\);/);
+  assert.match(html, /gl\.uniform1f\(pixelLocation, \(\(2\.0 \* renderer\.viewHalfHeight\) \/ Math\.max\(renderer\.height, 1\)\) \* 1\.6\);/);
+  assert.match(html, /viewHalfHeight: 1\.02,/);
+  assert.match(html, /vec3 rd = \(uRot \* normalize\(vec3\(p \* uViewHalf, -uCamZ\)\)\) \/ uScale;/);
+  assert.match(html, /if \(framesDrawn === 2 && !glHealthy\(\)\) stage\.classList\.add\('is-fallback'\);/);
+  assert.match(html, /if \(framesDrawn === 0 && !document\.hidden && stageVisible\)/);
+  assert.match(html, /glErrorCode = gl\.NO_ERROR;\s*framesDrawn = 0;\s*stage\.classList\.remove\('is-fallback'\);/);
+  assert.match(html, /const canRun = \(\) => !document\.hidden && stageVisible;/);
+  assert.doesNotMatch(html, /const canRun = \(\) =>[^;]*motionPreference/);
+  assert.match(html, /animation:rupee-coin 12s linear infinite;/);
+  // Mouse and touch both tilt the mark; vertical page scroll stays intact.
+  assert.match(html, /addEventListener\('touchstart'/);
+  assert.match(html, /addEventListener\('touchmove'/);
+  assert.match(html, /addEventListener\('touchend'/);
+  assert.match(html, /addEventListener\('mousemove'/);
+  assert.match(html, /\.rupee-stage\{[^}]*touch-action:pan-y/s);
+  // Per-device quality budget keeps phones at 60fps.
+  // Fewer march steps on phones, but still enough to reach the mark without tunnelling.
+  assert.match(html, /steps: coarsePointer \? 40 : 64/);
+  assert.match(html, /t \+= clamp\(d \* 0\.9, 0\.0022, 0\.045\);/);
+  assert.match(html, /maxSide = coarsePointer \? 620 : 980/);
+  assert.match(html, /renderScale: coarsePointer \? 0\.8 : 1/);
+  // Palette: electric emerald (#10B981 / #00F5A0) and cyan on dark onyx.
+  assert.match(html, /EMERALD = vec3\(0\.063, 0\.725, 0\.506\)/);
+  assert.match(html, /MINT = vec3\(0\.0, 0\.961, 0\.627\)/);
+  assert.match(html, /CYAN = vec3\(0\.0, 0\.898, 1\.0\)/);
+});
+
+test('SBI is removed from the lending network and all remaining lenders have real SVG logos', () => {
+  assert.doesNotMatch(html, /State Bank of India|\bSBI\b/i);
+  assert.match(html, /48 INSTITUTIONS/);
+  assert.match(html, /All institutions <span>48<\/span>/);
+  assert.match(html, /--lenders 48 --upfront-fees 0/);
+  assert.match(html, /Public sector banks <span>9<\/span>/);
+  assert.equal((html.match(/class="partner-mark"[^>]*><svg\b/g) || []).length, 6);
+  // Every directory chip renders a brand mark built from the per-institution SVG logo map.
+  assert.match(html, /logo\.className = 'lender-chip-logo';/);
+  assert.match(html, /logo\.innerHTML = lenderLogos\[name\]/);
+  assert.equal((html.match(/'[^']+': '<svg viewBox="0 0 32 32">/g) || []).length, 48);
+  assert.equal((html.match(/<span><svg viewBox="0 0 32 32">/g) || []).length, 3);
+});
+

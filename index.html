@@ -192,75 +192,67 @@
     .mobile-cta{ margin-top:16px; justify-content:center !important; border-radius:999px !important; border:1px solid rgba(0,229,255,.5) !important;
       background:linear-gradient(120deg, rgba(0,229,255,.22), rgba(255,46,210,.22)); color:#fff !important; font-weight:600; }
 
-    /* ---------- hero + prism scene ---------- */
+    /* ---------- hero + 3D glass rupee stage ---------- */
     .hero{ position:relative; overflow:clip; padding:84px 0 34px; }
-    .hero::before{ /* static spotlight: no per-frame background repaint */
+    .hero::before{ /* static onyx spotlight: no per-frame background repaint */
       content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
-      background:radial-gradient(560px circle at 28% 30%, rgba(0,229,255,.08), transparent 65%);
+      background:radial-gradient(640px circle at 74% 34%, rgba(16,185,129,.10), transparent 66%),
+        radial-gradient(520px circle at 22% 26%, rgba(0,229,255,.07), transparent 64%);
     }
-    .hero-canvas{ position:absolute; inset:0; z-index:0; pointer-events:none; }
-    .prism-scene{ position:absolute; inset:0; display:grid; place-items:center; perspective:1300px; }
-    .prism-halo{
-      position:absolute; width:560px; height:560px; border-radius:50%;
-      background:radial-gradient(ellipse at 25% 40%, rgba(0,229,255,.75), transparent 55%),
-        radial-gradient(ellipse at 75% 30%, rgba(139,92,246,.8), transparent 55%),
-        radial-gradient(ellipse at 65% 75%, rgba(255,46,210,.65), transparent 55%);
-      -webkit-mask-image:radial-gradient(closest-side, #000 35%, transparent 100%);
-      mask-image:radial-gradient(closest-side, #000 35%, transparent 100%);
-      opacity:.30; animation:halo-spin 26s linear infinite;
+    /* The mark owns a real grid slot (.hero-visual) between the copy and the lead form, so
+       it can never be painted over: it used to live in an absolute layer above .hero-layout,
+       which put it behind the frosted form card. z-index:10 + pointer-events keep it floating
+       over the hero background while still receiving drag events. */
+    .hero-visual{ position:relative; z-index:10; pointer-events:auto; display:grid; place-items:center; }
+    /* Only the square itself is interactive, so the copy and form keep normal hit testing. */
+    .rupee-stage{
+      position:relative; width:100%; max-width:420px; height:420px; min-height:350px;
+      justify-self:center; align-self:center; pointer-events:auto; opacity:1;
+      touch-action:pan-y; -webkit-user-select:none; user-select:none; cursor:grab;
+      contain:layout paint style;
     }
-    @keyframes halo-spin{ to{ transform:rotate(360deg); } }
-    .prism-floor{
-      position:absolute; left:50%; bottom:2%; width:980px; height:420px; opacity:.14;
-      transform:translateX(-50%) perspective(900px) rotateX(72deg); transform-origin:50% 100%;
-      background-image:linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px);
-      background-size:46px 46px;
-      -webkit-mask-image:radial-gradient(closest-side, #000 20%, transparent 78%);
-      mask-image:radial-gradient(closest-side, #000 20%, transparent 78%);
+    .rupee-stage.is-grabbing{ cursor:grabbing; }
+    .rupee-glow{
+      position:absolute; inset:8%; border-radius:50%; pointer-events:none; z-index:0;
+      background:radial-gradient(closest-side, rgba(16,185,129,.42), rgba(0,245,160,.16) 46%, transparent 76%);
+      box-shadow:0 0 90px rgba(16,185,129,.30), inset 0 0 70px rgba(0,245,160,.16);
+      filter:blur(14px); animation:rupee-breathe 7.5s ease-in-out infinite;
     }
-    .beam-in{
-      position:absolute; right:50%; top:41%; width:47%; height:96px; transform-origin:100% 50%;
-      transform:rotate(16deg);
-      background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.05) 32%, rgba(255,255,255,.4) 88%, rgba(255,255,255,.85) 100%);
-      filter:blur(9px); mix-blend-mode:screen; animation:beam-breathe 6s ease-in-out infinite;
+    @keyframes rupee-breathe{ 0%,100%{ opacity:.55; transform:scale(.94); } 50%{ opacity:.95; transform:scale(1.06); } }
+    .rupee-grid{
+      position:absolute; left:50%; bottom:-3%; width:152%; height:42%; opacity:.13; pointer-events:none; z-index:0;
+      transform:translateX(-50%) perspective(700px) rotateX(74deg); transform-origin:50% 100%;
+      background-image:linear-gradient(rgba(16,185,129,.55) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,.45) 1px, transparent 1px);
+      background-size:40px 40px;
+      -webkit-mask-image:radial-gradient(closest-side, #000 12%, transparent 74%);
+      mask-image:radial-gradient(closest-side, #000 12%, transparent 74%);
     }
-    .beam-spread{
-      position:absolute; left:50%; top:50%; width:58%; height:340px; transform:translateY(-50%);
-      background:linear-gradient(90deg, rgba(0,229,255,.16), rgba(77,124,255,.14) 25%, rgba(139,92,246,.14) 48%, rgba(255,46,210,.14) 72%, rgba(255,180,84,.10));
-      clip-path:polygon(0 47%, 100% 4%, 100% 96%, 0 53%);
-      filter:blur(16px); mix-blend-mode:screen; opacity:.8;
+    .rupee-gl{ position:relative; z-index:2; display:block; width:100%; height:100%; min-height:300px; }
+    /* An explicit height here is what stops the WebGL viewport collapsing to 0px: the stage no
+       longer depends on aspect-ratio resolving inside a grid track. */
+    #rupee-canvas{ width:100%; height:420px; min-height:350px; display:block; }
+    /* Dependency-free static fallback for browsers without WebGL. */
+    .rupee-static{ display:none; position:absolute; inset:0; z-index:1; place-items:center; pointer-events:none; }
+    .rupee-coin{
+      display:block; width:min(80%, 320px); aspect-ratio:1 / 1; transform-style:preserve-3d;
+      animation:rupee-coin 12s linear infinite;
+      filter:drop-shadow(0 0 28px rgba(16,185,129,.6)) drop-shadow(0 0 64px rgba(0,245,160,.28));
     }
-    .beam-out{
-      position:absolute; left:50%; top:calc(50% - 4px); width:52%; height:8px; border-radius:999px;
-      transform-origin:0 50%; transform:rotate(var(--a,0deg));
-      background:linear-gradient(90deg, var(--c,#fff) 0%, transparent 82%);
-      filter:blur(6px); mix-blend-mode:screen; opacity:.8;
-      animation:beam-breathe 5.2s ease-in-out infinite; animation-delay:var(--d,0s);
+    .rupee-coin-mark{ display:block; width:100%; height:100%; }
+    @keyframes rupee-coin{
+      from{ transform:perspective(900px) rotateY(0deg) rotateX(9deg); }
+      to{ transform:perspective(900px) rotateY(360deg) rotateX(9deg); }
     }
-    @keyframes beam-breathe{ 0%,100%{ opacity:.85; } 50%{ opacity:.5; } }
-    .prism-rig{ transform-style:preserve-3d; transform:rotateX(-10deg) rotateY(0deg); will-change:auto; }
-    .prism-rig.parallax-active{ will-change:transform; }
-    @keyframes prism-spin{ from{ transform:rotateY(0deg); } to{ transform:rotateY(360deg); } }
-    .prism{ position:relative; width:200px; height:240px; transform-style:preserve-3d; animation:prism-spin 18s linear infinite; }
-    .prism-face{
-      position:absolute; inset:0; border:1px solid rgba(255,255,255,.4);
-      background:linear-gradient(172deg, rgba(255,255,255,.20), rgba(255,255,255,.03) 34%, var(--tint) 130%);
-      box-shadow:inset 0 0 46px rgba(255,255,255,.07);
+    .rupee-stage.is-fallback .rupee-gl{ display:none; }
+    .rupee-stage.is-fallback .rupee-static{ display:grid; }
+    .rupee-hint{
+      position:absolute; left:50%; bottom:1%; transform:translateX(-50%); pointer-events:none; z-index:2;
+      font-family:var(--font-mono); font-size:9.5px; letter-spacing:.2em; color:var(--ghost); white-space:nowrap;
     }
-    .prism-face--a{ --tint:rgba(0,229,255,.34); transform:rotateY(0deg) translateZ(58px); }
-    .prism-face--b{ --tint:rgba(139,92,246,.36); transform:rotateY(120deg) translateZ(58px); }
-    .prism-face--c{ --tint:rgba(255,46,210,.34); transform:rotateY(240deg) translateZ(58px); }
-    .prism-cap{
-      position:absolute; left:50%; top:50%; width:200px; height:173px; margin:-86.5px 0 0 -100px;
-      clip-path:polygon(50% 0, 100% 100%, 0 100%);
-      transform-origin:50% 66.7%;
-      background:linear-gradient(120deg, rgba(0,229,255,.30), rgba(139,92,246,.30) 50%, rgba(255,46,210,.30));
-      border:1px solid rgba(255,255,255,.3);
-    }
-    .prism-cap--top{ transform:rotateX(90deg) translateZ(120px); }
-    .prism-cap--bottom{ transform:rotateX(90deg) translateZ(-120px); }
-    .hero-layout{ position:relative; z-index:1; display:grid; grid-template-columns:minmax(0, 1.04fr) minmax(0, .96fr); gap:58px; align-items:center; }
+    .rupee-hint::after{ content:"DRAG TO TILT"; }
+    @media (hover:none){ .rupee-hint::after{ content:"SWIPE TO TILT"; } }
+    .hero-layout{ position:relative; z-index:1; display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 400px) minmax(0, .96fr); gap:40px; align-items:center; }
     .hero-layout > *{ min-width:0; }
     .hero-copy{ max-width:600px; }
     .term-chip{
@@ -305,11 +297,13 @@
     .partner-mini-stack{ display:flex; }
     .partner-mini-stack span{
       width:26px; height:26px; border-radius:8px; display:grid; place-items:center; margin-left:-7px;
-      font-size:10.5px; font-weight:700; color:#fff; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.08);
+      font-size:10.5px; font-weight:700; color:#fff; border:1px solid rgba(255,255,255,.22); background:#fff; overflow:hidden;
     }
+    .partner-mini-stack span svg{ width:20px; height:20px; display:block; }
     .partner-mini-stack span:first-child{ margin-left:0; border-color:rgba(0,229,255,.45); }
     .partner-mini-stack span:nth-child(2){ border-color:rgba(139,92,246,.5); }
     .partner-mini-stack span:nth-child(3){ border-color:rgba(255,46,210,.5); }
+    .partner-mini-stack span:last-child{ background:rgba(255,255,255,.08); }
 
     /* ---------- lead card ---------- */
     .lead-card{
@@ -474,16 +468,17 @@
     .partner-mark{
       width:42px; height:42px; flex:0 0 auto; display:grid; place-items:center; border-radius:12px;
       font-weight:700; font-size:18px; color:#fff;
-      background:rgba(255,255,255,.06); border:1px solid var(--line-strong);
+      background:#fff; border:1px solid var(--line-strong); overflow:hidden; padding:4px;
     }
+    .partner-mark svg{ width:100%; height:100%; display:block; }
     .partner-logo strong{ display:block; font-size:13.5px; letter-spacing:.03em; }
     .partner-logo small{ display:block; font-family:var(--font-mono); font-size:9px; letter-spacing:.16em; color:var(--ghost); margin-top:2px; }
-    .partner-logo--hdfc .partner-mark{ color:var(--cyan); border-color:rgba(0,229,255,.5); box-shadow:0 0 20px rgba(0,229,255,.2); }
-    .partner-logo--icici .partner-mark{ color:var(--amber); border-color:rgba(255,180,84,.5); box-shadow:0 0 20px rgba(255,180,84,.2); }
-    .partner-logo--axis .partner-mark{ color:var(--magenta); border-color:rgba(255,46,210,.5); box-shadow:0 0 20px rgba(255,46,210,.2); }
-    .partner-logo--kotak .partner-mark{ color:var(--violet); border-color:rgba(139,92,246,.55); box-shadow:0 0 20px rgba(139,92,246,.22); }
-    .partner-logo--bajaj .partner-mark{ color:var(--blue); border-color:rgba(77,124,255,.55); box-shadow:0 0 20px rgba(77,124,255,.22); }
-    .partner-logo--tata .partner-mark{ color:var(--mint); border-color:rgba(61,255,180,.45); box-shadow:0 0 20px rgba(61,255,180,.18); }
+    .partner-logo--hdfc .partner-mark{ border-color:rgba(0,229,255,.5); box-shadow:0 0 20px rgba(0,229,255,.2); }
+    .partner-logo--icici .partner-mark{ border-color:rgba(255,180,84,.5); box-shadow:0 0 20px rgba(255,180,84,.2); }
+    .partner-logo--axis .partner-mark{ border-color:rgba(255,46,210,.5); box-shadow:0 0 20px rgba(255,46,210,.2); }
+    .partner-logo--kotak .partner-mark{ border-color:rgba(139,92,246,.55); box-shadow:0 0 20px rgba(139,92,246,.22); }
+    .partner-logo--bajaj .partner-mark{ border-color:rgba(77,124,255,.55); box-shadow:0 0 20px rgba(77,124,255,.22); }
+    .partner-logo--tata .partner-mark{ border-color:rgba(61,255,180,.45); box-shadow:0 0 20px rgba(61,255,180,.18); }
     .lender-browser{ border-radius:22px; overflow:hidden; }
     .lender-browser-head{
       display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
@@ -523,11 +518,17 @@
     .lender-category-group{ width:100%; margin-bottom:14px; }
     .lender-category-group:last-child{ margin-bottom:0; }
     .lender-chip{
-      display:inline-flex; align-items:center; gap:9px; padding:9px 15px; border-radius:999px;
+      display:inline-flex; align-items:center; gap:9px; padding:7px 14px 7px 8px; border-radius:999px;
       font-size:13px; color:var(--muted); background:rgba(255,255,255,.03); border:1px solid var(--line);
       transition:color .18s, border-color .18s, box-shadow .18s, transform .18s; --dot:rgba(255,255,255,.4);
     }
-    .lender-chip::before{ content:""; width:6px; height:6px; border-radius:50%; flex:0 0 auto; background:var(--dot); box-shadow:0 0 9px var(--dot); }
+    .lender-chip-logo{
+      width:25px; height:25px; border-radius:8px; flex:0 0 auto; display:grid; place-items:center;
+      background:#fff; border:1px solid rgba(255,255,255,.25); overflow:hidden; padding:2px;
+      box-shadow:0 2px 8px rgba(0,0,0,.35);
+    }
+    .lender-chip-logo svg{ width:100%; height:100%; display:block; }
+    .lender-chip-name{ line-height:1.2; }
     .lender-chip:nth-child(4n+1){ --dot:var(--cyan); }
     .lender-chip:nth-child(4n+2){ --dot:var(--violet); }
     .lender-chip:nth-child(4n+3){ --dot:var(--magenta); }
@@ -851,10 +852,16 @@
       .process-steps{ grid-template-columns:repeat(2, 1fr); }
       .footer-main{ grid-template-columns:1fr 1fr; }
     }
-    @media (max-width:980px){
+    /* Three columns would squeeze the copy and application form below this width; stack
+       the dedicated visual first so the rotating rupee stays immediately visible. */
+    @media (max-width:1200px){
       .hero-layout{ grid-template-columns:minmax(0, 1fr); gap:48px; }
       .hero-copy{ max-width:660px; }
-      .prism-scene{ transform:scale(.68) translateY(-90px); opacity:.8; }
+      .hero-visual{ justify-items:center; order:-1; }
+      .rupee-stage{ max-width:360px; height:360px; min-height:320px; }
+      #rupee-canvas{ height:360px; min-height:320px; }
+    }
+    @media (max-width:980px){
       .personal-application-layout{ grid-template-columns:1fr; gap:40px; }
       .personal-application-copy{ position:static; }
       .calculator-layout{ grid-template-columns:1fr; gap:44px; }
@@ -869,7 +876,9 @@
     @media (max-width:640px){
       .container{ width:calc(100% - 36px); }
       .hero{ padding-top:56px; }
-      .prism-scene{ transform:scale(.52) translateY(-150px); opacity:.62; }
+      .rupee-stage{ max-width:300px; height:330px; min-height:300px; }
+      #rupee-canvas{ height:330px; min-height:300px; }
+      .rupee-hint{ display:none; }
       .section{ padding:72px 0; }
       .loan-type-grid{ grid-template-columns:repeat(2, 1fr); }
       .lead-fields{ grid-template-columns:1fr; }
@@ -900,7 +909,8 @@
       *, *::before, *::after{
         animation:none !important; transition:none !important; scroll-behavior:auto !important;
       }
-      .prism-rig{ will-change:auto !important; }
+      .rupee-stage{ will-change:auto !important; }
+      .rupee-stage.is-fallback .rupee-coin{ animation:rupee-coin 30s linear infinite !important; }
     }
     ::-webkit-scrollbar{ width:10px; height:10px; }
     ::-webkit-scrollbar-track{ background:#000; }
@@ -961,32 +971,9 @@
 
   <main>
     <section class="hero" id="hero" aria-labelledby="hero-title">
-      <div class="hero-canvas" aria-hidden="true">
-        <div class="prism-scene" id="prism-scene">
-          <div class="prism-halo"></div>
-          <div class="prism-floor"></div>
-          <div class="beam-in"></div>
-          <div class="beam-spread"></div>
-          <div class="beam-out" style="--a:-22deg; --c:#00E5FF; --d:0s"></div>
-          <div class="beam-out" style="--a:-13deg; --c:#4D7CFF; --d:.7s"></div>
-          <div class="beam-out" style="--a:-4deg; --c:#8B5CF6; --d:1.4s"></div>
-          <div class="beam-out" style="--a:5deg; --c:#B39DFF; --d:2.1s"></div>
-          <div class="beam-out" style="--a:14deg; --c:#FF2ED2; --d:2.8s"></div>
-          <div class="beam-out" style="--a:23deg; --c:#FFB454; --d:3.5s"></div>
-          <div class="prism-rig" id="prism-rig">
-            <div class="prism">
-              <div class="prism-face prism-face--a"></div>
-              <div class="prism-face prism-face--b"></div>
-              <div class="prism-face prism-face--c"></div>
-              <div class="prism-cap prism-cap--top"></div>
-              <div class="prism-cap prism-cap--bottom"></div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="container hero-layout">
         <div class="hero-copy">
-          <div class="term-chip"><span class="term-dot"></span><span class="term-path">nexa@ruconnect:~$</span> init loan-engine --lenders 49 --upfront-fees 0</div>
+          <div class="term-chip"><span class="term-dot"></span><span class="term-path">nexa@ruconnect:~$</span> init loan-engine --lenders 48 --upfront-fees 0</div>
           <h1 id="hero-title">Instant Personal &amp; Business Loans from <span class="gradient-text">30+ Top Banks.</span></h1>
           <p class="hero-subhead">Compare rates starting from <strong>9.99% p.a.</strong> Zero upfront fees, 100% digital process with Ruconnect network backing.</p>
           <div class="hero-highlights">
@@ -999,6 +986,30 @@
             <div class="hero-note-copy"><strong>Your options. Your pace.</strong><br />Compare repayment, fees and lender terms before you decide.</div>
           </div>
           <p class="hero-footnote">*Rates and fees are indicative and lender-specific. Offers and approvals depend on lender criteria. Lender names are provided for reference, not proof of a direct partnership. <a href="#disclaimer">Important disclosures</a>.</p>
+        </div>
+
+        <div class="hero-visual rupee-stage" id="rupee-stage" aria-hidden="true">
+          <div class="rupee-glow"></div>
+          <div class="rupee-grid"></div>
+          <canvas class="rupee-gl" id="rupee-canvas"></canvas>
+          <div class="rupee-static">
+            <span class="rupee-coin">
+              <svg class="rupee-coin-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+                <defs>
+                  <linearGradient id="rupee-face-grad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#EAFFF7"/><stop offset=".45" stop-color="#00F5A0"/><stop offset="1" stop-color="#0B7C58"/>
+                  </linearGradient>
+                  <g id="rupee-strokes" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M38 36.4H62M38 43.6H62M38 43.6L60.8 64.8M62 43.6C68.8 45.6 66 52 51.6 51.6"/>
+                  </g>
+                </defs>
+                <use href="#rupee-strokes" y="5.2" stroke="#04331F" stroke-width="8" opacity=".95"/>
+                <use href="#rupee-strokes" y="2.6" stroke="#0B7C58" stroke-width="6.4"/>
+                <use href="#rupee-strokes" stroke="url(#rupee-face-grad)" stroke-width="4.6"/>
+              </svg>
+            </span>
+          </div>
+          <span class="rupee-hint"></span>
         </div>
 
         <div class="lead-card-wrap">
@@ -1034,7 +1045,7 @@
       </div>
       <div class="container hero-bottom">
         <div class="hero-bottom-left"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>Secure, consent-led experience <span>·</span> No credit-bureau check at this stage</div>
-        <div class="hero-bottom-right"><div class="partner-mini-stack" aria-hidden="true"><span>H</span><span>I</span><span>A</span><span>+</span></div><span><strong>One application.</strong> More lender options.</span></div>
+        <div class="hero-bottom-right"><div class="partner-mini-stack" aria-hidden="true"><span><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="4" fill="#E31837"/><rect x="13.5" y="0" width="5" height="32" fill="#fff"/><rect x="0" y="13.5" width="32" height="5" fill="#fff"/><rect x="6.5" y="6.5" width="19" height="19" fill="#fff"/><rect x="9.5" y="9.5" width="13" height="13" fill="#004C8F"/></svg></span><span><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="4" fill="#fff"/><ellipse cx="16" cy="16" rx="10" ry="12.5" transform="rotate(28 16 16)" fill="#F37021"/><ellipse cx="17.2" cy="16.5" rx="7.8" ry="10.5" transform="rotate(28 17.2 16.5)" fill="#9B1B1E"/><circle cx="19" cy="9" r="2.5" fill="#fff"/><path d="M13 15.2c2.2-1.8 5.2-2.2 6.2-1.4.8.7-.6 4.8-1.5 8.5-.6 2.3-.2 3.2 1.2 3.5-2.6.8-5.3.2-5.6-1.8-.3-2 1.1-5.6 1.6-7.2-1 .3-1.8.8-2.4 1.4z" fill="#fff"/></svg></span><span><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="4" fill="#97144D"/><path d="M16 5.5 6.5 25.5h5.8l5.9-12.5-2.2-7.5zm2.4 13.2 3.1 6.8h4.2l-3.6-6.8h-3.7z" fill="#fff"/></svg></span><span>+</span></div><span><strong>One application.</strong> More lender options.</span></div>
       </div>
     </section>
 
@@ -1044,19 +1055,19 @@
       <div class="container">
         <div class="network-heading"><span class="network-eyebrow" id="partner-title"><i></i> LENDING NETWORK</span><span class="network-subtext">Bank, NBFC &amp; digital lender directory</span></div>
         <div class="partner-logo-grid" aria-label="Lender directory">
-          <div class="partner-logo partner-logo--hdfc"><span class="partner-mark">H</span><span><strong>HDFC</strong><small>BANK</small></span></div>
-          <div class="partner-logo partner-logo--icici"><span class="partner-mark">i</span><span><strong>ICICI</strong><small>BANK</small></span></div>
-          <div class="partner-logo partner-logo--axis"><span class="partner-mark">A</span><span><strong>AXIS</strong><small>BANK</small></span></div>
-          <div class="partner-logo partner-logo--kotak"><span class="partner-mark">K</span><span><strong>kotak</strong><small>MAHINDRA BANK</small></span></div>
-          <div class="partner-logo partner-logo--bajaj"><span class="partner-mark">B</span><span><strong>BAJAJ</strong><small>FINSERV</small></span></div>
-          <div class="partner-logo partner-logo--tata"><span class="partner-mark">T</span><span><strong>TATA</strong><small>CAPITAL</small></span></div>
+          <div class="partner-logo partner-logo--hdfc"><span class="partner-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="4" fill="#E31837"/><rect x="13.5" y="0" width="5" height="32" fill="#fff"/><rect x="0" y="13.5" width="32" height="5" fill="#fff"/><rect x="6.5" y="6.5" width="19" height="19" fill="#fff"/><rect x="9.5" y="9.5" width="13" height="13" fill="#004C8F"/></svg></span><span><strong>HDFC</strong><small>BANK</small></span></div>
+          <div class="partner-logo partner-logo--icici"><span class="partner-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="4" fill="#fff"/><ellipse cx="16" cy="16" rx="10" ry="12.5" transform="rotate(28 16 16)" fill="#F37021"/><ellipse cx="17.2" cy="16.5" rx="7.8" ry="10.5" transform="rotate(28 17.2 16.5)" fill="#9B1B1E"/><circle cx="19" cy="9" r="2.5" fill="#fff"/><path d="M13 15.2c2.2-1.8 5.2-2.2 6.2-1.4.8.7-.6 4.8-1.5 8.5-.6 2.3-.2 3.2 1.2 3.5-2.6.8-5.3.2-5.6-1.8-.3-2 1.1-5.6 1.6-7.2-1 .3-1.8.8-2.4 1.4z" fill="#fff"/></svg></span><span><strong>ICICI</strong><small>BANK</small></span></div>
+          <div class="partner-logo partner-logo--axis"><span class="partner-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="4" fill="#97144D"/><path d="M16 5.5 6.5 25.5h5.8l5.9-12.5-2.2-7.5zm2.4 13.2 3.1 6.8h4.2l-3.6-6.8h-3.7z" fill="#fff"/></svg></span><span><strong>AXIS</strong><small>BANK</small></span></div>
+          <div class="partner-logo partner-logo--kotak"><span class="partner-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#003874"/><rect x="14.5" y="6.5" width="3" height="19" rx="1" fill="#ED1C24"/><path d="M15.5 16c-2-3.2-4.2-4.5-6.4-4.5-2.5 0-4.3 1.9-4.3 4.5s1.8 4.5 4.3 4.5c2.2 0 4.4-1.3 6.4-4.5zm1 0c2-3.2 4.2-4.5 6.4-4.5 2.2 0 3.8 1.4 4.2 3.4h-2.8c-.3-.6-.8-1-1.5-1-1.3 0-2.7 1-4.1 2.1 1.4 1.1 2.8 2.1 4.1 2.1.7 0 1.2-.4 1.5-1h2.8c-.4 2-2 3.4-4.2 3.4-2.2 0-4.4-1.3-6.4-4.5z" fill="#fff"/><circle cx="9.2" cy="16" r="1.9" fill="#003874"/></svg></span><span><strong>kotak</strong><small>MAHINDRA BANK</small></span></div>
+          <div class="partner-logo partner-logo--bajaj"><span class="partner-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#0066B3"/><path d="M9.5 8.5h8.8c3.2 0 5.4 1.6 5.4 4.1 0 1.7-1 3-2.6 3.5 1.9.5 3.1 1.9 3.1 3.9 0 2.8-2.3 4.5-5.8 4.5H9.5V8.5zm3.6 3v3.3h4.3c1.3 0 2.1-.6 2.1-1.6 0-1.1-.8-1.7-2.1-1.7h-4.3zm0 6.1v3.7h4.7c1.4 0 2.3-.7 2.3-1.8 0-1.2-.9-1.9-2.3-1.9h-4.7z" fill="#fff"/></svg></span><span><strong>BAJAJ</strong><small>FINSERV</small></span></div>
+          <div class="partner-logo partner-logo--tata"><span class="partner-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="4" fill="#fff"/><ellipse cx="16" cy="16" rx="14" ry="10.5" fill="#00599C"/><path d="M5 12.2c3.4-.9 7.1-1.4 11-1.4s7.6.5 11 1.4v2.3c-2.6-.5-5.7-.8-9.2-.9v11.6h-3.6V13.6c-3.5.1-6.6.4-9.2.9v-2.3z" fill="#fff"/></svg></span><span><strong>TATA</strong><small>CAPITAL</small></span></div>
         </div>
         <div class="lender-browser glass">
-          <div class="lender-browser-head"><div><strong>Explore lender names</strong><span>Institution and product availability can change by location, eligibility and active channel authorisation.</span></div><span class="lender-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg>49 INSTITUTIONS</span></div>
+          <div class="lender-browser-head"><div><strong>Explore lender names</strong><span>Institution and product availability can change by location, eligibility and active channel authorisation.</span></div><span class="lender-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg>48 INSTITUTIONS</span></div>
           <div class="lender-tabs" role="tablist" aria-label="Filter lender directory">
-            <button class="lender-tab is-active" type="button" data-lender-group="all" role="tab" aria-selected="true">All institutions <span>49</span></button>
+            <button class="lender-tab is-active" type="button" data-lender-group="all" role="tab" aria-selected="true">All institutions <span>48</span></button>
             <button class="lender-tab" type="button" data-lender-group="private" role="tab" aria-selected="false">Private &amp; other banks <span>15</span></button>
-            <button class="lender-tab" type="button" data-lender-group="public" role="tab" aria-selected="false">Public sector banks <span>10</span></button>
+            <button class="lender-tab" type="button" data-lender-group="public" role="tab" aria-selected="false">Public sector banks <span>9</span></button>
             <button class="lender-tab" type="button" data-lender-group="nbfc" role="tab" aria-selected="false">Major NBFCs <span>15</span></button>
             <button class="lender-tab" type="button" data-lender-group="fintech" role="tab" aria-selected="false">Fintech &amp; neo-lenders <span>9</span></button>
           </div>
@@ -1345,16 +1356,73 @@
       // Lender directory: names are supplied examples, not an assertion of active contracts.
       const lenderGroups = {
         private: ['HDFC Bank', 'ICICI Bank', 'Axis Bank', 'Kotak Mahindra Bank', 'IDFC FIRST Bank', 'RBL Bank', 'IndusInd Bank', 'Federal Bank', 'YES Bank', 'Bandhan Bank', 'IDBI Bank', 'City Union Bank', 'Karnataka Bank', 'Dhanlaxmi Bank', 'DBS Bank'],
-        public: ['State Bank of India (SBI)', 'Bank of Baroda (BoB)', 'Canara Bank', 'Punjab National Bank (PNB)', 'Union Bank of India', 'Bank of India (BoI)', 'Central Bank of India', 'Indian Bank', 'Bank of Maharashtra', 'UCO Bank'],
+        public: ['Bank of Baroda (BoB)', 'Canara Bank', 'Punjab National Bank (PNB)', 'Union Bank of India', 'Bank of India (BoI)', 'Central Bank of India', 'Indian Bank', 'Bank of Maharashtra', 'UCO Bank'],
         nbfc: ['Piramal Finance', 'HDB Financial Services (HDBFS)', 'Tata Capital', 'Aditya Birla Finance', 'Bajaj Finserv', 'L&T Finance', 'InCred Financial Services', 'IIFL Finance', 'Godrej Capital', 'Mahindra Finance', 'Shriram Finance', 'Cholamandalam Investment and Finance (Chola DB)', 'Muthoot Finance', 'Manappuram Finance', 'Hero Fincorp'],
         fintech: ['Fibe (EarlySalary)', 'ZipLoan', 'KreditBee', 'Moneyview', 'PaySense', 'CASHe', 'Navi Finserv', 'Finnable', 'mPokket']
+      };
+      const lenderLogos = {
+        'HDFC Bank': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="4" fill="#E31837"/><rect x="13.5" y="0" width="5" height="32" fill="#fff"/><rect x="0" y="13.5" width="32" height="5" fill="#fff"/><rect x="6.5" y="6.5" width="19" height="19" fill="#fff"/><rect x="9.5" y="9.5" width="13" height="13" fill="#004C8F"/></svg>',
+        'ICICI Bank': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#fff"/><ellipse cx="16" cy="16" rx="10" ry="12.5" transform="rotate(28 16 16)" fill="#F37021"/><ellipse cx="17.2" cy="16.5" rx="7.8" ry="10.5" transform="rotate(28 17.2 16.5)" fill="#9B1B1E"/><circle cx="19" cy="9" r="2.5" fill="#fff"/><path d="M13 15.2c2.2-1.8 5.2-2.2 6.2-1.4.8.7-.6 4.8-1.5 8.5-.6 2.3-.2 3.2 1.2 3.5-2.6.8-5.3.2-5.6-1.8-.3-2 1.1-5.6 1.6-7.2-1 .3-1.8.8-2.4 1.4z" fill="#fff"/></svg>',
+        'Axis Bank': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#97144D"/><path d="M16 5.5 6.5 25.5h5.8l5.9-12.5-2.2-7.5zm2.4 13.2 3.1 6.8h4.2l-3.6-6.8h-3.7z" fill="#fff"/></svg>',
+        'Kotak Mahindra Bank': '<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#003874"/><rect x="14.5" y="6.5" width="3" height="19" rx="1" fill="#ED1C24"/><path d="M15.5 16c-2-3.2-4.2-4.5-6.4-4.5-2.5 0-4.3 1.9-4.3 4.5s1.8 4.5 4.3 4.5c2.2 0 4.4-1.3 6.4-4.5zm1 0c2-3.2 4.2-4.5 6.4-4.5 2.2 0 3.8 1.4 4.2 3.4h-2.8c-.3-.6-.8-1-1.5-1-1.3 0-2.7 1-4.1 2.1 1.4 1.1 2.8 2.1 4.1 2.1.7 0 1.2-.4 1.5-1h2.8c-.4 2-2 3.4-4.2 3.4-2.2 0-4.4-1.3-6.4-4.5z" fill="#fff"/><circle cx="9.2" cy="16" r="1.9" fill="#003874"/></svg>',
+        'IDFC FIRST Bank': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#9D1D27"/><rect x="5.5" y="5.5" width="21" height="21" rx="2" fill="none" stroke="#fff" stroke-width="2.2"/><rect x="9.5" y="9.5" width="13" height="3.2" fill="#fff"/><rect x="9.5" y="14.5" width="9" height="3.2" fill="#fff"/><rect x="9.5" y="19.5" width="4.5" height="3.2" fill="#fff"/></svg>',
+        'RBL Bank': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#fff"/><rect x="8.5" y="5" width="5" height="14" fill="#1B3280"/><path d="M16.5 10.5a8.2 8.2 0 1 1-5 14.7v-4.6a4.2 4.2 0 1 0 5-6.1v-4z" fill="#1B3280"/><path d="M8.5 27v-8.5c0-4.8 3.2-8 7.3-8v4.2c-1.9 0-2.3 1.4-2.3 3.8V27h-5z" fill="#E31E24"/></svg>',
+        'IndusInd Bank': '<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#fff"/><ellipse cx="16" cy="16" rx="13" ry="10.5" fill="none" stroke="#5BC2E7" stroke-width="2.2"/><line x1="3" y1="16" x2="29" y2="16" stroke="#5BC2E7" stroke-width="1.5"/><line x1="16" y1="5.5" x2="16" y2="26.5" stroke="#5BC2E7" stroke-width="1.5"/><path d="M10 19v-3c0-2 2-3 4.5-3h3c1.2-1.8 2.8-2.8 4-2-.5 1.2-.5 2.4 0 3.5.8 1.5.2 3.5-1.5 4.5h-10z" fill="#98272A"/></svg>',
+        'Federal Bank': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#004A8F"/><rect x="0" y="24.5" width="32" height="7.5" fill="#F7A800"/><path d="M19.5 7.5c-3.2 0-5.2 1.8-5.7 4.8l-.3 1.7H11l-.5 2.8h2.5l-1.2 6.2h3.8l1.2-6.2h3.4l.5-2.8h-3.4l.2-1.4c.3-1.4 1-2.1 2.4-2.1h1.4l.5-3h-2.3z" fill="#fff"/></svg>',
+        'YES Bank': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#00518F"/><path d="M6.5 16.5 13 23.5 26.5 6.5" fill="none" stroke="#fff" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 16.5 13 23.5 26.5 6.5" fill="none" stroke="#E31E24" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        'Bandhan Bank': '<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#002F5F"/><circle cx="16" cy="16" r="10.5" fill="#E31E24"/><path d="M16 5.5a10.5 10.5 0 0 1 0 21z" fill="#B5121B"/><path d="M16 7.5c2.5 3.6 2.8 7.8 0 12.2-2.8-4.4-2.5-8.6 0-12.2z" fill="#fff"/></svg>',
+        'IDBI Bank': '<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#00846C"/><circle cx="16" cy="16" r="11" fill="#fff"/><circle cx="16" cy="16.5" r="7.8" fill="#F37021"/><rect x="14.2" y="12.5" width="3.6" height="11" rx="1" fill="#fff"/><circle cx="16" cy="9.5" r="1.9" fill="#F37021"/></svg>',
+        'City Union Bank': '<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#fff"/><circle cx="16" cy="13.5" r="8.5" fill="none" stroke="#283583" stroke-width="2"/><path d="M16 8.5c1.8 2 1.8 4.5 0 6.5-1.8-2-1.8-4.5 0-6.5z" fill="#283583"/><rect x="5" y="23" width="22" height="4.5" rx="2" fill="#EC008C"/></svg>',
+        'Karnataka Bank': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#7B2481"/><polygon points="16,5.5 25,21 7,21" fill="none" stroke="#fff" stroke-width="2.1" stroke-linejoin="round"/><polygon points="16,26.5 25,11 7,11" fill="none" stroke="#fff" stroke-width="2.1" stroke-linejoin="round"/><circle cx="16" cy="16" r="2" fill="#fff"/></svg>',
+        'Dhanlaxmi Bank': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#540D46"/><path d="M16 7c2.4 3.5 2.4 7.2 0 10.5-2.4-3.3-2.4-7 0-10.5zm-5.5 5.5c3.2 1.2 5 3.6 5.2 7-3.4-.4-5.4-2.8-5.2-7zm11 0c.2 4.2-1.8 6.6-5.2 7 .2-3.4 2-5.8 5.2-7z" fill="#7AC143"/><rect x="10" y="21.5" width="12" height="2.6" rx="1.3" fill="#fff"/></svg>',
+        'DBS Bank': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#E31B23"/><path d="M16 5.5 19.5 12.5 26.5 16 19.5 19.5 16 26.5 12.5 19.5 5.5 16 12.5 12.5Z" fill="#fff"/><circle cx="16" cy="16" r="2.8" fill="#E31B23"/></svg>',
+        'Bank of Baroda (BoB)': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#F26522"/><path d="M9.5 7.5h8.5c3.4 0 5.8 1.7 5.8 4.4 0 1.8-1.1 3.2-2.8 3.8 2 .5 3.4 2 3.4 4.1 0 2.9-2.5 4.7-6.2 4.7H7.5l2-17zm3.5 3.2-.6 3.8h4.2c1.4 0 2.3-.7 2.3-1.9 0-1.2-.9-1.9-2.3-1.9H13zm-1 6.7-.7 4.1h4.6c1.5 0 2.5-.8 2.5-2.1 0-1.3-1-2-2.5-2H12z" fill="#fff"/><path d="M7 23.5 15 17M7 20l7-4.5M7 16.5l5.5-3" stroke="#F26522" stroke-width="1.4" stroke-linecap="round"/></svg>',
+        'Canara Bank': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#fff"/><polygon points="18.5,6.5 26.5,22 11,20.5" fill="none" stroke="#0095D9" stroke-width="2.8" stroke-linejoin="round"/><polygon points="6,14.5 20.5,13 14,25.5" fill="none" stroke="#FDB913" stroke-width="2.8" stroke-linejoin="round"/></svg>',
+        'Punjab National Bank (PNB)': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#A20A3A"/><path d="M9 9.5v6c0 4.2 3.2 7.2 7.2 7.2h2.3V25h3.5V9.5h-3.5v10h-2c-2.2 0-4-1.6-4-4V9.5H9z" fill="#FBB016"/><circle cx="15.8" cy="13.5" r="2.6" fill="#FBB016"/></svg>',
+        'Union Bank of India': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#fff"/><path d="M8.5 9.5v9c0 3.6 2.7 6.2 6.2 6.2s6.2-2.6 6.2-6.2V13h-3.4v5.5c0 1.6-1.2 2.8-2.8 2.8s-2.8-1.2-2.8-2.8v-9H8.5z" fill="#E31E24"/><path d="M23.5 22.5v-9c0-3.6-2.7-6.2-6.2-6.2s-6.2 2.6-6.2 6.2V19h3.4v-5.5c0-1.6 1.2-2.8 2.8-2.8s2.8 1.2 2.8 2.8v9h3.4z" fill="#0054A6"/></svg>',
+        'Bank of India (BoI)': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#0072BC"/><polygon points="16,3.5 18.8,12.5 28,12.5 20.6,17.8 23.4,26.8 16,21.4 8.6,26.8 11.4,17.8 4,12.5 13.2,12.5" fill="#F36F21"/><circle cx="16" cy="16.2" r="3" fill="#fff"/></svg>',
+        'Central Bank of India': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#0066B3"/><rect x="5" y="5" width="22" height="22" fill="#fff"/><path d="M16 7.5 24.5 16 16 24.5 7.5 16Z" fill="none" stroke="#ED1C24" stroke-width="3.4"/><rect x="11" y="14.4" width="10" height="3.2" fill="#ED1C24"/></svg>',
+        'Indian Bank': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#004A99"/><circle cx="16" cy="11" r="4.6" fill="none" stroke="#FFD100" stroke-width="2.8"/><circle cx="11.5" cy="19" r="4.6" fill="none" stroke="#FFD100" stroke-width="2.8"/><circle cx="20.5" cy="19" r="4.6" fill="none" stroke="#FFD100" stroke-width="2.8"/></svg>',
+        'Bank of Maharashtra': '<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14.5" fill="#fff" stroke="#0072BC" stroke-width="2"/><path d="M16 6.5 13 22h6L16 6.5z" fill="#0072BC"/><circle cx="16" cy="6" r="2" fill="#F26522"/><rect x="9" y="22" width="14" height="2.6" rx="1.2" fill="#0072BC"/></svg>',
+        'UCO Bank': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#fff"/><polygon points="11,5 21,5 27,11 27,21 21,27 11,27 5,21 5,11" fill="#0E4C92"/><polygon points="16,9 22,15 16,21 10,15" fill="none" stroke="#fff" stroke-width="2.2"/><circle cx="16" cy="15" r="2.5" fill="#FDB913"/><rect x="14.5" y="18" width="3" height="7" fill="#fff"/></svg>',
+        'Piramal Finance': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#fff"/><circle cx="16" cy="16" r="11.5" fill="none" stroke="#F26522" stroke-width="2.8"/><path d="M12.5 22.5V9.5h5c2.8 0 4.6 1.6 4.6 4.1s-1.8 4.1-4.6 4.1h-2v4.8h-3z" fill="#F26522"/></svg>',
+        'HDB Financial Services (HDBFS)': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#004C8F"/><rect x="4" y="4" width="24" height="24" rx="2" fill="none" stroke="#E31837" stroke-width="3.2"/><text x="16" y="19.5" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="9.5" fill="#fff">HDB</text></svg>',
+        'Tata Capital': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#fff"/><ellipse cx="16" cy="16" rx="13.5" ry="10" fill="#00599C"/><path d="M5.5 12.4c3.2-.8 6.8-1.3 10.5-1.3s7.3.5 10.5 1.3v2.2c-2.5-.5-5.4-.8-8.8-.9v11h-3.4v-11c-3.4.1-6.3.4-8.8.9v-2.2z" fill="#fff"/></svg>',
+        'Aditya Birla Finance': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#C4161C"/><polygon points="16,5 6,25 16,25" fill="#F37021"/><polygon points="16,5 26,25 16,25" fill="#FFC72C"/><path d="M9 25a7 7 0 0 1 14 0z" fill="#C4161C"/><rect x="4" y="25" width="24" height="2.5" fill="#F7A800"/></svg>',
+        'Bajaj Finserv': '<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#0066B3"/><path d="M9.5 8.5h8.8c3.2 0 5.4 1.6 5.4 4.1 0 1.7-1 3-2.6 3.5 1.9.5 3.1 1.9 3.1 3.9 0 2.8-2.3 4.5-5.8 4.5H9.5V8.5zm3.6 3v3.3h4.3c1.3 0 2.1-.6 2.1-1.6 0-1.1-.8-1.7-2.1-1.7h-4.3zm0 6.1v3.7h4.7c1.4 0 2.3-.7 2.3-1.8 0-1.2-.9-1.9-2.3-1.9h-4.7z" fill="#fff"/></svg>',
+        'L&T Finance': '<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#FFC600"/><circle cx="16" cy="16" r="12.2" fill="#005596"/><path d="M9.5 10.5v11h7v-2.8h-3.8v-8.2H9.5zm8.2 0v2.8h2.6v8.2h3.2v-8.2H26v-2.8h-8.3z" fill="#fff"/></svg>',
+        'InCred Financial Services': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#1B2432"/><text x="14.5" y="20.5" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="12" fill="#fff">In</text><rect x="22.5" y="9.5" width="3.2" height="8" rx="1.2" fill="#E8384F"/><circle cx="24.1" cy="20.5" r="1.7" fill="#E8384F"/></svg>',
+        'IIFL Finance': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#1B365D"/><text x="16" y="22.5" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="10.5" fill="#fff">IIFL</text><circle cx="16" cy="8.5" r="2.8" fill="#F37021"/></svg>',
+        'Godrej Capital': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#fff"/><path d="M21.5 11.5a7.5 7.5 0 1 0 1.2 6.2h-6.2v-3h9.2v1.3a10.2 10.2 0 1 1-2-6.5l-2.2 2z" fill="#D91B5C"/><circle cx="23" cy="9.5" r="2.2" fill="#7AC143"/></svg>',
+        'Mahindra Finance': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#E31837"/><path d="M6.5 23.5 12 8.5l4 8.5 4-8.5 5.5 15h-3.6l-2.7-8.2-3.2 6.8-3.2-6.8-2.7 8.2H6.5z" fill="#fff"/></svg>',
+        'Shriram Finance': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#FFD100"/><circle cx="16" cy="10" r="3.6" fill="#111"/><path d="M9.5 15.5c4.2 1.8 8.8 1.8 13 0l-2 10.5h-9l-2-10.5z" fill="#111"/></svg>',
+        'Cholamandalam Investment and Finance (Chola DB)': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#fff"/><path d="M22.5 11a8 8 0 1 0 0 10l2.4 2.2a11.2 11.2 0 1 1 0-14.4L22.5 11z" fill="#ED1C24"/><circle cx="17" cy="16" r="3.6" fill="#0054A6"/></svg>',
+        'Muthoot Finance': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#DA251D"/><circle cx="11.5" cy="16.5" r="5" fill="none" stroke="#fff" stroke-width="2.6"/><circle cx="20.5" cy="16.5" r="5" fill="none" stroke="#fff" stroke-width="2.6"/><path d="M11.5 11.5 16 7l4.5 4.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        'Manappuram Finance': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#FFC700"/><path d="M6.5 23.5V9l5 6.5L16 9l4.5 6.5 5-6.5v14.5h-3.5v-8l-3.2 4.2L16 15.5l-2.8 3.8-3.2-4.2v8H6.5z" fill="#E31E24"/></svg>',
+        'Hero Fincorp': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#111"/><polygon points="8,7 13,7 13,25 8,22" fill="#EE2326"/><polygon points="19,10 24,7 24,25 19,25" fill="#fff"/><polygon points="13,14 19,14 19,18 13,18" fill="#EE2326"/></svg>',
+        'Fibe (EarlySalary)': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#0F172A"/><text x="15" y="21.5" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="12" fill="#00C4B3">fibe</text><circle cx="26.5" cy="11.5" r="2.2" fill="#FF3366"/></svg>',
+        'ZipLoan': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#F37021"/><path d="M9 9.5h14l-9.2 13H23v3H8.5l9.2-13H9v-3z" fill="#fff"/></svg>',
+        'KreditBee': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#FDB913"/><polygon points="16,4.5 25.5,10 25.5,22 16,27.5 6.5,22 6.5,10" fill="#111"/><path d="M11.5 10v12h3v-4.8l4.2 4.8h3.8l-5.2-6 4.8-6h-3.8l-3.8 4.6V10h-3z" fill="#FDB913"/></svg>',
+        'Moneyview': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#00875A"/><path d="M7 22V12c0-2.2 1.6-3.8 3.8-3.8 1.8 0 3.2 1 3.7 2.5.6-1.5 2-2.5 3.8-2.5 2.2 0 3.8 1.6 3.8 3.8v10h-3.3v-9.2c0-.9-.6-1.5-1.4-1.5s-1.4.6-1.4 1.5V22h-3.2v-9.2c0-.9-.6-1.5-1.4-1.5s-1.4.6-1.4 1.5V22H7z" fill="#fff"/></svg>',
+        'PaySense': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#2563EB"/><path d="M11 23.5V8.5h6.2c3.2 0 5.3 1.9 5.3 4.8s-2.1 4.8-5.3 4.8h-2.8v5.4H11zm3.4-8.2h2.5c1.3 0 2.1-.7 2.1-1.9s-.8-1.9-2.1-1.9h-2.5v3.8z" fill="#fff"/></svg>',
+        'CASHe': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#0077B6"/><path d="M22 11.5a7.5 7.5 0 1 0 0 9l2.4 2.2a10.8 10.8 0 1 1 0-13.4L22 11.5z" fill="#fff"/><circle cx="21.5" cy="16" r="2.8" fill="#FF6B00"/></svg>',
+        'Navi Finserv': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#111827"/><path d="M8.5 22.5v-13h3.6l6.2 8.2V9.5h3.5v13h-3.5L12 14.3v8.2H8.5z" fill="#fff"/><polygon points="23.5,9.5 27.5,9.5 25.5,14" fill="#22C55E"/></svg>',
+        'Finnable': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#1D4ED8"/><path d="M10 8.5h12.5v3.4H13.6v3.2h7.4v3.4h-7.4v5H10v-15z" fill="#fff"/><circle cx="22.5" cy="21.5" r="2.5" fill="#00D4AA"/></svg>',
+        'mPokket': '<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#0052CC"/><text x="16" y="18.5" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="13" fill="#fff">m</text><path d="M10.5 22c3.2 2.6 7.8 2.6 11 0" fill="none" stroke="#FDB913" stroke-width="2.5" stroke-linecap="round"/></svg>'
       };
       const lenderList = document.getElementById('lender-list');
       const lenderGroupTitles = { private: 'Private & other banks', public: 'Public sector banks', nbfc: 'Major NBFCs', fintech: 'Fintech & neo-lenders' };
       const makeLenderChips = (names, target) => names.forEach((name) => {
         const chip = document.createElement('span');
         chip.className = 'lender-chip';
-        chip.textContent = name;
+        const logo = document.createElement('span');
+        logo.className = 'lender-chip-logo';
+        logo.setAttribute('aria-hidden', 'true');
+        logo.innerHTML = lenderLogos[name] || '';
+        const label = document.createElement('span');
+        label.className = 'lender-chip-name';
+        label.textContent = name;
+        chip.append(logo, label);
         target.appendChild(chip);
       });
       const renderLenderGroup = (group) => {
@@ -1517,76 +1585,534 @@
         const motionObserver = new IntersectionObserver((entries) => {
           entries.forEach((entry) => entry.target.classList.toggle('motion-paused', !entry.isIntersecting));
         });
-        document.querySelectorAll('.hero-canvas, .term-dot, .lead-card-overline i, .network-eyebrow i, .result-live i')
+        document.querySelectorAll('.hero-visual, .term-dot, .lead-card-overline i, .network-eyebrow i, .result-live i')
           .forEach((element) => motionObserver.observe(element));
       }
 
-      // Frame-batched, time-based prism parallax: no layout work on pointer events.
+      // ============================================================
+      // Hero visual — responsive 3D glassmorphic ₹.
+      // Rendered with raw WebGL (no library, no CDN, no asset route): the
+      // mark is an exact distance field of the ₹ outline generated on the CPU
+      // — cross-section SDF + gradient packed into one RGBA texture — then
+      // extruded, filleted and shaded in a single fragment pass.
+      // ============================================================
+      const RUPEE_FIELD_RANGE = 1.0;
+      const RUPEE_STROKE_HALF = 0.055;
+      const rupeeStage = document.getElementById('rupee-stage');
+      const rupeeCanvas = document.getElementById('rupee-canvas');
       const heroEl = document.getElementById('hero');
-      const prismRig = document.getElementById('prism-rig');
-      const finePointer = window.matchMedia('(pointer: fine)');
-      if (heroEl && prismRig) {
-        let targetX = 0, targetY = 0, curX = 0, curY = 0;
-        let rafId = null, lastTime = null, pendingPointer = null, heroVisible = true;
-        const canAnimate = () => heroVisible && !document.hidden && finePointer.matches && !motionPreference.matches;
-        const stopParallax = () => {
-          if (rafId !== null) cancelAnimationFrame(rafId);
-          rafId = null;
-          lastTime = null;
-          pendingPointer = null;
-          targetX = targetY = curX = curY = 0;
-          prismRig.classList.remove('parallax-active');
-          prismRig.style.removeProperty('transform');
+
+      // ₹ = two headline bars, the descending leg and the R-bowl (cubic curve).
+      const rupeeSegments = () => {
+        const segments = [
+          [[-0.3, -0.34], [0.3, -0.34]],
+          [[-0.3, -0.16], [0.3, -0.16]],
+          [[-0.3, -0.16], [0.27, 0.37]]
+        ];
+        const p0 = [0.3, -0.16], p1 = [0.47, -0.11], p2 = [0.4, 0.05], p3 = [0.04, 0.04];
+        const at = (t) => {
+          const u = 1 - t;
+          return [
+            u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0],
+            u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1]
+          ];
         };
-        const tick = (time) => {
-          if (!canAnimate()) { stopParallax(); return; }
-          if (pendingPointer) {
-            const rect = heroEl.getBoundingClientRect();
-            targetX = ((pendingPointer.x - rect.left) / rect.width - 0.5) * 16;
-            targetY = ((pendingPointer.y - rect.top) / rect.height - 0.5) * -10;
-            pendingPointer = null;
-          }
-          const delta = lastTime === null ? 16 : Math.min(time - lastTime, 64);
-          const easing = 1 - Math.exp(-delta / 120);
-          curX += (targetX - curX) * easing;
-          curY += (targetY - curY) * easing;
-          lastTime = time;
-          prismRig.style.transform = `rotateX(${-10 + curY}deg) rotateY(${curX}deg)`;
-          if (Math.abs(targetX - curX) > 0.01 || Math.abs(targetY - curY) > 0.01) {
-            rafId = requestAnimationFrame(tick);
-          } else {
-            rafId = null;
-            lastTime = null;
-            prismRig.classList.remove('parallax-active');
-          }
-        };
-        const requestTick = () => {
-          if (canAnimate() && rafId === null) {
-            prismRig.classList.add('parallax-active');
-            rafId = requestAnimationFrame(tick);
-          }
-        };
-        heroEl.addEventListener('pointermove', (event) => {
-          if (!canAnimate()) return;
-          pendingPointer = { x: event.clientX, y: event.clientY };
-          requestTick();
-        }, { passive: true });
-        heroEl.addEventListener('pointerleave', () => {
-          pendingPointer = null;
-          targetX = targetY = 0;
-          requestTick();
-        });
-        document.addEventListener('visibilitychange', () => { if (document.hidden) stopParallax(); });
-        motionPreference.addEventListener('change', stopParallax);
-        finePointer.addEventListener('change', stopParallax);
-        if ('IntersectionObserver' in window) {
-          const heroObserver = new IntersectionObserver(([entry]) => {
-            heroVisible = entry.isIntersecting;
-            if (!heroVisible) stopParallax();
-          });
-          heroObserver.observe(heroEl);
+        let previous = at(0);
+        for (let i = 1; i <= 24; i += 1) {
+          const next = at(i / 24);
+          segments.push([previous, next]);
+          previous = next;
         }
-      }
+        return segments;
+      };
+
+      const buildRupeeField = (size) => {
+        const segments = rupeeSegments();
+        const span = RUPEE_FIELD_RANGE * 2;
+        const data = new Uint8Array(size * size * 4);
+        for (let row = 0; row < size; row += 1) {
+          const gy = (0.5 - (row + 0.5) / size) * span;
+          for (let col = 0; col < size; col += 1) {
+            const gx = ((col + 0.5) / size - 0.5) * span;
+            let bestSquared = Infinity;
+            let normalX = 0;
+            let normalY = 0;
+            for (let s = 0; s < segments.length; s += 1) {
+              const a = segments[s][0];
+              const b = segments[s][1];
+              const edgeX = b[0] - a[0];
+              const edgeY = b[1] - a[1];
+              const lengthSquared = edgeX * edgeX + edgeY * edgeY || 1e-9;
+              let t = ((gx - a[0]) * edgeX + (gy - a[1]) * edgeY) / lengthSquared;
+              t = t < 0 ? 0 : t > 1 ? 1 : t;
+              const dx = gx - (a[0] + edgeX * t);
+              const dy = gy - (a[1] + edgeY * t);
+              const squared = dx * dx + dy * dy;
+              if (squared < bestSquared) { bestSquared = squared; normalX = dx; normalY = dy; }
+            }
+            const distance = Math.sqrt(bestSquared);
+            const signed = distance - RUPEE_STROKE_HALF;
+            const inverse = distance > 1e-6 ? 1 / distance : 0;
+            // Inverse of the shader decode d = (0.5 - tex) * span, so the distance
+            // the march sees is the real glyph distance (a 2x error here inflates the
+            // fillet/depth relationship and dims the mark).
+            const encoded = 0.5 - signed / span;
+            const index = (row * size + col) * 4;
+            data[index] = Math.round(Math.min(1, Math.max(0, encoded)) * 255);
+            data[index + 1] = Math.round((0.5 + normalX * inverse * 0.5) * 255);
+            data[index + 2] = Math.round((0.5 + normalY * inverse * 0.5) * 255);
+            data[index + 3] = 255;
+          }
+        }
+        return data;
+      };
+
+      const createGlassRupee = ({ stage, canvas, hero }) => {
+        if (!stage || !canvas || !canvas.getContext) return null;
+        let sizedByLayout = false;
+        const zeroBox = () => {
+          const rect = stage.getBoundingClientRect();
+          sizedByLayout = rect.width > 1 && rect.height > 1;
+          return !sizedByLayout;
+        };
+        // An un-laid-out stage cannot host a canvas: fall back to the spinning SVG now
+        // instead of leaving a transparent rectangle where the mark should be.
+        if (zeroBox()) stage.classList.add('is-fallback');
+        const contextAttributes = { alpha: true, antialias: false, depth: false, stencil: false, premultipliedAlpha: true, preserveDrawingBuffer: false, powerPreference: 'high-performance' };
+        let gl = canvas.getContext('webgl2', contextAttributes);
+        if (!gl) gl = canvas.getContext('webgl', contextAttributes) || canvas.getContext('experimental-webgl', contextAttributes);
+        if (!gl) { stage.classList.add('is-fallback'); return null; }
+
+        const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+        const renderer = {
+          alpha: true,
+          pixelRatio: 1,
+          maxPixelRatio: 2,
+          renderScale: coarsePointer ? 0.8 : 1,
+          steps: coarsePointer ? 40 : 64,
+          fieldSize: coarsePointer ? 192 : 256,
+          depth: 0.17,
+          fillet: 0.045,
+          glow: coarsePointer ? 1.0 : 1.2,
+          // Pull the camera back and widen the frustum with it: the mark keeps the
+          // same framing at any distance while perspective flattens out.
+          camera: { position: { z: 5 } },
+          viewHalfHeight: 1.02,
+          scale: 1,
+          width: 0,
+          height: 0,
+          setScale(value) {
+            // The floor is 1.0, not 0.75: window.innerWidth / 500 is 0.75 on a 375px phone,
+            // which used to shrink the mark to a third of its box - the opposite of what a
+            // small screen needs. Large screens still grow it, up to the ceiling.
+            this.scale = Math.max(1.0, Math.min(value || 1, 1.4));
+          },
+          // Cap the backing store so high-DPI phones never shade 3x pixels.
+          setPixelRatio(value) {
+            const capped = Math.max(1, Math.min(value || 1, this.maxPixelRatio));
+            this.pixelRatio = capped;
+            this.resize();
+          },
+          resize() {
+            const rect = stage.getBoundingClientRect();
+            sizedByLayout = rect.width > 1 && rect.height > 1;
+            // The CSS box is not square on phones (the stage keeps a 300px height floor
+            // while its width shrinks), so one shared "side" made CSS stretch a square
+            // render into a tall box and squish the mark. Size both edges from the box.
+            const cssW = Math.max(140, rect.width || 320);
+            const cssH = Math.max(140, rect.height || 320);
+            const maxSide = coarsePointer ? 620 : 980;
+            const longest = Math.max(cssW, cssH) * this.pixelRatio * this.renderScale;
+            const factor = Math.min(1, maxSide / longest) * this.pixelRatio * this.renderScale;
+            const width = Math.max(140, Math.round(cssW * factor));
+            const height = Math.max(140, Math.round(cssH * factor));
+            if (width === this.width && height === this.height) return;
+            this.width = width;
+            this.height = height;
+            canvas.width = width;
+            canvas.height = height;
+            gl.viewport(0, 0, width, height);
+          }
+        };
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setScale(Math.min(window.innerWidth / 500, 1.2));
+        renderer.resize();
+
+        const vertexSource = [
+          'attribute vec2 aPos;',
+          'varying vec2 vUv;',
+          'void main() {',
+          '  vUv = aPos * 0.5 + 0.5;',
+          '  gl_Position = vec4(aPos, 0.0, 1.0);',
+          '}'
+        ].join('\n');
+
+        const fragmentSource = [
+          '#ifdef GL_FRAGMENT_PRECISION_HIGH',
+          'precision highp float;',
+          '#else',
+          'precision mediump float;',
+          '#endif',
+          'varying vec2 vUv;',
+          'uniform sampler2D uField;',
+          'uniform mat3 uRot;',
+          'uniform float uTime;',
+          'uniform float uDepth;',
+          'uniform float uFillet;',
+          'uniform float uGlow;',
+          'uniform float uPixel;',
+          'uniform float uViewHalf;',
+          'uniform float uAspect;',
+          'uniform float uCamZ;',
+          'uniform float uScale;',
+          'const float RANGE = 1.0;',
+          'const vec3 EMERALD = vec3(0.063, 0.725, 0.506);',
+          'const vec3 MINT = vec3(0.0, 0.961, 0.627);',
+          'const vec3 CYAN = vec3(0.0, 0.898, 1.0);',
+          'vec4 field4(vec2 g) {',
+          '  return texture2D(uField, clamp(g * 0.5 + 0.5, 0.002, 0.998));',
+          '}',
+          'float section(vec2 g) { return (0.5 - field4(g).r) * 2.0 * RANGE; }',
+          // Extruded cross-section with a rounded (metallic) rim.
+          'float map(vec3 p) {',
+          '  vec2 q = vec2(section(p.xy), abs(p.z) - uDepth);',
+          '  return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - uFillet;',
+          '}',
+          'vec3 environment(vec3 d) {',
+          '  vec3 n = normalize(d);',
+          '  float sky = clamp(n.y * 0.5 + 0.5, 0.0, 1.0);',
+          '  vec3 col = mix(vec3(0.012, 0.017, 0.024), vec3(0.05, 0.062, 0.075), sky);',
+          '  col += EMERALD * pow(max(dot(n, normalize(vec3(-0.55, 0.32, -0.78))), 0.0), 7.0) * 1.6;',
+          '  col += CYAN * pow(max(dot(n, normalize(vec3(0.80, 0.12, -0.58))), 0.0), 11.0) * 1.25;',
+          '  return col;',
+          '}',
+          'void main() {',
+          '  vec2 p = (vUv - 0.5) * 2.0;',
+          '  p.x *= uAspect;',
+          '  // Framing is set by the view half-height, not the distance, so camera.position.z',
+    '  // can move without cropping the mark. Dividing the ray by uScale == scaling the mesh.',
+    '  vec3 ro = (uRot * vec3(0.0, 0.0, uCamZ)) / uScale;',
+    '  vec3 rd = (uRot * normalize(vec3(p * uViewHalf, -uCamZ))) / uScale;',
+          '  float pulse = 0.78 + 0.22 * sin(uTime * 1.35);',
+          '  vec3 col = vec3(0.0);',
+          '  float cover = 0.0;',
+          '  vec3 safe = mix(vec3(-1.0), vec3(1.0), step(0.0, rd)) * max(abs(rd), vec3(1e-4));',
+          '  float tz = -ro.z / safe.z;',
+          '  if (tz > 0.0) {',
+          '    float outside = max(section((ro + rd * tz).xy), 0.0);',
+          '    float halo = exp(-outside * 6.5) + 0.5 * exp(-outside * 1.8);',
+          '    col += (mix(EMERALD, MINT, 0.45) * halo * 0.72 + CYAN * pow(halo, 1.8) * 0.38) * pulse * uGlow;',
+          '  }',
+          '  vec3 bmin = vec3(-0.74, -0.74, -uDepth - uFillet);',
+          '  vec3 bmax = vec3(0.74, 0.74, uDepth + uFillet);',
+          '  vec3 ta = (bmin - ro) / safe;',
+          '  vec3 tb = (bmax - ro) / safe;',
+          '  vec3 tlo = min(ta, tb);',
+          '  vec3 thi = max(ta, tb);',
+          '  float tn = max(max(tlo.x, tlo.y), tlo.z);',
+          '  float tf = min(min(thi.x, thi.y), thi.z);',
+          '  if (tf > max(tn, 0.0)) {',
+          '    float t = max(tn, 0.0);',
+          '    float hit = -1.0;',
+          '    float dmin = 1.0;',
+          '    for (int i = 0; i < %STEPS%; i += 1) {',
+          '      float d = map(ro + rd * t);',
+          '      dmin = min(dmin, d);',
+          '      if (d < 0.0015) { hit = t; break; }',
+          '      // Clamp the advance: the stored field saturates at the texture bounds, so an',
+          '      // unclamped step can leap straight over the 0.11-wide strokes and render nothing.',
+          '      t += clamp(d * 0.9, 0.0022, 0.045);',
+          '      if (t > tf) break;',
+          '    }',
+          '    float soft = 1.0 - smoothstep(uPixel * 0.25, uPixel, dmin);',
+          '    if (hit > 0.0 || soft > 0.002) {',
+          '      vec3 q = ro + rd * max(t, 0.0);',
+          '      vec4 f = field4(q.xy);',
+          '      vec2 grad = (f.gb - 0.5) * 2.0;',
+          '      vec2 qq = vec2((0.5 - f.r) * 2.0 * RANGE, abs(q.z) - uDepth);',
+          '      vec2 above = max(qq, 0.0);',
+          '      vec2 dn = above / max(length(above), 1e-5);',
+          '      float axis = step(qq.y, qq.x);',
+          '      dn += step(max(qq.x, qq.y), 0.0) * vec2(axis, 1.0 - axis);',
+          '      float zSign = mix(-1.0, 1.0, step(0.0, q.z));',
+          '      vec3 n = normalize(dn.x * vec3(grad, 0.0) + dn.y * vec3(0.0, 0.0, zSign));',
+          '      if (dot(n, rd) > 0.0) n = -n;',
+          '      vec3 v = -rd;',
+          '      float fres = pow(1.0 - clamp(dot(n, v), 0.0, 1.0), 3.0);',
+          '      float rim = pow(1.0 - abs(n.z), 1.6);',
+          '      vec3 l1 = normalize(vec3(-0.42, 0.72, 0.55));',
+          '      vec3 l2 = normalize(vec3(0.86, -0.26, 0.40));',
+          '      vec3 l3 = normalize(vec3(-0.18, -0.52, -0.82));',
+          '      float k1 = max(dot(n, l1), 0.0);',
+          '      float k2 = max(dot(n, l2), 0.0);',
+          '      float k3 = max(dot(n, l3), 0.0);',
+          '      float s1 = pow(max(dot(n, normalize(v + l1)), 0.0), 110.0);',
+          '      float s2 = pow(max(dot(n, normalize(v + l2)), 0.0), 44.0);',
+          '      vec3 glass = EMERALD * 0.10 * uGlow;',
+          '      glass += mix(EMERALD, CYAN, clamp(n.x * 0.5 + 0.5, 0.0, 1.0)) * (0.10 + 0.80 * k1 + 0.46 * k2) * uGlow;',
+          '      glass += environment(reflect(rd, n)) * (0.30 + 0.70 * fres);',
+          '      glass += EMERALD * k3 * 0.55;',
+          '      glass += vec3(1.0) * (s1 * 0.8 + s2 * 0.34);',
+          '      vec3 refr = refract(rd, n, 0.7);',
+          '      float inner = clamp(1.0 - max(section((q + refr * 0.6).xy), 0.0) * 3.0, 0.0, 1.0);',
+          // Internal glow scatters most where the eye looks *through* the body, so weight it
+          // by grazing angle: flat faces keep the glassy body colour instead of clipping.
+          '      glass += MINT * inner * (0.06 + 0.30 * pulse) * (0.25 + 0.90 * fres) * uGlow;',
+          '      glass += mix(MINT, vec3(1.0), 0.5) * rim * 0.95;',
+          '      float alpha = clamp(0.42 + 0.44 * fres + 0.5 * rim, 0.0, 0.94) * soft;',
+          // The mark sits between the eye and the back glow, so the body has to absorb
+          // most of it; leaving 40% through was washing the flat faces to pale cyan.
+          '      col = col * (1.0 - alpha * 0.85) + glass * alpha;',
+          '      cover = max(cover, alpha);',
+          '    }',
+          '  }',
+          '  gl_FragColor = vec4(min(col, vec3(1.6)), clamp(cover, 0.0, 1.0));',
+          '}'
+        ].join('\n');
+
+        const compile = (type, source) => {
+          const shader = gl.createShader(type);
+          gl.shaderSource(shader, source.replace('%STEPS%', String(renderer.steps)));
+          gl.compileShader(shader);
+          if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            gl.deleteShader(shader);
+            return null;
+          }
+          return shader;
+        };
+        const vs = compile(gl.VERTEX_SHADER, vertexSource);
+        const fs = compile(gl.FRAGMENT_SHADER, fragmentSource);
+        const program = vs && fs ? gl.createProgram() : null;
+        if (!program) {
+          stage.classList.add('is-fallback');
+          return null;
+        }
+        gl.attachShader(program, vs);
+        gl.attachShader(program, fs);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+          stage.classList.add('is-fallback');
+          return null;
+        }
+        gl.useProgram(program);
+
+        const buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+        const positionLocation = gl.getAttribLocation(program, 'aPos');
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+        const texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, renderer.fieldSize, renderer.fieldSize, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildRupeeField(renderer.fieldSize));
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.uniform1i(gl.getUniformLocation(program, 'uField'), 0);
+        gl.uniform1f(gl.getUniformLocation(program, 'uDepth'), renderer.depth);
+        gl.uniform1f(gl.getUniformLocation(program, 'uFillet'), renderer.fillet);
+        gl.uniform1f(gl.getUniformLocation(program, 'uGlow'), renderer.glow);
+        gl.disable(gl.DEPTH_TEST);
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        gl.clearColor(0.0, 0.0, 0.0, 0.0);
+        gl.uniform1f(gl.getUniformLocation(program, 'uCamZ'), renderer.camera.position.z);
+        // The framing constant is fed from one place so the march and the pixel size can never drift.
+        gl.uniform1f(gl.getUniformLocation(program, 'uViewHalf'), renderer.viewHalfHeight);
+
+        const rotationLocation = gl.getUniformLocation(program, 'uRot');
+        const timeLocation = gl.getUniformLocation(program, 'uTime');
+        const pixelLocation = gl.getUniformLocation(program, 'uPixel');
+        const aspectLocation = gl.getUniformLocation(program, 'uAspect');
+        const scaleLocation = gl.getUniformLocation(program, 'uScale');
+        const columnMajorProduct = (a, b) => {
+          const out = new Float32Array(9);
+          for (let col = 0; col < 3; col += 1) {
+            for (let row = 0; row < 3; row += 1) {
+              out[col * 3 + row] = a[row] * b[col * 3] + a[3 + row] * b[col * 3 + 1] + a[6 + row] * b[col * 3 + 2];
+            }
+          }
+          return out;
+        };
+        const rotation = (yaw, pitch) => {
+          const cy = Math.cos(yaw), sy = Math.sin(yaw), cx = Math.cos(pitch), sx = Math.sin(pitch);
+          return columnMajorProduct(
+            new Float32Array([cy, 0, -sy, 0, 1, 0, sy, 0, cy]),
+            new Float32Array([1, 0, 0, 0, cx, sx, 0, -sx, cx])
+          );
+        };
+
+        // Auto-rotation is time based and pointer independent, so the mark
+        // keeps spinning on every screen; drag/touch only biases the pose.
+        let rafId = null, lastTime = 0, autoYaw = -0.5, spinYaw = 0, spinPitch = 0;
+        let velocityYaw = 0, velocityPitch = 0, pointerYaw = 0, pointerPitch = 0;
+        let targetYaw = 0, targetPitch = 0, dragging = false;
+        let stageVisible = true, lastPointerX = 0, lastPointerY = 0;
+
+        // Visibility and tab state only: the matching IntersectionObserver below owns
+        // resuming, so this must not read a class another observer toggles, or a
+        // re-entry race would strand the loop (frozen mark) until the next resize.
+        const canRun = () => !document.hidden && stageVisible;
+        // A shader that links but errors on a given mobile GPU still paints nothing, so
+        // the health probe also watches for GL errors once frames start landing.
+        let glErrorCode = gl.NO_ERROR;
+        let framesDrawn = 0;
+        const glHealthy = () => !gl.isContextLost() && glErrorCode === gl.NO_ERROR;
+        // If a mobile driver never delivers the first frame, do not strand the user with
+        // a transparent canvas. The SVG spins underneath instead; the normal path stays WebGL.
+        window.setTimeout(() => {
+          if (framesDrawn === 0 && !document.hidden && stageVisible) {
+            glErrorCode = gl.INVALID_OPERATION;
+            stage.classList.add('is-fallback');
+          }
+        }, 1600);
+
+        const drawFrame = (time) => {
+          if (!glHealthy()) return;
+          const delta = lastTime ? Math.min((time - lastTime) / 1000, 0.05) : 0.016;
+          lastTime = time;
+          // The mark always turns. A reduced-motion request slows the orbit and
+          // damps the pointer response instead of freezing the object, because a
+          // static hero would drop the one thing this visual exists to show.
+          const calm = motionPreference.matches;
+          autoYaw += delta * (calm ? 0.2 : 0.65);
+          if (!dragging) {
+            spinYaw += velocityYaw * delta;
+            spinPitch += velocityPitch * delta;
+            const friction = Math.pow(calm ? 0.01 : 0.1, delta);
+            velocityYaw *= friction;
+            velocityPitch *= friction;
+            const settle = Math.pow(calm ? 0.2 : 0.45, delta);
+            spinYaw *= settle;
+            spinPitch *= settle;
+          }
+          const ease = 1 - Math.exp(-delta / (calm ? 0.5 : 0.18));
+          pointerYaw += (targetYaw * (calm ? 0.35 : 1) - pointerYaw) * ease;
+          pointerPitch += (targetPitch * (calm ? 0.35 : 1) - pointerPitch) * ease;
+          const pitch = Math.max(-0.85, Math.min(0.85, 0.16 + spinPitch + pointerPitch));
+          gl.uniformMatrix3fv(rotationLocation, false, rotation(autoYaw + spinYaw + pointerYaw, pitch));
+          gl.uniform1f(timeLocation, time / 1000);
+          gl.uniform1f(pixelLocation, ((2.0 * renderer.viewHalfHeight) / Math.max(renderer.height, 1)) * 1.6);
+          gl.uniform1f(aspectLocation, renderer.width / Math.max(renderer.height, 1));
+          gl.uniform1f(scaleLocation, renderer.scale);
+          gl.clear(gl.COLOR_BUFFER_BIT);
+          gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+          framesDrawn += 1;
+          if (framesDrawn === 2) glErrorCode = gl.getError();
+          if (framesDrawn === 2 && !glHealthy()) stage.classList.add('is-fallback');
+        };
+
+        const step = (time) => {
+          rafId = null;
+          drawFrame(time);
+          if (canRun() && glHealthy()) rafId = requestAnimationFrame(step);
+        };
+        const requestFrame = () => { if (rafId === null) rafId = requestAnimationFrame(step); };
+        const render = () => {
+          if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+          lastTime = 0;
+          if (canRun()) requestFrame();
+          else if (glHealthy()) drawFrame(performance.now());
+        };
+
+        const setDragOrigin = (x, y) => {
+          dragging = true;
+          lastPointerX = x;
+          lastPointerY = y;
+          velocityYaw = 0;
+          velocityPitch = 0;
+          stage.classList.add('is-grabbing');
+        };
+        const dragTo = (x, y) => {
+          if (!dragging) return;
+          const dx = x - lastPointerX;
+          const dy = y - lastPointerY;
+          lastPointerX = x;
+          lastPointerY = y;
+          spinYaw += dx * 0.0075;
+          spinPitch = Math.max(-0.8, Math.min(0.8, spinPitch + dy * 0.005));
+          velocityYaw = velocityYaw * 0.6 + (dx * 0.0075 / 0.016) * 0.4;
+          velocityPitch = velocityPitch * 0.6 + (dy * 0.005 / 0.016) * 0.4;
+          requestFrame();
+        };
+        const endDrag = () => {
+          if (!dragging) return;
+          dragging = false;
+          stage.classList.remove('is-grabbing');
+        };
+
+        canvas.addEventListener('mousedown', (event) => { event.preventDefault(); setDragOrigin(event.clientX, event.clientY); });
+        window.addEventListener('mousemove', (event) => {
+          if (dragging) { dragTo(event.clientX, event.clientY); return; }
+          if (!hero || !hero.getBoundingClientRect) return;
+          const rect = hero.getBoundingClientRect();
+          targetYaw = ((event.clientX - rect.left) / Math.max(rect.width, 1) - 0.5) * 0.55;
+          targetPitch = ((event.clientY - rect.top) / Math.max(rect.height, 1) - 0.5) * -0.34;
+          requestFrame();
+        }, { passive: true });
+        window.addEventListener('mouseup', endDrag, { passive: true });
+        hero && hero.addEventListener('mouseleave', () => {
+          if (dragging) return;
+          targetYaw = 0;
+          targetPitch = 0;
+          requestFrame();
+        }, { passive: true });
+
+        // Touch: tilt with a swipe while vertical page scrolling stays intact.
+        const firstTouch = (event) => (event.touches && event.touches.length ? event.touches[0] : null);
+        canvas.addEventListener('touchstart', (event) => {
+          const touch = firstTouch(event);
+          if (touch) setDragOrigin(touch.clientX, touch.clientY);
+        }, { passive: true });
+        canvas.addEventListener('touchmove', (event) => {
+          const touch = firstTouch(event);
+          if (touch) dragTo(touch.clientX, touch.clientY);
+        }, { passive: true });
+        canvas.addEventListener('touchend', endDrag, { passive: true });
+        canvas.addEventListener('touchcancel', endDrag, { passive: true });
+
+        canvas.addEventListener('webglcontextlost', (event) => {
+          event.preventDefault();
+          if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+          stage.classList.add('is-fallback');
+        }, false);
+        canvas.addEventListener('webglcontextrestored', () => {
+          glErrorCode = gl.NO_ERROR;
+          framesDrawn = 0;
+          stage.classList.remove('is-fallback');
+          render();
+        }, false);
+
+        // Browser zoom changes devicePixelRatio, so re-cap it on every resize.
+        const relayout = () => {
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          // Leave the fallback only for the sizing reason; a GL or context failure keeps it.
+          if (sizedByLayout && !glErrorCode && stageVisible) stage.classList.remove('is-fallback');
+          renderer.setScale(Math.min(window.innerWidth / 500, 1.2));
+          renderer.resize();
+          render();
+        };
+        if ('ResizeObserver' in window) new ResizeObserver(relayout).observe(stage);
+        window.addEventListener('resize', relayout, { passive: true });
+        window.addEventListener('orientationchange', () => window.setTimeout(relayout, 260), { passive: true });
+        document.addEventListener('visibilitychange', render);
+        motionPreference.addEventListener('change', render);
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(([entry]) => {
+            stageVisible = entry.isIntersecting;
+            if (stageVisible) render();
+          }, { rootMargin: '160px' }).observe(stage);
+        }
+        renderer.resize();
+        render();
+
+        return { renderer, gl, canvas, stage, render, drawFrame, isPaused: () => !canRun(), get running() { return rafId !== null; } };
+      };
+
+      window.NexaRupee = createGlassRupee({ stage: rupeeStage, canvas: rupeeCanvas, hero: heroEl });
     })();
   </script>
 </body>

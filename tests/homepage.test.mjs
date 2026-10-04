@@ -119,20 +119,12 @@ test('the hero shows the glass-prism artwork as a local image', () => {
   assert.match(html, /<div class="hero-scene" id="prism-scene">/);
   assert.match(html, /\.hero-scene\{ position:absolute; inset:0; overflow:hidden; \}/);
   assert.match(html, /\.hero-scene img\{[\s\S]*?object-fit:cover; object-position:62% 50%/);
-  assert.match(html, /\.hero-scene::after\{[\s\S]*?linear-gradient\(90deg, rgba\(0,0,0,\.92\) 0%, rgba\(0,0,0,\.74\) 22%/);
-  assert.match(html, /<i class="hero-spectrum" aria-hidden="true"><\/i>/);
-  assert.match(html, /<i class="hero-spectrum hero-spectrum-rev" aria-hidden="true"><\/i>/);
-  assert.match(html, /\.hero-spectrum\{[\s\S]*?conic-gradient\(from 0deg,/);
-  assert.match(html, /\.hero-spectrum\{[\s\S]*?mix-blend-mode:screen;/);
-  assert.match(html, /animation:spectrum-turn 16s linear infinite, spectrum-flow 7s ease-in-out infinite alternate;/);
-  assert.match(html, /animation:spectrum-turn-rev 23s linear infinite, spectrum-flow-soft 9s ease-in-out infinite alternate;/);
-  assert.match(html, /@keyframes spectrum-turn-rev\{[\s\S]*?rotate\(-360deg\)/);
-  assert.match(html, /<div class="void-spin" aria-hidden="true"><\/div>/);
-  assert.match(html, /\.void-bg::before\{[\s\S]*?conic-gradient\(from 0deg,/);
-  assert.match(html, /animation:page-spectrum 24s linear infinite;/);
-  assert.match(html, /animation:page-spectrum-rev 16s linear infinite;/);
-  assert.match(html, /\.void-bg\{ overflow:hidden; \}/);
-  assert.match(html, /radial-gradient\(115% 78% at 50% 44%, rgba\(0,0,0,\.58\) 0%/);
+  assert.match(html, /\.hero-scene::after\{[\s\S]*?linear-gradient\(90deg, rgba\(0,0,0,\.95\) 0%, rgba\(0,0,0,\.86\) 26%/);
+  assert.match(html, /animation:prism-spin 48s linear infinite;/);
+  assert.match(html, /@keyframes prism-spin\{[\s\S]*?rotate\(360deg\) scale\(1\.5\)/);
+  assert.match(html, /-webkit-mask-image:radial-gradient\(118% 118% at 50% 50%, #000 52%, transparent 88%\)/);
+  // the page-wide colour wheels and the hero colour discs were explicitly rolled back
+  assert.doesNotMatch(html, /hero-spectrum|void-spin|page-spectrum|prism-drift/);
   assert.doesNotMatch(html, /class="scene"|px-spectrum|prism-rig|prism-face|hero-aura/);
 });
 

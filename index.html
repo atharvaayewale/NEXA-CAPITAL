@@ -67,10 +67,8 @@
 
     *{ box-sizing:border-box; }
     html{ scroll-behavior:smooth; scroll-padding-top:96px; background:var(--void); }
-    /* html carries the void colour; body stays transparent so the fixed void canvas
-       (z-index -2) is not painted behind body's own opaque background */
     body{
-      margin:0; min-width:320px; color:var(--ink); background:transparent;
+      margin:0; min-width:320px; color:var(--ink); background:var(--void);
       font-family:var(--font-display); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
       overflow-x:clip; position:relative;
     }
@@ -97,50 +95,6 @@
       radial-gradient(920px 540px at 86% 2%, rgba(139,92,246,.13), transparent 64%),
       radial-gradient(1100px 620px at 55% 110%, rgba(255,46,210,.09), transparent 62%),
       #000000;
-    }
-    /* the page-wide spectrum: one huge blurred rainbow wheel behind every section,
-       turning forever. It is fixed, so it keeps moving wherever the reader scrolls,
-       and it sits behind the starfield and all content. transform-only animation:
-       the browser rasterises the blur once and just spins the layer. */
-    .void-bg{ overflow:hidden; }
-    .void-bg::before{
-      content:""; position:absolute; left:50%; top:50%;
-      width:132vmax; height:132vmax; margin:-66vmax 0 0 -66vmax;
-      background:conic-gradient(from 0deg,
-        rgba(0,229,255,.85) 0deg, rgba(77,124,255,.80) 40deg, rgba(139,92,246,.85) 80deg,
-        rgba(255,46,210,.80) 120deg, rgba(255,138,61,.72) 160deg, rgba(255,224,102,.66) 200deg,
-        rgba(74,222,128,.62) 240deg, rgba(0,229,255,.85) 360deg);
-      filter:blur(78px) saturate(145%);
-      opacity:.34; pointer-events:none;
-      transform:translateZ(0);
-      animation:page-spectrum 24s linear infinite;
-    }
-    /* a soft dark core keeps the void reading black so copy stays crisp; the colour
-       still sweeps the edges of every section */
-    .void-bg::after{
-      content:""; position:absolute; inset:0;
-      background:radial-gradient(115% 78% at 50% 44%, rgba(0,0,0,.58) 0%, rgba(0,0,0,.42) 46%, rgba(0,0,0,.16) 78%, transparent 100%);
-    }
-    @keyframes page-spectrum{
-      to{ transform:translateZ(0) rotate(360deg); }
-    }
-    /* a second, smaller wheel turning the other way: the crossing colour bands make
-       the movement unmistakable even when the reader is still */
-    .void-spin{ position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
-    .void-spin::before{
-      content:""; position:absolute; left:50%; top:50%;
-      width:118vmax; height:118vmax; margin:-59vmax 0 0 -59vmax;
-      background:conic-gradient(from 140deg,
-        rgba(255,46,210,.85) 0deg, rgba(255,138,61,.80) 50deg, rgba(255,224,102,.72) 100deg,
-        rgba(74,222,128,.78) 150deg, rgba(0,229,255,.85) 210deg, rgba(139,92,246,.82) 280deg,
-        rgba(255,46,210,.85) 360deg);
-      filter:blur(54px) saturate(150%);
-      opacity:.26; pointer-events:none;
-      transform:translateZ(0);
-      animation:page-spectrum-rev 16s linear infinite;
-    }
-    @keyframes page-spectrum-rev{
-      to{ transform:translateZ(0) rotate(-360deg); }
     }
     .void-stars{ position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.55; background-image:
       radial-gradient(1.4px 1.4px at 12% 18%, rgba(255,255,255,.85) 50%, transparent 51%),
@@ -296,66 +250,29 @@
        cyan beam, a white beam and a rainbow fan. Gradient overlays feather it
        into the black void so type stays readable and no hard edge shows. */
     .hero-scene{ position:absolute; inset:0; overflow:hidden; }
+    /* the artwork itself turns, a full slow revolution: the prism, its beams and the
+       rainbow all sweep round with it. It is scaled up and feathered at the rim
+       (mask) so the bitmap's edges never show while it spins. Transform only, so the
+       browser keeps it on the compositor. */
     .hero-scene img{
       position:absolute; inset:0; width:100%; height:100%;
       object-fit:cover; object-position:62% 50%;
-      transform-origin:58% 52%;
-      animation:prism-drift 46s ease-in-out infinite alternate;
+      transform-origin:56% 50%;
+      will-change:transform;
+      -webkit-mask-image:radial-gradient(118% 118% at 50% 50%, #000 52%, transparent 88%);
+      mask-image:radial-gradient(118% 118% at 50% 50%, #000 52%, transparent 88%);
+      animation:prism-spin 48s linear infinite;
     }
-    /* the artwork only breathes: transforms stay on the compositor, the bitmap is
-       never repainted */
-    @keyframes prism-drift{
-      from{ transform:scale(1.012) rotate(-1.2deg); }
-      to{ transform:scale(1.06) rotate(1.2deg); }
+    @keyframes prism-spin{
+      from{ transform:rotate(0deg) scale(1.5); }
+      to{ transform:rotate(360deg) scale(1.5); }
     }
-    /* the live spectrum: two blurred rainbow discs lying ON the artwork, screen-blended
-       so they read as light rather than paint and the glass stays visible. They turn at
-       different speeds in opposite directions while their opacity swells and fades, so
-       colour visibly sweeps around the prism and keeps arriving and leaving.
-       They are real elements on purpose: a ::before would have painted UNDER the opaque
-       artwork bitmap and stayed invisible. */
-    .hero-spectrum{
-      position:absolute; left:56%; top:52%; width:min(1040px, 82vw); aspect-ratio:1;
-      background:conic-gradient(from 0deg,
-        #00E5FF 0deg, #4D7CFF 45deg, #8B5CF6 90deg, #FF2ED2 135deg,
-        #FF7A3D 180deg, #FFE066 225deg, #4ADE80 270deg, #00E5FF 360deg);
-      filter:blur(34px) saturate(150%);
-      mix-blend-mode:screen; pointer-events:none;
-      transform:translate(-50%,-50%);
-      will-change:transform, opacity;
-      /* fade the colour out over the copy column so the headline keeps its contrast */
-      -webkit-mask-image:linear-gradient(90deg, transparent 0%, rgba(0,0,0,.30) 26%, rgba(0,0,0,.85) 44%, #000 58%);
-      mask-image:linear-gradient(90deg, transparent 0%, rgba(0,0,0,.30) 26%, rgba(0,0,0,.85) 44%, #000 58%);
-      animation:spectrum-turn 16s linear infinite, spectrum-flow 7s ease-in-out infinite alternate;
-    }
-    .hero-spectrum-rev{
-      left:46%; top:57%; width:min(760px, 62vw);
-      filter:blur(40px) saturate(140%);
-      animation:spectrum-turn-rev 23s linear infinite, spectrum-flow-soft 9s ease-in-out infinite alternate;
-    }
-    @keyframes spectrum-turn{
-      from{ transform:translate(-50%,-50%) rotate(0deg); }
-      to{ transform:translate(-50%,-50%) rotate(360deg); }
-    }
-    @keyframes spectrum-turn-rev{
-      from{ transform:translate(-50%,-50%) rotate(0deg); }
-      to{ transform:translate(-50%,-50%) rotate(-360deg); }
-    }
-    @keyframes spectrum-flow{
-      from{ opacity:.26; }
-      to{ opacity:.62; }
-    }
-    @keyframes spectrum-flow-soft{
-      from{ opacity:.12; }
-      to{ opacity:.36; }
-    }
-
     /* show the whole artwork, as large as the hero allows; only a left wash for the
        copy column and gentle top/bottom fades keep it melting into the void */
     .hero-scene::after{
       content:""; position:absolute; inset:0;
       background:
-        linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.74) 22%, rgba(0,0,0,.30) 40%, transparent 52%),
+        linear-gradient(90deg, rgba(0,0,0,.95) 0%, rgba(0,0,0,.86) 26%, rgba(0,0,0,.52) 44%, transparent 58%),
         radial-gradient(125% 105% at 58% 50%, transparent 56%, rgba(0,0,0,.42) 88%, #000 100%),
         radial-gradient(72% 46% at 4% 96%, rgba(0,0,0,.86), transparent 68%),
         linear-gradient(180deg, #000 0%, transparent 10%, transparent 90%, #000 100%);
@@ -366,10 +283,6 @@
     @media (max-width:980px){
       .hero-scene{ inset:0 0 auto 0; height:min(62vw, 440px); }
       .hero-scene img{ object-position:62% 50%; }
-      .hero-spectrum{ left:58%; top:44%; width:min(560px, 108vw);
-        -webkit-mask-image:linear-gradient(180deg, transparent 0%, #000 30%, #000 70%, transparent 100%);
-        mask-image:linear-gradient(180deg, transparent 0%, #000 30%, #000 70%, transparent 100%); }
-      .hero-spectrum-rev{ left:50%; top:52%; width:min(420px, 82vw); }
       .hero-scene::after{
         background:
           linear-gradient(180deg, rgba(0,0,0,.52) 0%, transparent 26%, transparent 52%, rgba(0,0,0,.86) 86%, #000 100%),
@@ -1128,7 +1041,6 @@
     </defs>
   </svg>
   <div class="void-bg" aria-hidden="true"></div>
-  <div class="void-spin" aria-hidden="true"></div>
   <div class="void-stars" aria-hidden="true"></div>
 
   <header class="site-header" id="top">
@@ -1176,8 +1088,6 @@
       <div class="hero-canvas" aria-hidden="true">
         <div class="hero-scene" id="prism-scene">
           <img class="hero-scene-img" src="assets/hero-prism.webp" alt="" width="2912" height="1440" decoding="async" fetchpriority="high" />
-          <i class="hero-spectrum" aria-hidden="true"></i>
-          <i class="hero-spectrum hero-spectrum-rev" aria-hidden="true"></i>
         </div>
       </div>
       <div class="container hero-layout">

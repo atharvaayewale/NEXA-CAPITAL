@@ -94,8 +94,15 @@ test('the hero cube is replaced by a 3D glass rupee with mobile-safe rendering',
   assert.ok(idSet.has('rupee-canvas'), 'WebGL canvas must exist');
   assert.match(html, /<canvas class="rupee-gl" id="rupee-canvas"><\/canvas>/);
   // Dependency-free static mark when WebGL is unavailable.
-  assert.match(html, /class="rupee-static"><span>&#8377;<\/span>/);
+  // A blank canvas is never the answer: the fallback is an extruded SVG mesh that keeps spinning.
+  assert.match(html, /class="rupee-static"[\s\S]*?<svg class="rupee-coin-mark" viewBox="0 0 100 100"/);
+  assert.match(html, /rupee-strokes" stroke="url\(#rupee-face-grad\)"/);
   assert.match(html, /is-fallback/);
+  // Canvas box cannot collapse, and the mark is above the decorative layers.
+  assert.match(html, /\.rupee-gl\{ position:relative; z-index:2; display:block; width:100%; height:100%; min-height:300px; \}/);
+  assert.match(html, /camera: \{ position: \{ z: 5 \} \}/);
+  assert.match(html, /renderer\.setScale\(Math\.min\(window\.innerWidth \/ 500, 1\.2\)\)/);
+  assert.match(html, /gl\.clear\(gl\.COLOR_BUFFER_BIT\)/);
   // Transparent canvas, capped pixel ratio and continuous rAF auto-rotation.
   assert.match(html, /const contextAttributes = \{ alpha: true, antialias: false/);
   assert.match(html, /renderer\.setPixelRatio\(Math\.min\(window\.devicePixelRatio, 2\)\)/);
@@ -114,7 +121,9 @@ test('the hero cube is replaced by a 3D glass rupee with mobile-safe rendering',
   assert.match(html, /addEventListener\('mousemove'/);
   assert.match(html, /\.rupee-stage\{[^}]*touch-action:pan-y/s);
   // Per-device quality budget keeps phones at 60fps.
-  assert.match(html, /steps: coarsePointer \? 28 : 44/);
+  // Fewer march steps on phones, but still enough to reach the mark without tunnelling.
+  assert.match(html, /steps: coarsePointer \? 40 : 64/);
+  assert.match(html, /t \+= clamp\(d \* 0\.9, 0\.0022, 0\.045\);/);
   assert.match(html, /maxSide = coarsePointer \? 620 : 980/);
   assert.match(html, /renderScale: coarsePointer \? 0\.8 : 1/);
   // Palette: electric emerald (#10B981 / #00F5A0) and cyan on dark onyx.

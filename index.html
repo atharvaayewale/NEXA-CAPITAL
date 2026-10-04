@@ -203,7 +203,7 @@
     .rupee-scene{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; }
     /* Only the square itself is interactive, so the copy and form keep normal hit testing. */
     .rupee-stage{
-      position:relative; width:min(37vw, 430px); aspect-ratio:1 / 1;
+      position:relative; width:min(37vw, 430px); aspect-ratio:1 / 1; min-height:300px;
       justify-self:center; align-self:center; transform:translate3d(-17%, -7%, 0);
       pointer-events:auto; opacity:1;
       touch-action:pan-y; -webkit-user-select:none; user-select:none; cursor:grab;
@@ -226,15 +226,15 @@
       -webkit-mask-image:radial-gradient(closest-side, #000 12%, transparent 74%);
       mask-image:radial-gradient(closest-side, #000 12%, transparent 74%);
     }
-    .rupee-gl{ position:relative; z-index:1; display:block; width:100%; height:100%; }
+    .rupee-gl{ position:relative; z-index:2; display:block; width:100%; height:100%; min-height:300px; }
     /* Dependency-free static fallback for browsers without WebGL. */
     .rupee-static{ display:none; position:absolute; inset:0; z-index:1; place-items:center; pointer-events:none; }
-    .rupee-static span{
-      font-family:var(--font-display); font-weight:700; line-height:1; color:rgba(255,255,255,.92);
-      font-size:clamp(120px, 22vw, 286px);
-      text-shadow:0 0 30px rgba(0,245,160,.55), 0 0 74px rgba(16,185,129,.34), 0 2px 0 rgba(255,255,255,.22);
+    .rupee-coin{
+      display:block; width:min(80%, 320px); aspect-ratio:1 / 1; transform-style:preserve-3d;
       animation:rupee-coin 12s linear infinite;
+      filter:drop-shadow(0 0 28px rgba(16,185,129,.6)) drop-shadow(0 0 64px rgba(0,245,160,.28));
     }
+    .rupee-coin-mark{ display:block; width:100%; height:100%; }
     @keyframes rupee-coin{
       from{ transform:perspective(900px) rotateY(0deg) rotateX(9deg); }
       to{ transform:perspective(900px) rotateY(360deg) rotateX(9deg); }
@@ -900,7 +900,7 @@
         animation:none !important; transition:none !important; scroll-behavior:auto !important;
       }
       .rupee-stage{ will-change:auto !important; }
-      .rupee-stage.is-fallback .rupee-static span{ animation:rupee-coin 30s linear infinite !important; }
+      .rupee-stage.is-fallback .rupee-coin{ animation:rupee-coin 30s linear infinite !important; }
     }
     ::-webkit-scrollbar{ width:10px; height:10px; }
     ::-webkit-scrollbar-track{ background:#000; }
@@ -967,7 +967,23 @@
           <div class="rupee-glow"></div>
           <div class="rupee-grid"></div>
           <canvas class="rupee-gl" id="rupee-canvas"></canvas>
-          <div class="rupee-static"><span>&#8377;</span></div>
+          <div class="rupee-static">
+            <span class="rupee-coin">
+              <svg class="rupee-coin-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+                <defs>
+                  <linearGradient id="rupee-face-grad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#EAFFF7"/><stop offset=".45" stop-color="#00F5A0"/><stop offset="1" stop-color="#0B7C58"/>
+                  </linearGradient>
+                  <g id="rupee-strokes" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M38 36.4H62M38 43.6H62M38 43.6L60.8 64.8M62 43.6C68.8 45.6 66 52 51.6 51.6"/>
+                  </g>
+                </defs>
+                <use href="#rupee-strokes" y="5.2" stroke="#04331F" stroke-width="8" opacity=".95"/>
+                <use href="#rupee-strokes" y="2.6" stroke="#0B7C58" stroke-width="6.4"/>
+                <use href="#rupee-strokes" stroke="url(#rupee-face-grad)" stroke-width="4.6"/>
+              </svg>
+            </span>
+          </div>
           <span class="rupee-hint"></span>
         </div>
         </div>
@@ -1630,7 +1646,10 @@
             const distance = Math.sqrt(bestSquared);
             const signed = distance - RUPEE_STROKE_HALF;
             const inverse = distance > 1e-6 ? 1 / distance : 0;
-            const encoded = 0.5 - (signed / span) * 0.5;
+            // Inverse of the shader decode d = (0.5 - tex) * span, so the distance
+            // the march sees is the real glyph distance (a 2x error here inflates the
+            // fillet/depth relationship and dims the mark).
+            const encoded = 0.5 - signed / span;
             const index = (row * size + col) * 4;
             data[index] = Math.round(Math.min(1, Math.max(0, encoded)) * 255);
             data[index + 1] = Math.round((0.5 + normalX * inverse * 0.5) * 255);
@@ -1654,13 +1673,21 @@
           pixelRatio: 1,
           maxPixelRatio: 2,
           renderScale: coarsePointer ? 0.8 : 1,
-          steps: coarsePointer ? 28 : 44,
+          steps: coarsePointer ? 40 : 64,
           fieldSize: coarsePointer ? 192 : 256,
           depth: 0.17,
           fillet: 0.045,
-          glow: coarsePointer ? 0.85 : 1,
+          glow: coarsePointer ? 1.0 : 1.2,
+          // Pull the camera back and widen the frustum with it: the mark keeps the
+          // same framing at any distance while perspective flattens out.
+          camera: { position: { z: 5 } },
+          viewHalfHeight: 1.282,
+          scale: 1,
           width: 0,
           height: 0,
+          setScale(value) {
+            this.scale = Math.max(0.75, Math.min(value || 1, 1.4));
+          },
           // Cap the backing store so high-DPI phones never shade 3x pixels.
           setPixelRatio(value) {
             const capped = Math.max(1, Math.min(value || 1, this.maxPixelRatio));
@@ -1681,6 +1708,7 @@
           }
         };
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setScale(Math.min(window.innerWidth / 500, 1.2));
         renderer.resize();
 
         const vertexSource = [
@@ -1707,6 +1735,8 @@
           'uniform float uGlow;',
           'uniform float uPixel;',
           'uniform float uAspect;',
+          'uniform float uCamZ;',
+          'uniform float uScale;',
           'const float RANGE = 1.0;',
           'const vec3 EMERALD = vec3(0.063, 0.725, 0.506);',
           'const vec3 MINT = vec3(0.0, 0.961, 0.627);',
@@ -1731,8 +1761,10 @@
           'void main() {',
           '  vec2 p = (vUv - 0.5) * 2.0;',
           '  p.x *= uAspect;',
-          '  vec3 ro = uRot * vec3(0.0, 0.0, 2.5);',
-          '  vec3 rd = uRot * normalize(vec3(p, -1.95));',
+          '  // Framing is set by the view half-height, not the distance, so camera.position.z',
+    '  // can move without cropping the mark. Dividing the ray by uScale == scaling the mesh.',
+    '  vec3 ro = (uRot * vec3(0.0, 0.0, uCamZ)) / uScale;',
+    '  vec3 rd = (uRot * normalize(vec3(p * 1.282, -uCamZ))) / uScale;',
           '  float pulse = 0.78 + 0.22 * sin(uTime * 1.35);',
           '  vec3 col = vec3(0.0);',
           '  float cover = 0.0;',
@@ -1740,8 +1772,8 @@
           '  float tz = -ro.z / safe.z;',
           '  if (tz > 0.0) {',
           '    float outside = max(section((ro + rd * tz).xy), 0.0);',
-          '    float halo = exp(-outside * 7.0) + 0.45 * exp(-outside * 2.2);',
-          '    col += (mix(EMERALD, MINT, 0.45) * halo * 0.55 + CYAN * pow(halo, 2.0) * 0.3) * pulse * uGlow;',
+          '    float halo = exp(-outside * 6.5) + 0.5 * exp(-outside * 1.8);',
+          '    col += (mix(EMERALD, MINT, 0.45) * halo * 0.72 + CYAN * pow(halo, 1.8) * 0.38) * pulse * uGlow;',
           '  }',
           '  vec3 bmin = vec3(-0.74, -0.74, -uDepth - uFillet);',
           '  vec3 bmax = vec3(0.74, 0.74, uDepth + uFillet);',
@@ -1759,7 +1791,9 @@
           '      float d = map(ro + rd * t);',
           '      dmin = min(dmin, d);',
           '      if (d < 0.0015) { hit = t; break; }',
-          '      t += max(d * 0.9, 0.0025);',
+          '      // Clamp the advance: the stored field saturates at the texture bounds, so an',
+          '      // unclamped step can leap straight over the 0.11-wide strokes and render nothing.',
+          '      t += clamp(d * 0.9, 0.0022, 0.045);',
           '      if (t > tf) break;',
           '    }',
           '    float soft = 1.0 - smoothstep(uPixel * 0.25, uPixel, dmin);',
@@ -1777,7 +1811,7 @@
           '      if (dot(n, rd) > 0.0) n = -n;',
           '      vec3 v = -rd;',
           '      float fres = pow(1.0 - clamp(dot(n, v), 0.0, 1.0), 3.0);',
-          '      float rim = 1.0 - smoothstep(0.0, uFillet * 2.4, abs(section(q.xy)));',
+          '      float rim = pow(1.0 - abs(n.z), 1.6);',
           '      vec3 l1 = normalize(vec3(-0.42, 0.72, 0.55));',
           '      vec3 l2 = normalize(vec3(0.86, -0.26, 0.40));',
           '      vec3 l3 = normalize(vec3(-0.18, -0.52, -0.82));',
@@ -1786,20 +1820,25 @@
           '      float k3 = max(dot(n, l3), 0.0);',
           '      float s1 = pow(max(dot(n, normalize(v + l1)), 0.0), 110.0);',
           '      float s2 = pow(max(dot(n, normalize(v + l2)), 0.0), 44.0);',
-          '      vec3 glass = mix(EMERALD, CYAN, clamp(n.x * 0.5 + 0.5, 0.0, 1.0)) * (0.12 + 0.42 * k1 + 0.26 * k2);',
+          '      vec3 glass = EMERALD * 0.10 * uGlow;',
+          '      glass += mix(EMERALD, CYAN, clamp(n.x * 0.5 + 0.5, 0.0, 1.0)) * (0.10 + 0.80 * k1 + 0.46 * k2) * uGlow;',
           '      glass += environment(reflect(rd, n)) * (0.30 + 0.70 * fres);',
           '      glass += EMERALD * k3 * 0.55;',
-          '      glass += vec3(1.0) * (s1 * 0.9 + s2 * 0.4);',
+          '      glass += vec3(1.0) * (s1 * 0.8 + s2 * 0.34);',
           '      vec3 refr = refract(rd, n, 0.7);',
           '      float inner = clamp(1.0 - max(section((q + refr * 0.6).xy), 0.0) * 3.0, 0.0, 1.0);',
-          '      glass += MINT * inner * (0.18 + 0.5 * pulse);',
-          '      glass += mix(MINT, vec3(1.0), 0.35) * rim * 0.85;',
-          '      float alpha = clamp(0.34 + 0.52 * fres + 0.55 * rim, 0.0, 0.95) * soft;',
-          '      col = col * (1.0 - alpha * 0.6) + glass * alpha;',
+          // Internal glow scatters most where the eye looks *through* the body, so weight it
+          // by grazing angle: flat faces keep the glassy body colour instead of clipping.
+          '      glass += MINT * inner * (0.06 + 0.30 * pulse) * (0.25 + 0.90 * fres) * uGlow;',
+          '      glass += mix(MINT, vec3(1.0), 0.5) * rim * 0.95;',
+          '      float alpha = clamp(0.42 + 0.44 * fres + 0.5 * rim, 0.0, 0.94) * soft;',
+          // The mark sits between the eye and the back glow, so the body has to absorb
+          // most of it; leaving 40% through was washing the flat faces to pale cyan.
+          '      col = col * (1.0 - alpha * 0.85) + glass * alpha;',
           '      cover = max(cover, alpha);',
           '    }',
           '  }',
-          '  gl_FragColor = vec4(min(col, vec3(2.0)), clamp(cover, 0.0, 1.0));',
+          '  gl_FragColor = vec4(min(col, vec3(1.6)), clamp(cover, 0.0, 1.0));',
           '}'
         ].join('\n');
 
@@ -1851,11 +1890,14 @@
         gl.disable(gl.DEPTH_TEST);
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        gl.clearColor(0.0, 0.0, 0.0, 0.0);
+        gl.uniform1f(gl.getUniformLocation(program, 'uCamZ'), renderer.camera.position.z);
 
         const rotationLocation = gl.getUniformLocation(program, 'uRot');
         const timeLocation = gl.getUniformLocation(program, 'uTime');
         const pixelLocation = gl.getUniformLocation(program, 'uPixel');
         const aspectLocation = gl.getUniformLocation(program, 'uAspect');
+        const scaleLocation = gl.getUniformLocation(program, 'uScale');
         const columnMajorProduct = (a, b) => {
           const out = new Float32Array(9);
           for (let col = 0; col < 3; col += 1) {
@@ -1913,6 +1955,8 @@
           gl.uniform1f(timeLocation, time / 1000);
           gl.uniform1f(pixelLocation, (2.56 / Math.max(renderer.width, 1)) * 1.6);
           gl.uniform1f(aspectLocation, renderer.width / Math.max(renderer.height, 1));
+          gl.uniform1f(scaleLocation, renderer.scale);
+          gl.clear(gl.COLOR_BUFFER_BIT);
           gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         };
 
@@ -1998,6 +2042,7 @@
         // Browser zoom changes devicePixelRatio, so re-cap it on every resize.
         const relayout = () => {
           renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          renderer.setScale(Math.min(window.innerWidth / 500, 1.2));
           renderer.resize();
           render();
         };

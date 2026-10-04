@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64">
+  <path fill="#1860ac" d="M0 0h64v64H0z" style="fill:#1860ac;fill:color(display-p3 .0941 .3765 .6745);fill-opacity:1"/>
+  <path fill="#fff" d="M7.44 15.62v2.66h2.66v6.54h3.55v-6.54h2.66v-2.66z" style="fill:#fff;fill-opacity:1"/>
+  <path fill="#fff" d="m22.51 15.62 3.57 9.2h-3.65l-1.82-5.39-1.82 5.39h-3.67l3.6-9.2z" style="fill:#fff;fill-opacity:1"/>
+  <path fill="#fff" d="M25.2 15.62v2.66h2.65v6.54h3.56v-6.54h2.66v-2.66z" style="fill:#fff;fill-opacity:1"/>
+  <path fill="#fff" d="m40.28 15.62 3.58 9.2H40.2l-1.83-5.39-1.82 5.39H32.9l3.58-9.2z" style="fill:#fff;fill-opacity:1"/>
+  <path fill="#fff" d="M14.57 39.09c-.39.2-1.27.4-2.41.4-2.94 0-4.72-1.83-4.72-4.65 0-3.04 2.12-4.89 4.95-4.89 1.12 0 1.9.23 2.23.41l-.35 1.35a5 5 0 0 0-1.82-.35c-1.88 0-3.25 1.18-3.25 3.4 0 2.03 1.19 3.3 3.22 3.3.68 0 1.4-.15 1.84-.33l.26 1.32z" style="fill:#fff;fill-opacity:1"/>
+  <path fill="#fff" d="M20.55 30.1H18.4l-2.96 9.26h1.74l.8-2.62h2.94l.83 2.62h1.8l-3.02-9.25zm-1.14 5.36h-1.18l.73-2.29c.15-.55.3-1.2.44-1.74h.04c.14.56.28 1.19.46 1.74l.73 2.29z" style="fill:#fff;fill-opacity:1"/>
+  <path fill="#fff" d="M30.14 30.8a4 4 0 0 0-2.21-.74h-.5q-1.68 0-2.6.2v9.14h1.68v-3.5q.36.07.83.06.3.01.6-.04c.94-.08 1.75-.4 2.32-.97q.77-.75.78-2.09c0-.88-.36-1.6-.9-2.06m-2.21 3.75a3 3 0 0 1-1.43-.03v-3.1q.27-.08.98-.09.24-.01.46.04c.9.12 1.44.65 1.44 1.54 0 .88-.53 1.47-1.44 1.64z" style="fill:#fff;fill-opacity:1"/>
+  <path fill="#fff" d="M34.2 30.1h-1.68v9.26h1.68z" style="fill:#fff;fill-opacity:1"/>
+  <path fill="#fff" d="M37.92 31.52h-2.64v-1.41h6.97v1.41H39.6v7.83h-1.68z" style="fill:#fff;fill-opacity:1"/>
+  <path fill="#fff" d="M46.78 30.1h-2.16l-2.95 9.26h1.73l.8-2.62h2.94l.83 2.62h1.8l-3.02-9.25zm-1.11 5.36h-1.18l.7-2.29c.16-.55.3-1.2.45-1.74h.03v.04c.14.53.29 1.15.46 1.7l.73 2.29z" style="fill:#fff;fill-opacity:1"/>
+  <path fill="#fff" d="M51.08 30.1h1.7v7.84h3.78v1.41h-5.48z" style="fill:#fff;fill-opacity:1"/>
+  <path fill="#d7db29" d="M56.56 45.32H7.44v3.06h49.12z" style="fill:#d7db29;fill:color(display-p3 .8431 .8588 .1608);fill-opacity:1"/>
+</svg>

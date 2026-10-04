@@ -7,10 +7,33 @@
   <meta name="color-scheme" content="dark" />
   <meta name="description" content="Compare personal and business loan options from 30+ banks and NBFCs with Nexa Capital and the Ruconnect network." />
   <title>Nexa Capital — Smarter Loans. Fast Approvals.</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300E5FF'/%3E%3Cstop offset='1' stop-color='%23FF2ED2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='%23070B14'/%3E%3Cpath d='M9.6 9.2v14.3L22.4 9.2v14.3' fill='none' stroke='url(%23g)' stroke-width='3.1' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="preload" href="assets/fonts/open-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
   <style>
+    /* ---------- one typeface for the whole product: Open Sans Variable ----------
+       Open Sans is the web typeface SBI itself serves on sbi.bank.in (SBI-Theme ships
+       OpenSans.woff2 for the whole UI). SBI's corporate identity wordmark is set in Effra
+       (Dalton Maag), a commercial licence that cannot be redistributed, so Effra only joins
+       the stack below for machines that already have it installed. */
+    @font-face{
+      font-family:"Open Sans Variable";
+      font-style:normal;
+      font-weight:300 800;
+      font-display:swap;
+      src:url("assets/fonts/open-sans-latin-wght-normal.woff2") format("woff2-variations");
+      unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+    }
+    /* Open Sans ships no rupee glyph, so ₹ comes from its sibling design Noto Sans — same
+       humanist skeleton, so amounts never fall back to a random system font. */
+    @font-face{
+      font-family:"Rupee Sign";
+      font-style:normal;
+      font-weight:300 800;
+      font-display:swap;
+      src:url("assets/fonts/currency-rupee.woff2") format("woff2-variations");
+      unicode-range:U+20A8,U+20B0,U+20B9;
+    }
+
     /* ============================================================
        NEXA CAPITAL — vgpu spectrum design system
        void #000000 · ink #FFFFFF · neon cyan/magenta/violet spectrum
@@ -30,9 +53,15 @@
       --magenta:#FF2ED2;
       --amber:#FFB454;
       --mint:#3DFFB4;
+      --emerald:#10B981; /* electric emerald — hero aura accent */
       --spec:linear-gradient(92deg,#00E5FF 0%,#4D7CFF 26%,#8B5CF6 50%,#FF2ED2 74%,#FFB454 100%);
-      --font-display:"Space Grotesk",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-      --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      /* Open Sans — SBI's own website typeface — carries headings, subheads, body copy, form
+         labels, lender tags and numerals. "Effra"/"Effra Std" is SBI's licensed corporate
+         identity face (used only where the machine already has it) and "Rupee Sign" covers ₹.
+         The legacy --font-mono token resolves to the same family so no element can drift to a
+         second typeface. */
+      --font-display:"Open Sans Variable","Open Sans","Effra","Effra Std","Rupee Sign",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+      --font-mono:"Open Sans Variable","Open Sans","Effra","Effra Std","Rupee Sign",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
       --radius:20px;
     }
 
@@ -115,11 +144,11 @@
       background:var(--spec); -webkit-background-clip:text; background-clip:text; color:transparent;
     }
     .section-kicker::before{ content:"// "; color:rgba(255,255,255,.35); -webkit-text-fill-color:rgba(255,255,255,.35); }
-    .section-heading{ max-width:640px; margin:0 auto 52px; text-align:center; }
-    .section-heading h2{ margin:16px 0 14px; }
+    .section-heading{ max-width:640px; margin:0 auto 28px; text-align:center; }
+    .section-heading h2{ margin:9px 0 9px; }
     .section-heading p{ margin:0 auto; color:var(--muted); max-width:520px; }
     h1,h2,h3{ font-weight:700; letter-spacing:-.02em; margin:0; }
-    .section{ padding:96px 0; position:relative; }
+    .section{ padding:52px 0; position:relative; }
 
     /* ---------- header ---------- */
     .site-header{
@@ -129,15 +158,29 @@
     }
     .nav-shell{ display:flex; align-items:center; gap:26px; height:72px; }
     .brand{ display:flex; align-items:center; gap:11px; }
-    .brand-mark{ width:36px; height:36px; display:grid; place-items:center; border-radius:11px;
-      background:linear-gradient(150deg, rgba(0,229,255,.16), rgba(139,92,246,.10) 50%, rgba(255,46,210,.16));
-      border:1px solid rgba(0,229,255,.35);
-      box-shadow:0 0 22px rgba(0,229,255,.22), inset 0 1px 0 rgba(255,255,255,.18);
+    .brand-mark{ width:42px; height:42px; display:grid; place-items:center; border-radius:13px;
+      background:
+        radial-gradient(120% 120% at 16% 10%, rgba(0,229,255,.34), transparent 56%),
+        radial-gradient(120% 120% at 86% 90%, rgba(255,46,210,.34), transparent 58%),
+        linear-gradient(160deg, #0B1224, #05070D 58%, #0B0716);
+      border:1px solid rgba(0,229,255,.45);
+      box-shadow:0 0 26px rgba(0,229,255,.26), 0 8px 28px rgba(255,46,210,.16), inset 0 1px 0 rgba(255,255,255,.22);
       color:#fff;
     }
-    .brand-mark svg{ width:21px; height:21px; }
-    .brand-name{ font-family:var(--font-mono); font-size:15px; font-weight:700; letter-spacing:.06em; }
-    .brand-name .brand-dim{ color:var(--faint); font-weight:500; }
+    .brand-mark svg{ width:26px; height:26px; filter:drop-shadow(0 0 6px rgba(0,229,255,.55)); }
+    /* the wordmark lock-up: NEXA set bright and solid, CAPITAL riding the neon spectrum */
+    .brand-name{
+      font-family:var(--font-mono); font-size:19.5px; font-weight:700; letter-spacing:.075em; color:#fff;
+      display:inline-flex; align-items:baseline;
+      text-shadow:0 0 20px rgba(255,255,255,.20);
+    }
+    .brand-name .brand-dim{
+      font-weight:700; opacity:1;
+      background:linear-gradient(94deg, #7DF9FF 0%, #00E5FF 20%, #4D7CFF 44%, #8B5CF6 66%, #FF2ED2 86%, #FFB454 100%);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      filter:drop-shadow(0 0 11px rgba(0,229,255,.40));
+    }
+    @media (max-width:640px){ .brand-name{ font-size:16px; letter-spacing:.055em; } }
     .desktop-nav{ display:flex; align-items:center; gap:4px; margin-left:auto; }
     .nav-link{
       display:inline-flex; align-items:center; gap:6px; padding:9px 13px; border-radius:10px;
@@ -193,79 +236,67 @@
       background:linear-gradient(120deg, rgba(0,229,255,.22), rgba(255,46,210,.22)); color:#fff !important; font-weight:600; }
 
     /* ---------- hero + prism scene ---------- */
-    .hero{ position:relative; overflow:clip; padding:84px 0 34px; }
+    .hero{ position:relative; overflow:clip; padding:36px 0 14px; }
     .hero::before{ /* static spotlight: no per-frame background repaint */
       content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
       background:radial-gradient(560px circle at 28% 30%, rgba(0,229,255,.08), transparent 65%);
     }
-    .hero-canvas{ position:absolute; inset:0; z-index:0; pointer-events:none; }
-    .prism-scene{ position:absolute; inset:0; display:grid; place-items:center; perspective:1300px; }
-    .prism-halo{
-      position:absolute; width:560px; height:560px; border-radius:50%;
-      background:radial-gradient(ellipse at 25% 40%, rgba(0,229,255,.75), transparent 55%),
-        radial-gradient(ellipse at 75% 30%, rgba(139,92,246,.8), transparent 55%),
-        radial-gradient(ellipse at 65% 75%, rgba(255,46,210,.65), transparent 55%);
-      -webkit-mask-image:radial-gradient(closest-side, #000 35%, transparent 100%);
-      mask-image:radial-gradient(closest-side, #000 35%, transparent 100%);
-      opacity:.30; animation:halo-spin 26s linear infinite;
+    /* ---------- rotating electric-emerald aura behind the hero tag line and lead card ----------
+       A single conic-gradient disc (emerald melting into transparent onyx) spins slowly behind
+       the copy and the form card. It is painted underneath the content layer, takes no pointer
+       events and is paused offscreen or under reduced motion like the other decorative motion. */
+    /* ---------- hero light scene: the glass-prism artwork ----------
+       One local image behind the copy and the lead card: a glass triangle with a
+       white beam. Colour-free on purpose: the prism is the only subject. Gradient
+       overlays feather it into the black void so type stays readable. */
+    .hero-scene{ position:absolute; inset:0; overflow:hidden; }
+    /* the artwork mirrors strictly left-right: a horizontal flip (scaleX 1 -> -1)
+       that swings out to the mirrored pose and back, so the left and right sides keep
+       reversing while the top always stays on top. There is no rotation and no
+       vertical flip anywhere. It is scaled up and feathered at the rim (mask) so the
+       bitmap's edges never show while it swings. Transform only, so the browser keeps
+       it on the compositor. */
+    .hero-scene img{
+      position:absolute; inset:0; width:100%; height:100%;
+      object-fit:cover; object-position:62% 50%;
+      transform-origin:56% 50%;
+      will-change:transform;
+      -webkit-mask-image:radial-gradient(118% 118% at 50% 50%, #000 52%, transparent 88%);
+      mask-image:radial-gradient(118% 118% at 50% 50%, #000 52%, transparent 88%);
+      animation:prism-flip 20s cubic-bezier(.45,0,.55,1) infinite alternate;
     }
-    @keyframes halo-spin{ to{ transform:rotate(360deg); } }
-    .prism-floor{
-      position:absolute; left:50%; bottom:2%; width:980px; height:420px; opacity:.14;
-      transform:translateX(-50%) perspective(900px) rotateX(72deg); transform-origin:50% 100%;
-      background-image:linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px);
-      background-size:46px 46px;
-      -webkit-mask-image:radial-gradient(closest-side, #000 20%, transparent 78%);
-      mask-image:radial-gradient(closest-side, #000 20%, transparent 78%);
+    @keyframes prism-flip{
+      from{ transform:scale(1.5) scaleX(1); }
+      to{ transform:scale(1.5) scaleX(-1); }
     }
-    .beam-in{
-      position:absolute; right:50%; top:41%; width:47%; height:96px; transform-origin:100% 50%;
-      transform:rotate(16deg);
-      background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.05) 32%, rgba(255,255,255,.4) 88%, rgba(255,255,255,.85) 100%);
-      filter:blur(9px); mix-blend-mode:screen; animation:beam-breathe 6s ease-in-out infinite;
+    /* show the whole artwork, as large as the hero allows; only a left wash for the
+       copy column and gentle top/bottom fades keep it melting into the void */
+    .hero-scene::after{
+      content:""; position:absolute; inset:0;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.95) 0%, rgba(0,0,0,.86) 26%, rgba(0,0,0,.52) 44%, transparent 58%),
+        radial-gradient(125% 105% at 58% 50%, transparent 56%, rgba(0,0,0,.42) 88%, #000 100%),
+        radial-gradient(72% 46% at 4% 96%, rgba(0,0,0,.86), transparent 68%),
+        linear-gradient(180deg, #000 0%, transparent 10%, transparent 90%, #000 100%);
     }
-    .beam-spread{
-      position:absolute; left:50%; top:50%; width:58%; height:340px; transform:translateY(-50%);
-      background:linear-gradient(90deg, rgba(0,229,255,.16), rgba(77,124,255,.14) 25%, rgba(139,92,246,.14) 48%, rgba(255,46,210,.14) 72%, rgba(255,180,84,.10));
-      clip-path:polygon(0 47%, 100% 4%, 100% 96%, 0 53%);
-      filter:blur(16px); mix-blend-mode:screen; opacity:.8;
+    /* phones: don't stretch a 2:1 render down a tall column. The artwork keeps a
+       top band sized to its own ratio (so the prism and fan read at full width),
+       then fades into the void before the copy gets dense. */
+    @media (max-width:980px){
+      .hero-scene{ inset:0 0 auto 0; height:min(62vw, 440px); }
+      .hero-scene img{ object-position:62% 50%; }
+      .hero-scene::after{
+        background:
+          linear-gradient(180deg, rgba(0,0,0,.52) 0%, transparent 26%, transparent 52%, rgba(0,0,0,.86) 86%, #000 100%),
+          linear-gradient(90deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.34) 38%, transparent 62%);
+      }
     }
-    .beam-out{
-      position:absolute; left:50%; top:calc(50% - 4px); width:52%; height:8px; border-radius:999px;
-      transform-origin:0 50%; transform:rotate(var(--a,0deg));
-      background:linear-gradient(90deg, var(--c,#fff) 0%, transparent 82%);
-      filter:blur(6px); mix-blend-mode:screen; opacity:.8;
-      animation:beam-breathe 5.2s ease-in-out infinite; animation-delay:var(--d,0s);
-    }
-    @keyframes beam-breathe{ 0%,100%{ opacity:.85; } 50%{ opacity:.5; } }
-    .prism-rig{ transform-style:preserve-3d; transform:rotateX(-10deg) rotateY(0deg); will-change:auto; }
-    .prism-rig.parallax-active{ will-change:transform; }
-    @keyframes prism-spin{ from{ transform:rotateY(0deg); } to{ transform:rotateY(360deg); } }
-    .prism{ position:relative; width:200px; height:240px; transform-style:preserve-3d; animation:prism-spin 18s linear infinite; }
-    .prism-face{
-      position:absolute; inset:0; border:1px solid rgba(255,255,255,.4);
-      background:linear-gradient(172deg, rgba(255,255,255,.20), rgba(255,255,255,.03) 34%, var(--tint) 130%);
-      box-shadow:inset 0 0 46px rgba(255,255,255,.07);
-    }
-    .prism-face--a{ --tint:rgba(0,229,255,.34); transform:rotateY(0deg) translateZ(58px); }
-    .prism-face--b{ --tint:rgba(139,92,246,.36); transform:rotateY(120deg) translateZ(58px); }
-    .prism-face--c{ --tint:rgba(255,46,210,.34); transform:rotateY(240deg) translateZ(58px); }
-    .prism-cap{
-      position:absolute; left:50%; top:50%; width:200px; height:173px; margin:-86.5px 0 0 -100px;
-      clip-path:polygon(50% 0, 100% 100%, 0 100%);
-      transform-origin:50% 66.7%;
-      background:linear-gradient(120deg, rgba(0,229,255,.30), rgba(139,92,246,.30) 50%, rgba(255,46,210,.30));
-      border:1px solid rgba(255,255,255,.3);
-    }
-    .prism-cap--top{ transform:rotateX(90deg) translateZ(120px); }
-    .prism-cap--bottom{ transform:rotateX(90deg) translateZ(-120px); }
-    .hero-layout{ position:relative; z-index:1; display:grid; grid-template-columns:minmax(0, 1.04fr) minmax(0, .96fr); gap:58px; align-items:center; }
+    .hero-layout{ position:relative; z-index:1; display:grid; grid-template-columns:minmax(0, 1.04fr) minmax(0, .96fr); gap:40px; align-items:center; }
     .hero-layout > *{ min-width:0; }
     .hero-copy{ max-width:600px; }
     .term-chip{
       display:inline-flex; align-items:center; gap:10px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-      padding:8px 14px; border-radius:999px; margin-bottom:26px;
+      padding:8px 14px; border-radius:999px; margin-bottom:15px;
       font-family:var(--font-mono); font-size:12.5px; letter-spacing:.02em; color:var(--muted);
       background:rgba(255,255,255,.045); border:1px solid var(--line);
       backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
@@ -275,9 +306,9 @@
     .term-dot{ width:7px; height:7px; border-radius:50%; background:var(--mint); box-shadow:0 0 10px var(--mint); animation:pulse-dot 2.2s ease-in-out infinite; flex:0 0 auto; }
     @keyframes pulse-dot{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.45; transform:scale(.8); } }
     .hero h1{ font-size:clamp(2.6rem, 5.1vw, 4.15rem); line-height:1.04; letter-spacing:-.03em; }
-    .hero-subhead{ margin:22px 0 0; font-size:17px; line-height:1.65; color:var(--muted); max-width:520px; }
+    .hero-subhead{ margin:13px 0 0; font-size:17px; line-height:1.65; color:var(--muted); max-width:520px; }
     .hero-subhead strong{ color:#fff; }
-    .hero-highlights{ display:flex; flex-wrap:wrap; gap:10px; margin-top:26px; }
+    .hero-highlights{ display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
     .hero-highlight{
       display:inline-flex; align-items:center; gap:8px; padding:9px 14px; border-radius:999px;
       font-family:var(--font-mono); font-size:12.5px; color:var(--muted);
@@ -285,16 +316,17 @@
     }
     .hero-highlight svg{ color:var(--cyan); }
     .hero-highlight strong{ color:#fff; }
-    .hero-note{ display:flex; align-items:center; gap:14px; margin-top:30px; }
+    .hero-note{ display:flex; align-items:center; gap:14px; margin-top:18px; }
     .hero-note-icon{ width:40px; height:40px; display:grid; place-items:center; flex:0 0 auto;
       border-radius:12px; color:var(--cyan); background:rgba(0,229,255,.07); border:1px solid rgba(0,229,255,.24); }
     .hero-note-copy{ font-size:13px; line-height:1.5; color:var(--faint); }
     .hero-note-copy strong{ color:#fff; }
-    .hero-footnote{ margin:26px 0 0; font-size:11.5px; line-height:1.6; color:var(--ghost); max-width:520px; }
+    .hero-footnote{ margin:14px 0 0; font-size:11.5px; line-height:1.6; color:var(--ghost); max-width:520px;
+      text-shadow:0 1px 10px rgba(0,0,0,.95), 0 0 3px rgba(0,0,0,.9); }
     .hero-footnote a{ color:var(--cyan); text-decoration:underline; text-underline-offset:3px; }
     .hero-bottom{
       position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
-      margin-top:56px; padding-top:22px; border-top:1px solid rgba(255,255,255,.07);
+      margin-top:26px; padding-top:14px; border-top:1px solid rgba(255,255,255,.07);
       font-family:var(--font-mono); font-size:12px; color:var(--faint);
     }
     .hero-bottom-left{ display:flex; align-items:center; gap:9px; }
@@ -302,21 +334,24 @@
     .hero-bottom-left span{ color:var(--ghost); }
     .hero-bottom-right{ display:flex; align-items:center; gap:12px; }
     .hero-bottom-right strong{ color:#fff; font-weight:600; }
-    .partner-mini-stack{ display:flex; }
+    .partner-mini-stack{ display:flex; align-items:center; }
     .partner-mini-stack span{
-      width:26px; height:26px; border-radius:8px; display:grid; place-items:center; margin-left:-7px;
-      font-size:10.5px; font-weight:700; color:#fff; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.08);
+      width:36px; height:36px; border-radius:11px; display:grid; place-items:center; margin-left:-10px;
+      border:1px solid rgba(255,255,255,.22); background:linear-gradient(180deg, #F7F9FD, #E9EDF6);
+      box-shadow:0 4px 12px rgba(0,0,0,.4);
     }
-    .partner-mini-stack span:first-child{ margin-left:0; border-color:rgba(0,229,255,.45); }
-    .partner-mini-stack span:nth-child(2){ border-color:rgba(139,92,246,.5); }
-    .partner-mini-stack span:nth-child(3){ border-color:rgba(255,46,210,.5); }
+    .partner-mini-stack span:first-child{ margin-left:0; }
+    .partner-mini-stack img{ width:auto; height:auto; max-width:23px; max-height:23px; object-fit:contain; }
 
     /* ---------- lead card ---------- */
     .lead-card{
-      border-radius:24px; padding:28px; position:relative;
+      border-radius:24px; padding:24px; position:relative;
+      /* a touch denser than the shared .glass so the spectrum behind it never
+         washes over the field labels and the consent line */
+      background:linear-gradient(158deg, rgba(9,12,20,.90), rgba(6,8,14,.82) 42%, rgba(10,8,18,.88));
       box-shadow:0 40px 100px rgba(0,0,0,.6), 0 0 60px rgba(139,92,246,.12), inset 0 1px 0 rgba(255,255,255,.10);
     }
-    .lead-card-head{ display:flex; align-items:center; gap:13px; margin-bottom:22px; }
+    .lead-card-head{ display:flex; align-items:center; gap:13px; margin-bottom:16px; }
     .lead-card-symbol{
       width:46px; height:46px; flex:0 0 auto; display:grid; place-items:center; border-radius:14px; color:#fff;
       background:linear-gradient(140deg, rgba(0,229,255,.30), rgba(139,92,246,.22) 55%, rgba(255,46,210,.30));
@@ -349,10 +384,11 @@
       background:linear-gradient(160deg, rgba(0,229,255,.16), rgba(139,92,246,.12));
       box-shadow:0 0 0 1px rgba(0,229,255,.30), 0 0 26px rgba(0,229,255,.22), inset 0 1px 0 rgba(255,255,255,.14);
     }
-    .loan-amount-panel{ margin-top:20px; padding:16px; border-radius:16px; background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.07); }
+    .loan-amount-panel{ margin-top:14px; padding:14px; border-radius:16px; background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.07); }
     .amount-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:6px; }
     .amount-head label{ font-size:13.5px; color:var(--muted); }
-    .amount-output, output{ font-family:var(--font-mono); }
+    .amount-output, output{ font-family:var(--font-mono); font-variant-numeric:tabular-nums; }
+    .range-limit, .calc-limits, .emi-amount, .result-breakdown strong, .amount-output, output{ font-variant-numeric:tabular-nums; }
     .amount-output{ font-size:16px; font-weight:700; color:var(--cyan); text-shadow:0 0 18px rgba(0,229,255,.45); }
     .range-limit, .calc-limits{ display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:10.5px; color:var(--ghost); margin-top:2px; }
 
@@ -374,7 +410,7 @@
       width:16px; height:16px; border-radius:50%; background:#fff; border:2px solid rgba(0,229,255,.95);
       box-shadow:0 0 0 4px rgba(0,229,255,.16), 0 0 20px rgba(0,229,255,.6);
     }
-    .lead-fields{ display:grid; grid-template-columns:1.2fr .8fr; gap:12px; margin-top:18px; }
+    .lead-fields{ display:grid; grid-template-columns:1.2fr .8fr; gap:12px; margin-top:13px; }
     .field-wrap label, .personal-field label{ display:block; font-size:12.5px; color:var(--muted); margin-bottom:7px; }
     .field-wrap label span, .personal-field label span{ color:var(--faint); font-size:11.5px; }
     .input-shell{ position:relative; display:flex; align-items:center; }
@@ -416,11 +452,11 @@
       box-shadow:0 0 14px rgba(0,229,255,.45);
     }
     input[type="checkbox"]:checked::before{ transform:scale(1); }
-    .consent-row{ display:flex; gap:11px; align-items:flex-start; margin-top:18px; font-size:12px; line-height:1.6; color:var(--faint); cursor:pointer; }
+    .consent-row{ display:flex; gap:11px; align-items:flex-start; margin-top:14px; font-size:12px; line-height:1.6; color:var(--faint); cursor:pointer; }
     .consent-row a{ color:var(--cyan); text-decoration:underline; text-underline-offset:3px; }
     .apply-button, .personal-submit{
       width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
-      margin-top:20px; padding:15.5px 18px; border-radius:14px;
+      margin-top:16px; padding:15px 18px; border-radius:14px;
       font-weight:700; font-size:15.5px; letter-spacing:.01em; color:#02040A;
       background:linear-gradient(96deg, #7DF3FF, #00E5FF 30%, #8B5CF6 64%, #FF2ED2);
       box-shadow:0 10px 36px rgba(0,229,255,.32), 0 6px 26px rgba(255,46,210,.22), inset 0 1px 0 rgba(255,255,255,.55);
@@ -434,7 +470,7 @@
     .apply-button:active, .personal-submit:active{ transform:translateY(0); }
     .apply-button:disabled, .personal-submit:disabled{ opacity:.65; cursor:wait; transform:none; }
     .form-privacy-note, .personal-delivery-note{
-      display:flex; align-items:center; justify-content:center; gap:8px; margin:16px 0 0;
+      display:flex; align-items:center; justify-content:center; gap:8px; margin:13px 0 0;
       font-family:var(--font-mono); font-size:11px; color:var(--ghost); text-align:center;
     }
     .form-privacy-note svg, .personal-delivery-note svg{ width:13px; height:13px; flex:0 0 auto; color:var(--cyan); }
@@ -453,8 +489,8 @@
     .term-title{ font-family:var(--font-mono); font-size:12.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
     /* ---------- network section ---------- */
-    .network-section{ padding:78px 0 90px; position:relative; }
-    .network-heading{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:28px; }
+    .network-section{ padding:40px 0 48px; position:relative; }
+    .network-heading{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:18px; }
     .network-eyebrow{
       display:inline-flex; align-items:center; gap:9px; padding:8px 14px; border-radius:999px;
       font-family:var(--font-mono); font-size:11.5px; letter-spacing:.22em; color:#fff;
@@ -463,27 +499,28 @@
     }
     .network-eyebrow i{ width:6px; height:6px; border-radius:50%; background:var(--violet); box-shadow:0 0 9px var(--violet); animation:pulse-dot 2.2s ease-in-out infinite; }
     .network-subtext{ font-family:var(--font-mono); font-size:11.5px; color:var(--ghost); }
-    .partner-logo-grid{ display:grid; grid-template-columns:repeat(6, 1fr); gap:13px; margin-bottom:26px; }
+    .partner-logo-grid{
+      display:grid; grid-template-columns:repeat(6, 1fr); grid-auto-rows:1fr; gap:12px; margin-bottom:18px;
+    }
     .partner-logo{
-      display:flex; align-items:center; gap:12px; padding:16px; border-radius:16px;
-      background:rgba(255,255,255,.035); border:1px solid var(--line);
-      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-      transition:transform .2s, border-color .2s, box-shadow .2s;
+      display:flex; flex-direction:column; align-items:center; gap:10px; padding:13px 13px 12px;
+      border-radius:16px; text-align:center; transition:transform .2s, border-color .2s, box-shadow .2s;
+      box-shadow:0 14px 34px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
     }
-    .partner-logo:hover{ transform:translateY(-3px); border-color:rgba(255,255,255,.3); box-shadow:0 12px 34px rgba(0,0,0,.5); }
-    .partner-mark{
-      width:42px; height:42px; flex:0 0 auto; display:grid; place-items:center; border-radius:12px;
-      font-weight:700; font-size:18px; color:#fff;
-      background:rgba(255,255,255,.06); border:1px solid var(--line-strong);
+    .partner-logo:hover{ transform:translateY(-3px); border-color:rgba(0,229,255,.42); }
+    /* Uniform light well keeps every official mark legible on the dark glass card. */
+    .partner-logo-plate{
+      width:100%; height:58px; display:grid; place-items:center; padding:0 12px; border-radius:13px;
+      background:linear-gradient(180deg, #F7F9FD, #E9EDF6);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.6), 0 6px 16px rgba(0,0,0,.3);
     }
-    .partner-logo strong{ display:block; font-size:13.5px; letter-spacing:.03em; }
-    .partner-logo small{ display:block; font-family:var(--font-mono); font-size:9px; letter-spacing:.16em; color:var(--ghost); margin-top:2px; }
-    .partner-logo--hdfc .partner-mark{ color:var(--cyan); border-color:rgba(0,229,255,.5); box-shadow:0 0 20px rgba(0,229,255,.2); }
-    .partner-logo--icici .partner-mark{ color:var(--amber); border-color:rgba(255,180,84,.5); box-shadow:0 0 20px rgba(255,180,84,.2); }
-    .partner-logo--axis .partner-mark{ color:var(--magenta); border-color:rgba(255,46,210,.5); box-shadow:0 0 20px rgba(255,46,210,.2); }
-    .partner-logo--kotak .partner-mark{ color:var(--violet); border-color:rgba(139,92,246,.55); box-shadow:0 0 20px rgba(139,92,246,.22); }
-    .partner-logo--bajaj .partner-mark{ color:var(--blue); border-color:rgba(77,124,255,.55); box-shadow:0 0 20px rgba(77,124,255,.22); }
-    .partner-logo--tata .partner-mark{ color:var(--mint); border-color:rgba(61,255,180,.45); box-shadow:0 0 20px rgba(61,255,180,.18); }
+    .partner-logo-plate img{ display:block; width:auto; height:auto; max-width:100%; max-height:40px; object-fit:contain; }
+    .partner-logo-copy{ display:block; }
+    .partner-logo strong{ display:block; font-size:12.5px; font-weight:600; letter-spacing:.01em; line-height:1.25; }
+    .partner-logo small{
+      display:block; margin-top:3px; font-size:9px; font-weight:600;
+      letter-spacing:.15em; text-transform:uppercase; color:var(--ghost);
+    }
     .lender-browser{ border-radius:22px; overflow:hidden; }
     .lender-browser-head{
       display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
@@ -523,8 +560,8 @@
     .lender-category-group{ width:100%; margin-bottom:14px; }
     .lender-category-group:last-child{ margin-bottom:0; }
     .lender-chip{
-      display:inline-flex; align-items:center; gap:9px; padding:9px 15px; border-radius:999px;
-      font-size:13px; color:var(--muted); background:rgba(255,255,255,.03); border:1px solid var(--line);
+      display:inline-flex; align-items:center; gap:10px; padding:9px 16px 9px 10px; border-radius:999px;
+      font-size:13.5px; color:var(--muted); background:rgba(255,255,255,.03); border:1px solid var(--line);
       transition:color .18s, border-color .18s, box-shadow .18s, transform .18s; --dot:rgba(255,255,255,.4);
     }
     .lender-chip::before{ content:""; width:6px; height:6px; border-radius:50%; flex:0 0 auto; background:var(--dot); box-shadow:0 0 9px var(--dot); }
@@ -532,6 +569,12 @@
     .lender-chip:nth-child(4n+2){ --dot:var(--violet); }
     .lender-chip:nth-child(4n+3){ --dot:var(--magenta); }
     .lender-chip:nth-child(4n+4){ --dot:var(--amber); }
+    .lender-chip.has-mark::before{ display:none; }
+    .lender-chip-mark{
+      width:auto; min-width:26px; max-width:56px; height:26px; flex:0 0 auto; border-radius:7px; object-fit:contain;
+      background:linear-gradient(180deg, #FFFFFF, #E9EDF6); padding:3px;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.7), 0 2px 6px rgba(0,0,0,.35);
+    }
     .lender-chip:hover{ color:#fff; border-color:var(--dot); box-shadow:0 0 18px rgba(0,229,255,.14); transform:translateY(-1px); }
     .lender-disclaimer{ margin:0; padding:0 26px 22px; font-size:11px; line-height:1.6; color:var(--ghost); }
 
@@ -541,13 +584,13 @@
       content:""; position:absolute; inset:0; pointer-events:none;
       background:radial-gradient(760px 420px at 8% 20%, rgba(139,92,246,.10), transparent 65%);
     }
-    .personal-application-layout{ position:relative; display:grid; grid-template-columns:.92fr 1.08fr; gap:56px; align-items:start; }
+    .personal-application-layout{ position:relative; display:grid; grid-template-columns:.92fr 1.08fr; gap:40px; align-items:start; }
     .personal-application-copy{ position:sticky; top:100px; }
-    .personal-application-copy h2{ font-size:clamp(1.8rem, 2.9vw, 2.5rem); margin:16px 0 16px; line-height:1.12; }
+    .personal-application-copy h2{ font-size:clamp(1.8rem, 2.9vw, 2.5rem); margin:9px 0 11px; line-height:1.12; }
     .personal-application-copy h2 span{ background:var(--spec); -webkit-background-clip:text; background-clip:text; color:transparent; }
     .personal-application-copy > p{ margin:0; color:var(--muted); line-height:1.65; }
     .personal-safety-card{
-      display:flex; gap:14px; margin-top:26px; padding:18px; border-radius:16px;
+      display:flex; gap:14px; margin-top:17px; padding:16px; border-radius:16px;
       background:rgba(255,46,210,.06); border:1px solid rgba(255,46,210,.3);
       box-shadow:0 0 34px rgba(255,46,210,.10);
     }
@@ -555,15 +598,15 @@
       color:var(--magenta); background:rgba(255,46,210,.12); border:1px solid rgba(255,46,210,.35); }
     .personal-safety-card p{ margin:0; font-size:12.5px; line-height:1.65; color:var(--muted); }
     .personal-safety-card strong{ color:#fff; }
-    .personal-steps-mini{ display:grid; gap:10px; margin-top:26px; }
+    .personal-steps-mini{ display:grid; gap:10px; margin-top:17px; }
     .personal-steps-mini span{ display:flex; align-items:center; gap:12px; font-size:13.5px; color:var(--muted); }
     .personal-steps-mini i{
-      width:26px; height:26px; flex:0 0 auto; display:grid; place-items:center; border-radius:50%;
+      font-style:normal; width:26px; height:26px; flex:0 0 auto; display:grid; place-items:center; border-radius:50%;
       font-style:normal; font-family:var(--font-mono); font-size:11.5px; font-weight:700; color:var(--cyan);
       background:rgba(0,229,255,.10); border:1px solid rgba(0,229,255,.4);
     }
-    .personal-form-card{ border-radius:24px; padding:30px; }
-    .personal-form-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:20px; }
+    .personal-form-card{ border-radius:24px; padding:26px; }
+    .personal-form-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:16px; }
     .personal-form-head small{ display:block; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.2em; color:var(--cyan); }
     .personal-form-head h3{ font-size:20px; margin-top:6px; }
     .personal-form-badge{
@@ -573,7 +616,7 @@
     }
     .personal-form-badge svg{ width:13px; height:13px; }
     .personal-prefill-note{
-      margin:0 0 18px; padding:12px 15px; border-radius:12px; font-size:12.5px; line-height:1.55;
+      margin:0 0 14px; padding:12px 15px; border-radius:12px; font-size:12.5px; line-height:1.55;
       color:var(--mint); background:rgba(61,255,180,.07); border:1px solid rgba(61,255,180,.35);
     }
     .personal-form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px 14px; }
@@ -582,7 +625,7 @@
     .personal-amount-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:4px; }
     .personal-amount-head label{ margin:0; font-size:13.5px; color:var(--muted); }
     #personal-amount-output{ font-size:16px; font-weight:700; color:var(--cyan); text-shadow:0 0 18px rgba(0,229,255,.45); }
-    .personal-consent{ display:flex; gap:11px; align-items:flex-start; margin-top:20px; font-size:12px; line-height:1.6; color:var(--faint); cursor:pointer; }
+    .personal-consent{ display:flex; gap:11px; align-items:flex-start; margin-top:16px; font-size:12px; line-height:1.6; color:var(--faint); cursor:pointer; }
     .personal-consent a{ color:var(--cyan); text-decoration:underline; text-underline-offset:3px; }
     .calculator-disclaimer{ margin:16px 0 0; font-size:11px; line-height:1.6; color:var(--ghost); }
 
@@ -593,7 +636,7 @@
     }
     .advantage-grid{ display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; position:relative; }
     .advantage-card{
-      position:relative; overflow:hidden; padding:26px 24px; border-radius:20px;
+      position:relative; overflow:hidden; padding:22px 20px; border-radius:20px;
       display:flex; flex-direction:column; gap:12px;
       transition:transform .22s, border-color .22s, box-shadow .22s; --tint:rgba(0,229,255,.14);
     }
@@ -624,25 +667,25 @@
     .advantage-tag svg{ width:12px; height:12px; }
 
     /* ---------- calculator ---------- */
-    .calculator-section{ padding:104px 0; position:relative; }
+    .calculator-section{ padding:52px 0; position:relative; }
     .calculator-section::before{
       content:""; position:absolute; inset:0; pointer-events:none;
       background:radial-gradient(900px 460px at 50% 118%, rgba(139,92,246,.12), transparent 62%);
     }
-    .calculator-layout{ position:relative; display:grid; grid-template-columns:.9fr 1.1fr; gap:56px; align-items:center; }
-    .calc-copy h2{ font-size:clamp(1.9rem, 3vw, 2.6rem); line-height:1.12; margin:16px 0 16px; }
+    .calculator-layout{ position:relative; display:grid; grid-template-columns:.9fr 1.1fr; gap:40px; align-items:center; }
+    .calc-copy h2{ font-size:clamp(1.9rem, 3vw, 2.6rem); line-height:1.12; margin:9px 0 11px; }
     .calc-copy h2 span{ background:var(--spec); -webkit-background-clip:text; background-clip:text; color:transparent; }
     .calc-copy > p{ margin:0; color:var(--muted); line-height:1.65; max-width:440px; }
-    .calc-bullets{ list-style:none; margin:24px 0 0; padding:0; display:grid; gap:11px; }
+    .calc-bullets{ list-style:none; margin:17px 0 0; padding:0; display:grid; gap:10px; }
     .calc-bullets li{ display:flex; align-items:center; gap:10px; font-size:14px; color:var(--muted); }
     .calc-bullets svg{ width:16px; height:16px; color:var(--cyan); flex:0 0 auto; }
     .calc-copy-note{
-      display:inline-flex; align-items:center; gap:9px; margin-top:26px; padding:10px 14px; border-radius:999px;
+      display:inline-flex; align-items:center; gap:9px; margin-top:17px; padding:10px 14px; border-radius:999px;
       font-family:var(--font-mono); font-size:11px; color:var(--faint);
       background:rgba(255,255,255,.04); border:1px solid var(--line);
     }
     .calc-copy-note svg{ width:13px; height:13px; color:var(--mint); }
-    .calculator-card{ border-radius:24px; padding:30px; }
+    .calculator-card{ border-radius:24px; padding:26px; }
     .calculator-card-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:24px; }
     .calculator-card-head span{ font-family:var(--font-mono); font-size:10.5px; letter-spacing:.2em; color:var(--violet); }
     .calculator-card-head span::before{ content:"// "; color:var(--ghost); }
@@ -653,14 +696,14 @@
       background:rgba(0,229,255,.08); border:1px solid rgba(0,229,255,.4);
     }
     .calc-free-badge svg{ width:13px; height:13px; }
-    .calculator-main{ display:grid; gap:24px; }
+    .calculator-main{ display:grid; gap:20px; }
     .calc-controls{ display:grid; gap:18px; }
     .calc-control{ padding:16px; border-radius:16px; background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.07); }
     .calc-control-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
     .calc-control-head label{ font-size:13.5px; color:var(--muted); }
     .calc-control-head output{ font-size:15px; font-weight:700; color:var(--cyan); text-shadow:0 0 16px rgba(0,229,255,.4); }
     .calc-result{
-      padding:24px; border-radius:18px; background:rgba(0,0,0,.5); border:1px solid rgba(139,92,246,.35);
+      padding:20px; border-radius:18px; background:rgba(0,0,0,.5); border:1px solid rgba(139,92,246,.35);
       box-shadow:0 0 44px rgba(139,92,246,.12), inset 0 1px 0 rgba(255,255,255,.06);
     }
     .result-label{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
@@ -686,14 +729,14 @@
     .result-breakdown strong{ display:block; margin-top:6px; font-family:var(--font-mono); font-size:16px; color:#fff; }
 
     /* ---------- process ---------- */
-    .process-heading{ display:flex; align-items:flex-end; justify-content:space-between; gap:28px; flex-wrap:wrap; margin-bottom:44px; }
-    .process-heading h2{ font-size:clamp(1.9rem, 3vw, 2.6rem); line-height:1.12; margin-top:16px; }
+    .process-heading{ display:flex; align-items:flex-end; justify-content:space-between; gap:28px; flex-wrap:wrap; margin-bottom:26px; }
+    .process-heading h2{ font-size:clamp(1.9rem, 3vw, 2.6rem); line-height:1.12; margin-top:9px; }
     .process-heading h2 span{ background:var(--spec); -webkit-background-clip:text; background-clip:text; color:transparent; }
     .process-heading > p{ margin:0; max-width:340px; color:var(--muted); font-size:14px; line-height:1.6; }
     .process-layout{ display:block; }
     .process-steps{ display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; }
     .process-step{
-      position:relative; overflow:hidden; padding:24px; border-radius:20px;
+      position:relative; overflow:hidden; padding:20px; border-radius:20px;
       display:flex; flex-direction:column; gap:10px;
       transition:transform .22s, border-color .22s, box-shadow .22s;
     }
@@ -717,17 +760,17 @@
     }
     .step-speed svg{ width:12px; height:12px; }
     .network-footnote{
-      display:flex; align-items:flex-start; gap:9px; margin:26px 0 0;
+      display:flex; align-items:flex-start; gap:9px; margin:18px 0 0;
       font-size:11.5px; line-height:1.6; color:var(--ghost);
     }
     .network-footnote svg{ width:14px; height:14px; flex:0 0 auto; margin-top:2px; color:var(--amber); }
 
     /* ---------- borrowing guide ---------- */
-    .guide-heading{ display:flex; align-items:flex-end; justify-content:space-between; gap:28px; flex-wrap:wrap; margin-bottom:44px; }
-    .guide-heading h2{ font-size:clamp(1.9rem, 3vw, 2.6rem); line-height:1.12; margin-top:16px; }
+    .guide-heading{ display:flex; align-items:flex-end; justify-content:space-between; gap:28px; flex-wrap:wrap; margin-bottom:26px; }
+    .guide-heading h2{ font-size:clamp(1.9rem, 3vw, 2.6rem); line-height:1.12; margin-top:9px; }
     .guide-heading > p{ margin:0; max-width:350px; color:var(--muted); font-size:14px; line-height:1.6; }
     .guide-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; }
-    .guide-card{ padding:26px; border-radius:20px; display:flex; flex-direction:column; gap:16px;
+    .guide-card{ padding:22px; border-radius:20px; display:flex; flex-direction:column; gap:16px;
       transition:transform .22s, border-color .22s; }
     .guide-card:hover{ transform:translateY(-4px); border-color:rgba(0,229,255,.4); }
     .guide-card h3{ font-size:19px; }
@@ -735,11 +778,12 @@
     .guide-card:nth-child(2) .step-icon-wrap{ border-color:rgba(139,92,246,.4); }
     .guide-card:nth-child(3) .step-icon-wrap{ border-color:rgba(255,46,210,.4); }
     .guide-link{ align-self:flex-start; font-size:13px; color:var(--cyan); text-decoration:underline; text-underline-offset:4px; }
+    .guide-link svg{ vertical-align:-2px; }
 
     /* ---------- final CTA ---------- */
-    .final-cta-section{ padding:30px 0 110px; }
+    .final-cta-section{ padding:16px 0 52px; }
     .final-cta{
-      position:relative; overflow:hidden; border-radius:28px; padding:56px 52px;
+      position:relative; overflow:hidden; border-radius:28px; padding:38px 40px;
       display:flex; align-items:center; justify-content:space-between; gap:36px; flex-wrap:wrap;
       background:linear-gradient(158deg, rgba(255,255,255,.085), rgba(255,255,255,.028) 38%, rgba(255,255,255,.05));
       border:1px solid var(--line);
@@ -754,7 +798,7 @@
     .final-cta-copy{ position:relative; z-index:1; max-width:460px; }
     .final-cta-overline{ display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:11px; letter-spacing:.22em; color:var(--cyan); }
     .final-cta-overline svg{ color:var(--magenta); }
-    .final-cta-copy h2{ font-size:clamp(1.9rem, 3.2vw, 2.7rem); line-height:1.1; margin:16px 0 14px; }
+    .final-cta-copy h2{ font-size:clamp(1.9rem, 3.2vw, 2.7rem); line-height:1.1; margin:9px 0 9px; }
     .final-cta-copy p{ margin:0; color:var(--muted); line-height:1.6; }
     .final-cta-action{ position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; gap:14px; }
     .final-cta-action .nav-cta{ padding:16px 28px; font-size:16px; }
@@ -762,12 +806,17 @@
     .final-cta-action small svg{ width:12px; height:12px; color:var(--mint); }
 
     /* ---------- footer ---------- */
-    .site-footer{ border-top:1px solid rgba(255,255,255,.08); padding:68px 0 34px; position:relative;
+    .site-footer{ border-top:1px solid rgba(255,255,255,.08); padding:38px 0 24px; position:relative;
       background:linear-gradient(180deg, transparent, rgba(139,92,246,.06)); }
-    .footer-main{ display:grid; grid-template-columns:1.5fr 1fr 1fr 1.2fr; gap:40px; margin-bottom:44px; }
+    .footer-main{ display:grid; grid-template-columns:1.5fr 1fr 1fr 1.2fr; gap:36px; margin-bottom:26px; }
     .footer-tagline{ margin:18px 0 12px; font-size:19px; font-weight:700; line-height:1.3; letter-spacing:-.01em; }
     .footer-brand-copy{ margin:0; font-size:13px; line-height:1.65; color:var(--faint); max-width:290px; }
-    .footer-contact-lines{ display:grid; gap:10px; margin-top:20px; }
+    .footer-founder{
+      margin:12px 0 0; font-family:var(--font-mono); font-size:11px; letter-spacing:.14em;
+      text-transform:uppercase; color:var(--faint);
+    }
+    .footer-founder strong{ color:#fff; font-weight:600; }
+    .footer-contact-lines{ display:grid; gap:10px; margin-top:14px; }
     .footer-contact-lines a{
       display:inline-flex; align-items:center; gap:10px; width:fit-content;
       font-family:var(--font-mono); font-size:12.5px; color:var(--muted);
@@ -782,7 +831,7 @@
     .footer-icon-link svg{ width:14px; height:14px; flex:0 0 auto; }
     .footer-disclaimer{
       padding:26px 28px; border-radius:20px; border:1px solid rgba(255,255,255,.09);
-      background:rgba(0,0,0,.4); margin-bottom:30px;
+      background:rgba(0,0,0,.4); margin-bottom:20px;
     }
     .disclaimer-title{
       display:flex; align-items:center; gap:9px; margin-bottom:14px;
@@ -844,15 +893,91 @@
     }
     .dialog-action:hover{ transform:translateY(-1px); filter:saturate(1.12); }
 
+    /* ---------- ultra-wide fidelity: 4K to 8K canvases ----------
+       Big screens get a wider stage, bigger lender marks and larger type so the
+       composition never shrinks into a small island floating in black. Marks are
+       vectors, so they stay pixel-crisp at any density. */
+    @media (min-width:1500px){
+      .container{ width:min(1420px, calc(100% - 72px)); }
+      .partner-logo-grid{ gap:14px; }
+      .partner-logo-plate{ height:68px; }
+      .partner-logo-plate img{ max-height:48px; }
+      .partner-logo strong{ font-size:13.5px; }
+      .lender-chip{ font-size:14px; padding:10px 18px 10px 11px; }
+      .lender-chip-mark{ height:30px; min-width:30px; max-width:66px; border-radius:8px; }
+      .partner-mini-stack span{ width:42px; height:42px; }
+      .partner-mini-stack img{ max-width:27px; max-height:27px; }
+      .hero-subhead{ font-size:18px; max-width:560px; }
+      .hero-footnote, .hero-note-copy{ font-size:12.5px; }
+      .hero h1{ font-size:clamp(3rem, 4.6vw, 5rem); }
+      .hero-copy{ max-width:720px; }
+      .section-heading h2, .personal-application-copy h2, .calc-copy h2, .process-heading h2, .guide-heading h2, .final-cta-copy h2{ font-size:clamp(2.2rem, 2.9vw, 3.2rem); }
+      .emi-amount{ font-size:clamp(2.6rem, 3.4vw, 3.6rem); }
+    }
+    @media (min-width:2100px){
+      .container{ width:min(1840px, calc(100% - 120px)); }
+      .section{ padding:74px 0; }
+      .partner-logo-grid{ gap:18px; }
+      .partner-logo{ padding:16px 16px 15px; border-radius:20px; }
+      .partner-logo-plate{ height:88px; border-radius:16px; }
+      .partner-logo-plate img{ max-height:62px; }
+      .partner-logo strong{ font-size:16px; }
+      .partner-logo small{ font-size:11px; }
+      .lender-chip{ font-size:16px; padding:12px 22px 12px 13px; }
+      .lender-chip-mark{ width:36px; height:36px; border-radius:9px; }
+      .partner-mini-stack span{ width:52px; height:52px; border-radius:15px; }
+      .partner-mini-stack img{ max-width:34px; max-height:34px; }
+      .hero-subhead{ font-size:21px; max-width:660px; }
+      .hero-highlight, .hero-note-copy{ font-size:15px; }
+      .lender-browser-head strong{ font-size:21px; }
+      .lender-category-title{ font-size:15px; }
+    }
+    @media (min-width:3000px){ /* true 8K-class canvases */
+      .container{ width:min(2500px, calc(100% - 220px)); }
+      .section{ padding:96px 0; }
+      .hero{ padding:56px 0 22px; }
+      .hero-subhead{ font-size:27px; max-width:860px; }
+      .hero-footnote, .hero-note-copy{ font-size:19px; }
+      .hero-highlight{ font-size:19px; padding:14px 22px; }
+      .term-chip{ font-size:17px; }
+      .partner-logo-grid{ gap:26px; }
+      .partner-logo{ padding:22px 22px 20px; border-radius:26px; }
+      .partner-logo-plate{ height:126px; border-radius:22px; }
+      .partner-logo-plate img{ max-height:92px; }
+      .partner-logo strong{ font-size:22px; }
+      .partner-logo small{ font-size:14px; }
+      .lender-chip{ font-size:21px; padding:16px 30px 16px 17px; gap:14px; }
+      .lender-chip-mark{ height:50px; min-width:50px; max-width:112px; border-radius:13px; padding:5px; }
+      .partner-mini-stack span{ width:74px; height:74px; border-radius:22px; margin-left:-16px; }
+      .partner-mini-stack img{ max-width:48px; max-height:48px; }
+      .lender-browser-head strong{ font-size:28px; }
+      .lender-category-title{ font-size:19px; }
+      .network-subtext, .lender-disclaimer{ font-size:16px; }
+      .network-eyebrow{ font-size:17px; }
+      .hero h1{ font-size:clamp(4rem, 4.4vw, 6.6rem); }
+      .hero-copy{ max-width:1000px; }
+      .hero-layout{ gap:64px; }
+      .section-heading h2, .personal-application-copy h2, .calc-copy h2, .process-heading h2, .guide-heading h2, .final-cta-copy h2{ font-size:clamp(3rem, 2.8vw, 4.4rem); }
+      .emi-amount{ font-size:clamp(3.4rem, 3.4vw, 5rem); }
+      .section-eyebrow, .calc-eyebrow, .process-eyebrow, .guide-eyebrow{ font-size:15px; }
+      .lead-card-head-copy h2{ font-size:26px; }
+      .trust-row, .hero-note-copy{ font-size:17px; }
+      .footer-tagline{ font-size:26px; }
+      .footer-brand-copy{ font-size:17px; max-width:420px; }
+      .footer-col a{ font-size:18px; }
+      .footer-col h3{ font-size:14px; }
+      .footer-contact-lines a{ font-size:16px; }
+    }
+
     /* ---------- responsive ---------- */
     @media (max-width:1120px){
       .advantage-grid{ grid-template-columns:repeat(2, 1fr); }
-      .partner-logo-grid{ grid-template-columns:repeat(3, 1fr); }
+      .partner-logo-grid{ grid-template-columns:repeat(4, 1fr); }
       .process-steps{ grid-template-columns:repeat(2, 1fr); }
       .footer-main{ grid-template-columns:1fr 1fr; }
     }
     @media (max-width:980px){
-      .hero-layout{ grid-template-columns:minmax(0, 1fr); gap:48px; }
+      .hero-layout{ grid-template-columns:minmax(0, 1fr); gap:34px; }
       .hero-copy{ max-width:660px; }
       .prism-scene{ transform:scale(.68) translateY(-90px); opacity:.8; }
       .personal-application-layout{ grid-template-columns:1fr; gap:40px; }
@@ -868,9 +993,9 @@
     }
     @media (max-width:640px){
       .container{ width:calc(100% - 36px); }
-      .hero{ padding-top:56px; }
+      .hero{ padding-top:26px; }
       .prism-scene{ transform:scale(.52) translateY(-150px); opacity:.62; }
-      .section{ padding:72px 0; }
+      .section{ padding:44px 0; }
       .loan-type-grid{ grid-template-columns:repeat(2, 1fr); }
       .lead-fields{ grid-template-columns:1fr; }
       .lead-card{ padding:22px; }
@@ -879,9 +1004,10 @@
       .advantage-grid{ grid-template-columns:1fr; }
       .process-steps{ grid-template-columns:1fr; }
       .guide-grid{ grid-template-columns:1fr; }
-      .partner-logo-grid{ grid-template-columns:repeat(2, 1fr); }
+      .partner-logo-grid{ grid-template-columns:repeat(2, 1fr); gap:10px; }
+      .partner-logo-plate{ height:50px; }
       .footer-main{ grid-template-columns:1fr; gap:30px; }
-      .final-cta{ padding:38px 26px; }
+      .final-cta{ padding:28px 22px; }
       .result-breakdown{ grid-template-columns:1fr; }
       .hero-bottom{ flex-direction:column; align-items:flex-start; }
       .nav-shell .nav-cta span{ display:none; }
@@ -894,13 +1020,13 @@
     }
 
     /* ---------- motion + scrollbar ---------- */
-    .motion-paused, .motion-paused *, .motion-paused::before, .motion-paused::after,
+    .motion-paused, .motion-paused *, .motion-paused *::before, .motion-paused *::after,
+    .motion-paused::before, .motion-paused::after,
     .page-paused *, .page-paused *::before, .page-paused *::after{ animation-play-state:paused !important; }
     @media (prefers-reduced-motion: reduce){
       *, *::before, *::after{
         animation:none !important; transition:none !important; scroll-behavior:auto !important;
       }
-      .prism-rig{ will-change:auto !important; }
     }
     ::-webkit-scrollbar{ width:10px; height:10px; }
     ::-webkit-scrollbar-track{ background:#000; }
@@ -923,7 +1049,7 @@
     <div class="container nav-shell">
       <a class="brand" href="#top" aria-label="Nexa Capital home">
         <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 32 32" fill="none" stroke="url(#brand-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 5.5 26.5 25h-21L16 5.5Z"/><path d="M4.5 15.5h6.5"/><path d="M19.5 15.5l2.6-2M19.8 15.5h3.4M19.5 15.5l2.6 2" stroke-width="1.6"/></svg>
+          <svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9.6 9.2v14.3L22.4 9.2v14.3" stroke="url(#brand-grad)" stroke-width="3.1"/><path d="M8.4 27.4h3.4" stroke="#00E5FF" stroke-width="1.7"/><path d="M14.3 27.4h3.4" stroke="#C9A6FF" stroke-width="1.7"/><path d="M20.2 27.4h3.4" stroke="#FF2ED2" stroke-width="1.7"/></svg>
         </span>
         <span class="brand-name">NEXA<span class="brand-dim">_CAPITAL</span></span>
       </a>
@@ -962,31 +1088,13 @@
   <main>
     <section class="hero" id="hero" aria-labelledby="hero-title">
       <div class="hero-canvas" aria-hidden="true">
-        <div class="prism-scene" id="prism-scene">
-          <div class="prism-halo"></div>
-          <div class="prism-floor"></div>
-          <div class="beam-in"></div>
-          <div class="beam-spread"></div>
-          <div class="beam-out" style="--a:-22deg; --c:#00E5FF; --d:0s"></div>
-          <div class="beam-out" style="--a:-13deg; --c:#4D7CFF; --d:.7s"></div>
-          <div class="beam-out" style="--a:-4deg; --c:#8B5CF6; --d:1.4s"></div>
-          <div class="beam-out" style="--a:5deg; --c:#B39DFF; --d:2.1s"></div>
-          <div class="beam-out" style="--a:14deg; --c:#FF2ED2; --d:2.8s"></div>
-          <div class="beam-out" style="--a:23deg; --c:#FFB454; --d:3.5s"></div>
-          <div class="prism-rig" id="prism-rig">
-            <div class="prism">
-              <div class="prism-face prism-face--a"></div>
-              <div class="prism-face prism-face--b"></div>
-              <div class="prism-face prism-face--c"></div>
-              <div class="prism-cap prism-cap--top"></div>
-              <div class="prism-cap prism-cap--bottom"></div>
-            </div>
-          </div>
+        <div class="hero-scene" id="prism-scene">
+          <img class="hero-scene-img" src="assets/hero-prism-mono-v2.webp" alt="" width="2912" height="1440" decoding="async" fetchpriority="high" />
         </div>
       </div>
       <div class="container hero-layout">
         <div class="hero-copy">
-          <div class="term-chip"><span class="term-dot"></span><span class="term-path">nexa@ruconnect:~$</span> init loan-engine --lenders 49 --upfront-fees 0</div>
+          <div class="term-chip"><span class="term-dot"></span><span class="term-path">nexa@ruconnect:~$</span> init loan-engine --lenders 48 --upfront-fees 0</div>
           <h1 id="hero-title">Instant Personal &amp; Business Loans from <span class="gradient-text">30+ Top Banks.</span></h1>
           <p class="hero-subhead">Compare rates starting from <strong>9.99% p.a.</strong> Zero upfront fees, 100% digital process with Ruconnect network backing.</p>
           <div class="hero-highlights">
@@ -1034,7 +1142,7 @@
       </div>
       <div class="container hero-bottom">
         <div class="hero-bottom-left"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>Secure, consent-led experience <span>·</span> No credit-bureau check at this stage</div>
-        <div class="hero-bottom-right"><div class="partner-mini-stack" aria-hidden="true"><span>H</span><span>I</span><span>A</span><span>+</span></div><span><strong>One application.</strong> More lender options.</span></div>
+        <div class="hero-bottom-right"><div class="partner-mini-stack" aria-hidden="true"><span><img src="assets/brands/marks/hdfc-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span><span><img src="assets/brands/marks/icici-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span><span><img src="assets/brands/marks/axis-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span><span><img src="assets/brands/marks/kotak-mahindra-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span><span><img src="assets/brands/marks/punjab-national-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span></div><span><strong>One application.</strong> More lender options.</span></div>
       </div>
     </section>
 
@@ -1043,18 +1151,60 @@
     <section class="network-section" id="partners" aria-labelledby="partner-title">
       <div class="container">
         <div class="network-heading"><span class="network-eyebrow" id="partner-title"><i></i> LENDING NETWORK</span><span class="network-subtext">Bank, NBFC &amp; digital lender directory</span></div>
-        <div class="partner-logo-grid" aria-label="Lender directory">
-          <div class="partner-logo partner-logo--hdfc"><span class="partner-mark">H</span><span><strong>HDFC</strong><small>BANK</small></span></div>
-          <div class="partner-logo partner-logo--icici"><span class="partner-mark">i</span><span><strong>ICICI</strong><small>BANK</small></span></div>
-          <div class="partner-logo partner-logo--axis"><span class="partner-mark">A</span><span><strong>AXIS</strong><small>BANK</small></span></div>
-          <div class="partner-logo partner-logo--kotak"><span class="partner-mark">K</span><span><strong>kotak</strong><small>MAHINDRA BANK</small></span></div>
-          <div class="partner-logo partner-logo--bajaj"><span class="partner-mark">B</span><span><strong>BAJAJ</strong><small>FINSERV</small></span></div>
-          <div class="partner-logo partner-logo--tata"><span class="partner-mark">T</span><span><strong>TATA</strong><small>CAPITAL</small></span></div>
+        <div class="partner-logo-grid" aria-label="Bank, NBFC and digital lender marks">
+          <div class="partner-logo glass">
+            <span class="partner-logo-plate"><img src="assets/brands/hdfc-bank.svg" alt="" width="384" height="64" loading="lazy" decoding="async" /></span>
+            <span class="partner-logo-copy"><strong>HDFC Bank</strong><small>Private bank</small></span>
+          </div>
+          <div class="partner-logo glass">
+            <span class="partner-logo-plate"><img src="assets/brands/icici-bank.svg" alt="" width="322" height="64" loading="lazy" decoding="async" /></span>
+            <span class="partner-logo-copy"><strong>ICICI Bank</strong><small>Private bank</small></span>
+          </div>
+          <div class="partner-logo glass">
+            <span class="partner-logo-plate"><img src="assets/brands/axis-bank.svg" alt="" width="237" height="64" loading="lazy" decoding="async" /></span>
+            <span class="partner-logo-copy"><strong>Axis Bank</strong><small>Private bank</small></span>
+          </div>
+          <div class="partner-logo glass">
+            <span class="partner-logo-plate"><img src="assets/brands/kotak-mahindra-bank.svg" alt="" width="237" height="64" loading="lazy" decoding="async" /></span>
+            <span class="partner-logo-copy"><strong>Kotak Mahindra Bank</strong><small>Private bank</small></span>
+          </div>
+          <div class="partner-logo glass">
+            <span class="partner-logo-plate"><img src="assets/brands/bank-of-maharashtra.svg" alt="" width="400" height="120" loading="lazy" decoding="async" /></span>
+            <span class="partner-logo-copy"><strong>Bank of Maharashtra</strong><small>Public sector bank</small></span>
+          </div>
+          <div class="partner-logo glass">
+            <span class="partner-logo-plate"><img src="assets/brands/idfc-first-bank.svg" alt="" width="182" height="64" loading="lazy" decoding="async" /></span>
+            <span class="partner-logo-copy"><strong>IDFC FIRST Bank</strong><small>Private bank</small></span>
+          </div>
+          <div class="partner-logo glass">
+            <span class="partner-logo-plate"><img src="assets/brands/indusind-bank.svg" alt="" width="584" height="64" loading="lazy" decoding="async" /></span>
+            <span class="partner-logo-copy"><strong>IndusInd Bank</strong><small>Private bank</small></span>
+          </div>
+          <div class="partner-logo glass">
+            <span class="partner-logo-plate"><img src="assets/brands/bank-of-baroda.svg" alt="" width="183" height="64" loading="lazy" decoding="async" /></span>
+            <span class="partner-logo-copy"><strong>Bank of Baroda</strong><small>Public sector bank</small></span>
+          </div>
+          <div class="partner-logo glass">
+            <span class="partner-logo-plate"><img src="assets/brands/bajaj-finance.svg" alt="" width="148" height="64" loading="lazy" decoding="async" /></span>
+            <span class="partner-logo-copy"><strong>Bajaj Finserv</strong><small>NBFC</small></span>
+          </div>
+          <div class="partner-logo glass">
+            <span class="partner-logo-plate"><img src="assets/brands/tata-capital.svg" alt="" width="348" height="64" loading="lazy" decoding="async" /></span>
+            <span class="partner-logo-copy"><strong>Tata Capital</strong><small>NBFC</small></span>
+          </div>
+          <div class="partner-logo glass">
+            <span class="partner-logo-plate"><img src="assets/brands/aditya-birla-capital.svg" alt="" width="269" height="64" loading="lazy" decoding="async" /></span>
+            <span class="partner-logo-copy"><strong>Aditya Birla Capital</strong><small>NBFC</small></span>
+          </div>
+          <div class="partner-logo glass">
+            <span class="partner-logo-plate"><img src="assets/brands/shriram-finance.svg" alt="" width="205" height="64" loading="lazy" decoding="async" /></span>
+            <span class="partner-logo-copy"><strong>Shriram Finance</strong><small>NBFC</small></span>
+          </div>
         </div>
         <div class="lender-browser glass">
-          <div class="lender-browser-head"><div><strong>Explore lender names</strong><span>Institution and product availability can change by location, eligibility and active channel authorisation.</span></div><span class="lender-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg>49 INSTITUTIONS</span></div>
+          <div class="lender-browser-head"><div><strong>Explore lender names</strong><span>Institution and product availability can change by location, eligibility and active channel authorisation.</span></div><span class="lender-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg>48 INSTITUTIONS</span></div>
           <div class="lender-tabs" role="tablist" aria-label="Filter lender directory">
-            <button class="lender-tab is-active" type="button" data-lender-group="all" role="tab" aria-selected="true">All institutions <span>49</span></button>
+            <button class="lender-tab is-active" type="button" data-lender-group="all" role="tab" aria-selected="true">All institutions <span>48</span></button>
             <button class="lender-tab" type="button" data-lender-group="private" role="tab" aria-selected="false">Private &amp; other banks <span>15</span></button>
             <button class="lender-tab" type="button" data-lender-group="public" role="tab" aria-selected="false">Public sector banks <span>10</span></button>
             <button class="lender-tab" type="button" data-lender-group="nbfc" role="tab" aria-selected="false">Major NBFCs <span>15</span></button>
@@ -1175,9 +1325,9 @@
       <div class="container">
         <div class="guide-heading"><div><span class="section-kicker">BEFORE YOU APPLY</span><h2>Borrow with a plan.<br /><span class="gradient-text">Choose with clarity.</span></h2></div><p>A few simple checks can help you understand the commitment before accepting a loan.</p></div>
         <div class="guide-grid">
-          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2M8 18h2M14 18h2"/></svg></span><h3>Plan a comfortable EMI.</h3><p>Compare your estimated repayment with regular expenses and savings. Leave room for unexpected costs.</p><a class="guide-link" href="#calculator">Explore the EMI calculator →</a></article>
-          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v6h6M8 13h8M8 17h8"/></svg></span><h3>Read the full lender terms.</h3><p>Check the Key Facts Statement, annual percentage rate, processing fees and prepayment conditions—not just the headline interest rate.</p><a class="guide-link" href="#disclaimer">Read the important disclosures →</a></article>
-          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg></span><h3>Keep your information safe.</h3><p>Use your lender’s official secure KYC process. Never share an OTP, password or PIN with anyone offering a loan.</p><a class="guide-link" href="#privacy">Understand how enquiries are handled →</a></article>
+          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2M8 18h2M14 18h2"/></svg></span><h3>Plan a comfortable EMI.</h3><p>Compare your estimated repayment with regular expenses and savings. Leave room for unexpected costs.</p><a class="guide-link" href="#calculator">Explore the EMI calculator <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></article>
+          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v6h6M8 13h8M8 17h8"/></svg></span><h3>Read the full lender terms.</h3><p>Check the Key Facts Statement, annual percentage rate, processing fees and prepayment conditions—not just the headline interest rate.</p><a class="guide-link" href="#disclaimer">Read the important disclosures <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></article>
+          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg></span><h3>Keep your information safe.</h3><p>Use your lender’s official secure KYC process. Never share an OTP, password or PIN with anyone offering a loan.</p><a class="guide-link" href="#privacy">Understand how enquiries are handled <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></article>
         </div>
       </div>
     </section>
@@ -1190,7 +1340,7 @@
   <footer class="site-footer" id="contact">
     <div class="container">
       <div class="footer-main">
-        <div class="footer-brand"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="url(#brand-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 5.5 26.5 25h-21L16 5.5Z"/><path d="M4.5 15.5h6.5"/><path d="M19.5 15.5l2.6-2M19.8 15.5h3.4M19.5 15.5l2.6 2" stroke-width="1.6"/></svg></span><span class="brand-name">NEXA<span class="brand-dim">_CAPITAL</span></span></a><p class="footer-tagline">Smarter Loans.<br />Fast Approvals. Powered by Top Banks.</p><p class="footer-brand-copy">A connected marketplace for personal and business borrowing, built to make comparison easier.</p><div class="footer-contact-lines"><a href="mailto:atharvaayewale102@gmail.com" aria-label="Email Atharva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>atharvaayewale102@gmail.com</a><a href="tel:+919325324711" aria-label="Call +91 93253 24711"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 19a19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.4 2.8a2 2 0 0 1-.6 1.7L7.5 9.6a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 1.7-.6l2.8.4a2 2 0 0 1 1.6 1.9Z"/></svg>+91 93253 24711</a></div></div>
+        <div class="footer-brand"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9.6 9.2v14.3L22.4 9.2v14.3" stroke="url(#brand-grad)" stroke-width="3.1"/><path d="M8.4 27.4h3.4" stroke="#00E5FF" stroke-width="1.7"/><path d="M14.3 27.4h3.4" stroke="#C9A6FF" stroke-width="1.7"/><path d="M20.2 27.4h3.4" stroke="#FF2ED2" stroke-width="1.7"/></svg></span><span class="brand-name">NEXA<span class="brand-dim">_CAPITAL</span></span></a><p class="footer-tagline">Smarter Loans.<br />Fast Approvals. Powered by Top Banks.</p><p class="footer-brand-copy">A connected marketplace for personal and business borrowing, built to make comparison easier.</p><p class="footer-founder">Founder <strong>Atharva Yewale</strong></p><div class="footer-contact-lines"><a href="mailto:atharvaayewale102@gmail.com" aria-label="Email Atharva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>atharvaayewale102@gmail.com</a><a href="tel:+919325324711" aria-label="Call +91 93253 24711"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 19a19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.4 2.8a2 2 0 0 1-.6 1.7L7.5 9.6a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 1.7-.6l2.8.4a2 2 0 0 1 1.6 1.9Z"/></svg>+91 93253 24711</a></div></div>
         <div class="footer-col"><h3>PRODUCTS</h3><a href="#personal-application">Personal loan</a><a href="#lead-form">Business loan</a><a href="#lead-form">Overdraft</a><a href="#lead-form">Home loan</a><a href="#calculator">EMI calculator</a></div>
         <div class="footer-col"><h3>COMPANY</h3><a href="#advantages">Why Nexa Capital</a><a href="#partners">Lending network</a><a href="#process">How it works</a><a href="#borrower-guide">Borrowing guide</a></div>
         <div class="footer-col"><h3>HELP &amp; COMPLIANCE</h3><a class="footer-icon-link" href="#privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>Privacy policy</a><a class="footer-icon-link" href="#terms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v6h6M8 13h8M8 17h8"/></svg>Terms &amp; conditions</a><a class="footer-icon-link" href="#grievance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 4.3 1.7c-1.2 1.1-1.9 1.4-1.9 3M12 17h.01"/></svg>Grievance redressal</a><a class="footer-icon-link" href="https://www.rbi.org.in/scripts/FS_Notification.aspx?Id=12848" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg>RBI Digital Lending Directions</a></div>
@@ -1345,16 +1495,81 @@
       // Lender directory: names are supplied examples, not an assertion of active contracts.
       const lenderGroups = {
         private: ['HDFC Bank', 'ICICI Bank', 'Axis Bank', 'Kotak Mahindra Bank', 'IDFC FIRST Bank', 'RBL Bank', 'IndusInd Bank', 'Federal Bank', 'YES Bank', 'Bandhan Bank', 'IDBI Bank', 'City Union Bank', 'Karnataka Bank', 'Dhanlaxmi Bank', 'DBS Bank'],
-        public: ['State Bank of India (SBI)', 'Bank of Baroda (BoB)', 'Canara Bank', 'Punjab National Bank (PNB)', 'Union Bank of India', 'Bank of India (BoI)', 'Central Bank of India', 'Indian Bank', 'Bank of Maharashtra', 'UCO Bank'],
+        public: ['Bank of Baroda (BoB)', 'Canara Bank', 'Punjab National Bank (PNB)', 'Union Bank of India', 'Bank of India (BoI)', 'Central Bank of India', 'Indian Bank', 'Bank of Maharashtra', 'UCO Bank'],
         nbfc: ['Piramal Finance', 'HDB Financial Services (HDBFS)', 'Tata Capital', 'Aditya Birla Finance', 'Bajaj Finserv', 'L&T Finance', 'InCred Financial Services', 'IIFL Finance', 'Godrej Capital', 'Mahindra Finance', 'Shriram Finance', 'Cholamandalam Investment and Finance (Chola DB)', 'Muthoot Finance', 'Manappuram Finance', 'Hero Fincorp'],
         fintech: ['Fibe (EarlySalary)', 'ZipLoan', 'KreditBee', 'Moneyview', 'PaySense', 'CASHe', 'Navi Finserv', 'Finnable', 'mPokket']
       };
       const lenderList = document.getElementById('lender-list');
       const lenderGroupTitles = { private: 'Private & other banks', public: 'Public sector banks', nbfc: 'Major NBFCs', fintech: 'Fintech & neo-lenders' };
+      // Official vector marks for 47 of the 48 listed institutions. The three fintech marks
+      // traced locally (ZipLoan, PaySense, Finnable) were redrawn as vectors from the brands'
+      // published artwork; only Manappuram Finance still shows the plain name chip.
+      const lenderMarks = {
+        'HDFC Bank': 'assets/brands/marks/hdfc-bank-mark.svg',
+        'ICICI Bank': 'assets/brands/marks/icici-bank-mark.svg',
+        'Axis Bank': 'assets/brands/marks/axis-bank-mark.svg',
+        'Kotak Mahindra Bank': 'assets/brands/marks/kotak-mahindra-bank-mark.svg',
+        'IDFC FIRST Bank': 'assets/brands/marks/idfc-first-bank-mark.svg',
+        'RBL Bank': 'assets/brands/marks/rbl-bank-mark.svg',
+        'IndusInd Bank': 'assets/brands/marks/indusind-bank-mark.svg',
+        'Federal Bank': 'assets/brands/marks/federal-bank-mark.svg',
+        'YES Bank': 'assets/brands/marks/yes-bank-mark.svg',
+        'Bandhan Bank': 'assets/brands/marks/bandhan-bank-mark.svg',
+        'IDBI Bank': 'assets/brands/marks/idbi-bank-mark.svg',
+        'City Union Bank': 'assets/brands/marks/city-union-bank-mark.svg',
+        'Karnataka Bank': 'assets/brands/marks/karnataka-bank-mark.svg',
+        'Dhanlaxmi Bank': 'assets/brands/marks/dhanlaxmi-bank-mark.svg',
+        'DBS Bank': 'assets/brands/marks/dbs-bank-india-mark.svg',
+        'Bank of Baroda (BoB)': 'assets/brands/marks/bank-of-baroda-mark.svg',
+        'Canara Bank': 'assets/brands/marks/canara-bank-mark.svg',
+        'Punjab National Bank (PNB)': 'assets/brands/marks/punjab-national-bank-mark.svg',
+        'Union Bank of India': 'assets/brands/marks/union-bank-of-india-mark.svg',
+        'Bank of India (BoI)': 'assets/brands/marks/bank-of-india-mark.svg',
+        'Central Bank of India': 'assets/brands/marks/central-bank-of-india-mark.svg',
+        'UCO Bank': 'assets/brands/marks/uco-bank-mark.svg',
+        'Indian Bank': 'assets/brands/marks/indian-bank-mark.svg',
+        'Bank of Maharashtra': 'assets/brands/marks/bank-of-maharashtra-mark.svg',
+        'Piramal Finance': 'assets/brands/marks/piramal-finance-mark.svg',
+        'HDB Financial Services (HDBFS)': 'assets/brands/marks/hdb-financial-services-mark.svg',
+        'Tata Capital': 'assets/brands/marks/tata-capital-mark.svg',
+        'Aditya Birla Finance': 'assets/brands/marks/aditya-birla-capital-mark.svg',
+        'Bajaj Finserv': 'assets/brands/marks/bajaj-finance-mark.svg',
+        'L&T Finance': 'assets/brands/marks/lt-finance-mark.svg',
+        'IIFL Finance': 'assets/brands/marks/iifl-finance-mark.svg',
+        'Shriram Finance': 'assets/brands/marks/shriram-finance-mark.svg',
+        'Cholamandalam Investment and Finance (Chola DB)': 'assets/brands/marks/cholamandalam-finance-mark.svg',
+        'InCred Financial Services': 'assets/brands/marks/incred-financial-services-mark.svg',
+        'Godrej Capital': 'assets/brands/marks/godrej-capital-mark.svg',
+        'Mahindra Finance': 'assets/brands/marks/mahindra-finance-mark.svg',
+        'Muthoot Finance': 'assets/brands/marks/muthoot-finance-mark.svg',
+        'Hero Fincorp': 'assets/brands/marks/hero-fincorp-mark.svg',
+        'Fibe (EarlySalary)': 'assets/brands/marks/fibe-mark.svg',
+        'KreditBee': 'assets/brands/marks/kreditbee-mark.svg',
+        'Moneyview': 'assets/brands/marks/moneyview-mark.svg',
+        'CASHe': 'assets/brands/marks/cashe-mark.svg',
+        'Navi Finserv': 'assets/brands/marks/navi-mark.svg',
+        'mPokket': 'assets/brands/marks/mpokket-mark.svg',
+        'ZipLoan': 'assets/brands/marks/ziploan-mark.svg',
+        'PaySense': 'assets/brands/marks/paysense-mark.svg',
+        'Finnable': 'assets/brands/marks/finnable-mark.svg'
+      };
       const makeLenderChips = (names, target) => names.forEach((name) => {
         const chip = document.createElement('span');
         chip.className = 'lender-chip';
-        chip.textContent = name;
+        const mark = lenderMarks[name];
+        if (mark) {
+          chip.classList.add('has-mark');
+          const icon = document.createElement('img');
+          icon.className = 'lender-chip-mark';
+          icon.src = mark;
+          icon.alt = '';
+          icon.width = 64;
+          icon.height = 64;
+          icon.loading = 'lazy';
+          icon.decoding = 'async';
+          chip.appendChild(icon);
+        }
+        chip.appendChild(document.createTextNode(name));
         target.appendChild(chip);
       });
       const renderLenderGroup = (group) => {
@@ -1521,72 +1736,6 @@
           .forEach((element) => motionObserver.observe(element));
       }
 
-      // Frame-batched, time-based prism parallax: no layout work on pointer events.
-      const heroEl = document.getElementById('hero');
-      const prismRig = document.getElementById('prism-rig');
-      const finePointer = window.matchMedia('(pointer: fine)');
-      if (heroEl && prismRig) {
-        let targetX = 0, targetY = 0, curX = 0, curY = 0;
-        let rafId = null, lastTime = null, pendingPointer = null, heroVisible = true;
-        const canAnimate = () => heroVisible && !document.hidden && finePointer.matches && !motionPreference.matches;
-        const stopParallax = () => {
-          if (rafId !== null) cancelAnimationFrame(rafId);
-          rafId = null;
-          lastTime = null;
-          pendingPointer = null;
-          targetX = targetY = curX = curY = 0;
-          prismRig.classList.remove('parallax-active');
-          prismRig.style.removeProperty('transform');
-        };
-        const tick = (time) => {
-          if (!canAnimate()) { stopParallax(); return; }
-          if (pendingPointer) {
-            const rect = heroEl.getBoundingClientRect();
-            targetX = ((pendingPointer.x - rect.left) / rect.width - 0.5) * 16;
-            targetY = ((pendingPointer.y - rect.top) / rect.height - 0.5) * -10;
-            pendingPointer = null;
-          }
-          const delta = lastTime === null ? 16 : Math.min(time - lastTime, 64);
-          const easing = 1 - Math.exp(-delta / 120);
-          curX += (targetX - curX) * easing;
-          curY += (targetY - curY) * easing;
-          lastTime = time;
-          prismRig.style.transform = `rotateX(${-10 + curY}deg) rotateY(${curX}deg)`;
-          if (Math.abs(targetX - curX) > 0.01 || Math.abs(targetY - curY) > 0.01) {
-            rafId = requestAnimationFrame(tick);
-          } else {
-            rafId = null;
-            lastTime = null;
-            prismRig.classList.remove('parallax-active');
-          }
-        };
-        const requestTick = () => {
-          if (canAnimate() && rafId === null) {
-            prismRig.classList.add('parallax-active');
-            rafId = requestAnimationFrame(tick);
-          }
-        };
-        heroEl.addEventListener('pointermove', (event) => {
-          if (!canAnimate()) return;
-          pendingPointer = { x: event.clientX, y: event.clientY };
-          requestTick();
-        }, { passive: true });
-        heroEl.addEventListener('pointerleave', () => {
-          pendingPointer = null;
-          targetX = targetY = 0;
-          requestTick();
-        });
-        document.addEventListener('visibilitychange', () => { if (document.hidden) stopParallax(); });
-        motionPreference.addEventListener('change', stopParallax);
-        finePointer.addEventListener('change', stopParallax);
-        if ('IntersectionObserver' in window) {
-          const heroObserver = new IntersectionObserver(([entry]) => {
-            heroVisible = entry.isIntersecting;
-            if (!heroVisible) stopParallax();
-          });
-          heroObserver.observe(heroEl);
-        }
-      }
     })();
   </script>
 </body>

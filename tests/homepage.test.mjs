@@ -69,7 +69,7 @@ test('motion is paused offscreen and reduced-motion preference also controls scr
   assert.match(html, /animation-play-state:paused !important/);
   assert.match(html, /animation:none !important; transition:none !important; scroll-behavior:auto !important/);
   assert.match(html, /behavior: motionPreference\.matches \? 'auto' : 'smooth'/);
-  assert.match(html, /'\.hero-aura, \.hero-canvas, \.term-dot/);
+  assert.match(html, /'\.hero-canvas, \.term-dot/);
 });
 
 test('consent, privacy and lender-specific loan disclosures are retained', () => {
@@ -106,15 +106,24 @@ test("SBI's own web typeface, Open Sans, covers every heading, label, tag and pa
   assert.match(html, /url\("assets\/fonts\/currency-rupee\.woff2"\)/);
 });
 
-test('the hero keeps a rotating electric-emerald aura behind the tag line and card', () => {
-  assert.match(html, /--emerald:#10B981/);
-  assert.match(html, /<div class="hero-aura" aria-hidden="true"><\/div>/);
-  assert.match(html, /\.hero-aura\{[\s\S]*?conic-gradient\(from 0deg,/);
-  assert.match(html, /rgba\(16,185,129,1\) 0deg/);
-  assert.match(html, /\.hero-aura\{[\s\S]*?mask-image:radial-gradient\(closest-side, transparent 34%, #000 58%, #000 76%, transparent 100%\)/);
-  assert.match(html, /\.hero-aura\{[\s\S]*?pointer-events:none; z-index:0;/);
-  assert.match(html, /@keyframes spin\{ 0%\{ transform:rotate\(0deg\); \} 100%\{ transform:rotate\(360deg\); \} \}/);
-  assert.match(html, /animation:spin 12s linear infinite/);
+test('the wordmark is a larger, spectrum-coloured lock-up', () => {
+  assert.match(html, /\.brand-name\{\s*font-family:var\(--font-mono\); font-size:17\.5px; font-weight:700; letter-spacing:\.07em;/);
+  assert.match(html, /\.brand-name\{[\s\S]*?background:linear-gradient\(94deg, #9BF6FF 0%, #00E5FF 20%, #4D7CFF 44%, #8B5CF6 68%, #FF2ED2 100%\)/);
+  assert.match(html, /-webkit-background-clip:text; background-clip:text; color:transparent;/);
+  assert.match(html, /\.brand-name \.brand-dim\{ color:inherit; font-weight:600; opacity:\.82; \}/);
+});
+
+test('the hero paints a glass prism bending two beams into a spectrum', () => {
+  assert.match(html, /<div class="prism-scene" id="prism-scene">/);
+  assert.match(html, /<div class="prism-rig" id="prism-rig">/);
+  assert.match(html, /class="scene"/);
+  assert.match(html, /id="px-spectrum"/);
+  assert.match(html, /id="px-beam-cyan"|url\(#px-beam-cyan\)/);
+  assert.match(html, /class="spectrum"/);
+  assert.match(html, /\.prism-scene\{ position:absolute; inset:0; display:grid; place-items:center; \}/);
+  assert.match(html, /@keyframes spectrum-breathe/);
+  assert.match(html, /@keyframes beam-breathe/);
+  assert.doesNotMatch(html, /hero-aura|prism-spin|halo-spin|prism-face|beam-spread/);
 });
 
 test('the lending network shows official lender marks in uniform cards, not text initials', () => {
@@ -175,5 +184,5 @@ test('hero mark stack and directory chips use vector marks instead of letter til
   assert.match(html, /\.lender-chip-mark\{[\s\S]*?min-width:26px; max-width:56px; height:26px/);
   assert.match(html, /\.lender-chip\.has-mark::before\{ display:none; \}/);
   assert.match(html, /lenderMarks/);
-  assert.match(html, /Founded by <strong>Atharva Yewale<\/strong>/);
+  assert.match(html, /Founder <strong>Atharva Yewale<\/strong>/);
 });

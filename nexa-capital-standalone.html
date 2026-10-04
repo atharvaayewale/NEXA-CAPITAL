@@ -163,8 +163,15 @@
       color:#fff;
     }
     .brand-mark svg{ width:21px; height:21px; }
-    .brand-name{ font-family:var(--font-mono); font-size:15px; font-weight:700; letter-spacing:.06em; }
-    .brand-name .brand-dim{ color:var(--faint); font-weight:500; }
+    /* the wordmark runs the same neon spectrum as the rest of the theme, one step larger */
+    .brand-name{
+      font-family:var(--font-mono); font-size:17.5px; font-weight:700; letter-spacing:.07em;
+      background:linear-gradient(94deg, #9BF6FF 0%, #00E5FF 20%, #4D7CFF 44%, #8B5CF6 68%, #FF2ED2 100%);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      filter:drop-shadow(0 0 12px rgba(0,229,255,.32));
+    }
+    .brand-name .brand-dim{ color:inherit; font-weight:600; opacity:.82; }
+    @media (max-width:640px){ .brand-name{ font-size:15.5px; letter-spacing:.05em; } }
     .desktop-nav{ display:flex; align-items:center; gap:4px; margin-left:auto; }
     .nav-link{
       display:inline-flex; align-items:center; gap:6px; padding:9px 13px; border-radius:10px;
@@ -229,90 +236,23 @@
        A single conic-gradient disc (emerald melting into transparent onyx) spins slowly behind
        the copy and the form card. It is painted underneath the content layer, takes no pointer
        events and is paused offscreen or under reduced motion like the other decorative motion. */
-    .hero-aura{
-      position:absolute; inset:12% 0 auto; margin:0 auto;      /* centred on the hero layout row */
-      width:min(880px, 118vw); aspect-ratio:1 / 1; border-radius:50%;
-      /* one bright plume that fades all the way round, so the spin reads clearly, and the
-         plume itself runs emerald into cyan, violet and magenta — the same neon family as
-         the rest of the theme, kept anchored on electric emerald */
-      background:conic-gradient(from 0deg,
-        rgba(16,185,129,1) 0deg, rgba(61,255,180,.92) 26deg,
-        rgba(0,229,255,.88) 58deg, rgba(77,124,255,.60) 96deg,
-        rgba(139,92,246,.34) 138deg, rgba(255,46,210,0) 172deg,
-        rgba(255,46,210,0) 288deg, rgba(139,92,246,.22) 322deg,
-        rgba(0,229,255,.42) 344deg, rgba(16,185,129,1) 360deg);
-      filter:blur(56px) saturate(1.14);
-      /* a ring, not a disc: the middle is cut out so the tag line stays clean and the
-         rotating emerald plume is actually visible as it sweeps around the hero */
-      -webkit-mask-image:radial-gradient(closest-side, transparent 34%, #000 58%, #000 76%, transparent 100%);
-      mask-image:radial-gradient(closest-side, transparent 34%, #000 58%, #000 76%, transparent 100%);
-      opacity:.85; pointer-events:none; z-index:0;
-      transform-origin:50% 50%; will-change:transform;
-      animation:spin 12s linear infinite;
-    }
-    @keyframes spin{ 0%{ transform:rotate(0deg); } 100%{ transform:rotate(360deg); } }
+    /* ---------- hero light scene: a glass prism bending two beams into a spectrum ----------
+       Recreated as pure CSS/SVG (no raster) so it stays razor-sharp on any display,
+       including 8K canvases: a glass triangle, a cyan beam and a white beam entering it,
+       and the rainbow fan leaving the lower edge. Sits under the copy and the lead card. */
+    .prism-scene{ position:absolute; inset:0; display:grid; place-items:center; }
+    .prism-rig{ position:relative; width:min(700px, 58vw); aspect-ratio:9 / 8; transform:translateX(-1%) translateY(-1%); }
+    .prism-rig .scene{ width:100%; height:100%; display:block; overflow:visible; }
+    .scene .spectrum{ animation:spectrum-breathe 7.5s ease-in-out infinite; transform-origin:50% 62%; }
+    .scene .beam-cyan{ animation:beam-breathe 5.6s ease-in-out infinite; }
+    .scene .beam-white{ animation:beam-breathe 6.8s ease-in-out infinite .6s; }
+    .scene .glow-halo{ animation:halo-breathe 9s ease-in-out infinite; }
+    @keyframes spectrum-breathe{ 0%,100%{ opacity:.95; } 50%{ opacity:.72; } }
+    @keyframes beam-breathe{ 0%,100%{ opacity:1; } 50%{ opacity:.62; } }
+    @keyframes halo-breathe{ 0%,100%{ opacity:.85; } 50%{ opacity:.6; } }
+    .prism-rig.parallax-active{ will-change:transform; }
     .hero-canvas{ position:absolute; inset:0; z-index:0; pointer-events:none; }
     .prism-scene{ position:absolute; inset:0; display:grid; place-items:center; perspective:1300px; }
-    .prism-halo{
-      position:absolute; width:560px; height:560px; border-radius:50%;
-      background:radial-gradient(ellipse at 25% 40%, rgba(0,229,255,.75), transparent 55%),
-        radial-gradient(ellipse at 75% 30%, rgba(139,92,246,.8), transparent 55%),
-        radial-gradient(ellipse at 65% 75%, rgba(255,46,210,.65), transparent 55%);
-      -webkit-mask-image:radial-gradient(closest-side, #000 35%, transparent 100%);
-      mask-image:radial-gradient(closest-side, #000 35%, transparent 100%);
-      opacity:.30; animation:halo-spin 26s linear infinite;
-    }
-    @keyframes halo-spin{ to{ transform:rotate(360deg); } }
-    .prism-floor{
-      position:absolute; left:50%; bottom:2%; width:980px; height:420px; opacity:.14;
-      transform:translateX(-50%) perspective(900px) rotateX(72deg); transform-origin:50% 100%;
-      background-image:linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px);
-      background-size:46px 46px;
-      -webkit-mask-image:radial-gradient(closest-side, #000 20%, transparent 78%);
-      mask-image:radial-gradient(closest-side, #000 20%, transparent 78%);
-    }
-    .beam-in{
-      position:absolute; right:50%; top:41%; width:47%; height:96px; transform-origin:100% 50%;
-      transform:rotate(16deg);
-      background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.05) 32%, rgba(255,255,255,.4) 88%, rgba(255,255,255,.85) 100%);
-      filter:blur(9px); mix-blend-mode:screen; animation:beam-breathe 6s ease-in-out infinite;
-    }
-    .beam-spread{
-      position:absolute; left:50%; top:50%; width:58%; height:340px; transform:translateY(-50%);
-      background:linear-gradient(90deg, rgba(0,229,255,.16), rgba(77,124,255,.14) 25%, rgba(139,92,246,.14) 48%, rgba(255,46,210,.14) 72%, rgba(255,180,84,.10));
-      clip-path:polygon(0 47%, 100% 4%, 100% 96%, 0 53%);
-      filter:blur(16px); mix-blend-mode:screen; opacity:.8;
-    }
-    .beam-out{
-      position:absolute; left:50%; top:calc(50% - 4px); width:52%; height:8px; border-radius:999px;
-      transform-origin:0 50%; transform:rotate(var(--a,0deg));
-      background:linear-gradient(90deg, var(--c,#fff) 0%, transparent 82%);
-      filter:blur(6px); mix-blend-mode:screen; opacity:.8;
-      animation:beam-breathe 5.2s ease-in-out infinite; animation-delay:var(--d,0s);
-    }
-    @keyframes beam-breathe{ 0%,100%{ opacity:.85; } 50%{ opacity:.5; } }
-    .prism-rig{ transform-style:preserve-3d; transform:rotateX(-10deg) rotateY(0deg); will-change:auto; }
-    .prism-rig.parallax-active{ will-change:transform; }
-    @keyframes prism-spin{ from{ transform:rotateY(0deg); } to{ transform:rotateY(360deg); } }
-    .prism{ position:relative; width:200px; height:240px; transform-style:preserve-3d; animation:prism-spin 18s linear infinite; }
-    .prism-face{
-      position:absolute; inset:0; border:1px solid rgba(255,255,255,.4);
-      background:linear-gradient(172deg, rgba(255,255,255,.20), rgba(255,255,255,.03) 34%, var(--tint) 130%);
-      box-shadow:inset 0 0 46px rgba(255,255,255,.07);
-    }
-    .prism-face--a{ --tint:rgba(0,229,255,.34); transform:rotateY(0deg) translateZ(58px); }
-    .prism-face--b{ --tint:rgba(139,92,246,.36); transform:rotateY(120deg) translateZ(58px); }
-    .prism-face--c{ --tint:rgba(255,46,210,.34); transform:rotateY(240deg) translateZ(58px); }
-    .prism-cap{
-      position:absolute; left:50%; top:50%; width:200px; height:173px; margin:-86.5px 0 0 -100px;
-      clip-path:polygon(50% 0, 100% 100%, 0 100%);
-      transform-origin:50% 66.7%;
-      background:linear-gradient(120deg, rgba(0,229,255,.30), rgba(139,92,246,.30) 50%, rgba(255,46,210,.30));
-      border:1px solid rgba(255,255,255,.3);
-    }
-    .prism-cap--top{ transform:rotateX(90deg) translateZ(120px); }
-    .prism-cap--bottom{ transform:rotateX(90deg) translateZ(-120px); }
     .hero-layout{ position:relative; z-index:1; display:grid; grid-template-columns:minmax(0, 1.04fr) minmax(0, .96fr); gap:40px; align-items:center; }
     .hero-layout > *{ min-width:0; }
     .hero-copy{ max-width:600px; }
@@ -1105,27 +1045,98 @@
 
   <main>
     <section class="hero" id="hero" aria-labelledby="hero-title">
-      <div class="hero-aura" aria-hidden="true"></div>
       <div class="hero-canvas" aria-hidden="true">
         <div class="prism-scene" id="prism-scene">
-          <div class="prism-halo"></div>
-          <div class="prism-floor"></div>
-          <div class="beam-in"></div>
-          <div class="beam-spread"></div>
-          <div class="beam-out" style="--a:-22deg; --c:#00E5FF; --d:0s"></div>
-          <div class="beam-out" style="--a:-13deg; --c:#4D7CFF; --d:.7s"></div>
-          <div class="beam-out" style="--a:-4deg; --c:#8B5CF6; --d:1.4s"></div>
-          <div class="beam-out" style="--a:5deg; --c:#B39DFF; --d:2.1s"></div>
-          <div class="beam-out" style="--a:14deg; --c:#FF2ED2; --d:2.8s"></div>
-          <div class="beam-out" style="--a:23deg; --c:#FFB454; --d:3.5s"></div>
           <div class="prism-rig" id="prism-rig">
-            <div class="prism">
-              <div class="prism-face prism-face--a"></div>
-              <div class="prism-face prism-face--b"></div>
-              <div class="prism-face prism-face--c"></div>
-              <div class="prism-cap prism-cap--top"></div>
-              <div class="prism-cap prism-cap--bottom"></div>
-            </div>
+            <svg class="scene" viewBox="0 0 900 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="px-halo" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#0E7490" stop-opacity=".34"/>
+                  <stop offset="55%" stop-color="#10B981" stop-opacity=".10"/>
+                  <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="px-glass" x1="300" y1="140" x2="820" y2="650" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity=".14"/>
+                  <stop offset="35%" stop-color="#BFF0FF" stop-opacity=".07"/>
+                  <stop offset="70%" stop-color="#FFFFFF" stop-opacity=".04"/>
+                  <stop offset="100%" stop-color="#7FD8F5" stop-opacity=".12"/>
+                </linearGradient>
+                <linearGradient id="px-glass-inner" x1="560" y1="140" x2="560" y2="640" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity=".18"/>
+                  <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+                </linearGradient>
+                <linearGradient id="px-beam-cyan" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#00E5FF" stop-opacity="0"/>
+                  <stop offset="50%" stop-color="#22D3EE" stop-opacity=".5"/>
+                  <stop offset="100%" stop-color="#67E8F9" stop-opacity=".92"/>
+                </linearGradient>
+                <linearGradient id="px-beam-white" x1="1" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
+                  <stop offset="50%" stop-color="#FFFFFF" stop-opacity=".46"/>
+                  <stop offset="100%" stop-color="#FFFFFF" stop-opacity=".9"/>
+                </linearGradient>
+                <linearGradient id="px-spectrum" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#10B981" stop-opacity="0"/>
+                  <stop offset="18%" stop-color="#22C55E" stop-opacity=".8"/>
+                  <stop offset="40%" stop-color="#A3E635" stop-opacity=".9"/>
+                  <stop offset="62%" stop-color="#FACC15" stop-opacity=".9"/>
+                  <stop offset="82%" stop-color="#FB923C" stop-opacity=".9"/>
+                  <stop offset="100%" stop-color="#EF4444" stop-opacity=".9"/>
+                </linearGradient>
+                <!-- the fan dissolves as it travels, so it never smears over the section below -->
+                <radialGradient id="px-fan-fade" cx="62%" cy="80%" r="70%">
+                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity=".95"/>
+                  <stop offset="45%" stop-color="#FFFFFF" stop-opacity=".55"/>
+                  <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+                </radialGradient>
+                <mask id="px-fan-mask">
+                  <rect x="0" y="560" width="900" height="240" fill="url(#px-fan-fade)"/>
+                </mask>
+                <linearGradient id="px-floor" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity=".09"/>
+                  <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+                </linearGradient>
+                <filter id="px-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="12"/></filter>
+                <filter id="px-soft-sm" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="5"/></filter>
+                <filter id="px-soft-lg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="26"/></filter>
+                <filter id="px-glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.4"/></filter>
+              </defs>
+
+              <ellipse class="glow-halo" cx="560" cy="400" rx="360" ry="320" fill="url(#px-halo)" filter="url(#px-soft-lg)"/>
+
+              <!-- beams arriving from the far corners, meeting inside the glass -->
+              <g class="beam-cyan" style="mix-blend-mode:screen">
+                <path d="M-60 10 L512 392" stroke="url(#px-beam-cyan)" stroke-width="20" stroke-linecap="round" filter="url(#px-soft)"/>
+                <path d="M-60 10 L512 392" stroke="#C9F7FF" stroke-width="3.4" stroke-linecap="round" opacity=".88"/>
+              </g>
+              <g class="beam-white" style="mix-blend-mode:screen">
+                <path d="M960 20 L648 384" stroke="url(#px-beam-white)" stroke-width="18" stroke-linecap="round" filter="url(#px-soft)"/>
+                <path d="M960 20 L648 384" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+              </g>
+              <ellipse cx="580" cy="388" rx="30" ry="20" fill="#EAFBFF" opacity=".30" filter="url(#px-soft)"/>
+
+              <!-- glass prism: body, inner facets, lit edges -->
+              <g>
+                <ellipse cx="560" cy="648" rx="240" ry="18" fill="url(#px-floor)" filter="url(#px-soft-sm)"/>
+                <polygon points="560,120 250,640 870,640" fill="url(#px-glass)"/>
+                <polygon points="560,120 408,520 712,520" fill="url(#px-glass-inner)" opacity=".8"/>
+                <path d="M560 120 L560 640" stroke="rgba(255,255,255,.16)" stroke-width="1.6"/>
+                <path d="M408 420 L712 420" stroke="rgba(255,255,255,.09)" stroke-width="1.3"/>
+                <polygon points="560,120 250,640 870,640" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2.2"/>
+                <path d="M560 120 L250 640" stroke="rgba(255,255,255,.95)" stroke-width="3" filter="url(#px-glow)"/>
+                <path d="M560 120 L870 640" stroke="rgba(255,255,255,.62)" stroke-width="2.4" filter="url(#px-glow)"/>
+                <path d="M250 640 L870 640" stroke="rgba(255,255,255,.42)" stroke-width="2.2"/>
+                <polygon points="560,120 494,268 626,268" fill="#FFFFFF" opacity=".09"/>
+                <polygon points="770,640 870,640 846,548" fill="#FFFFFF" opacity=".07"/>
+              </g>
+
+              <!-- rainbow leaving the lower edge, fading as it fans away -->
+              <g class="spectrum" style="mix-blend-mode:screen" mask="url(#px-fan-mask)">
+                <polygon points="560,620 90,760 620,772" fill="url(#px-spectrum)" opacity=".8" filter="url(#px-soft-lg)"/>
+                <polygon points="560,620 150,738 520,752" fill="url(#px-spectrum)" opacity=".75" filter="url(#px-soft)"/>
+                <polygon points="560,620 240,716 470,730" fill="url(#px-spectrum)" opacity=".6" filter="url(#px-soft-sm)"/>
+              </g>
+            </svg>
           </div>
         </div>
       </div>
@@ -1377,7 +1388,7 @@
   <footer class="site-footer" id="contact">
     <div class="container">
       <div class="footer-main">
-        <div class="footer-brand"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="url(#brand-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 5.5 26.5 25h-21L16 5.5Z"/><path d="M4.5 15.5h6.5"/><path d="M19.5 15.5l2.6-2M19.8 15.5h3.4M19.5 15.5l2.6 2" stroke-width="1.6"/></svg></span><span class="brand-name">NEXA<span class="brand-dim">_CAPITAL</span></span></a><p class="footer-tagline">Smarter Loans.<br />Fast Approvals. Powered by Top Banks.</p><p class="footer-brand-copy">A connected marketplace for personal and business borrowing, built to make comparison easier.</p><p class="footer-founder">Founded by <strong>Atharva Yewale</strong></p><div class="footer-contact-lines"><a href="mailto:atharvaayewale102@gmail.com" aria-label="Email Atharva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>atharvaayewale102@gmail.com</a><a href="tel:+919325324711" aria-label="Call +91 93253 24711"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 19a19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.4 2.8a2 2 0 0 1-.6 1.7L7.5 9.6a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 1.7-.6l2.8.4a2 2 0 0 1 1.6 1.9Z"/></svg>+91 93253 24711</a></div></div>
+        <div class="footer-brand"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="url(#brand-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 5.5 26.5 25h-21L16 5.5Z"/><path d="M4.5 15.5h6.5"/><path d="M19.5 15.5l2.6-2M19.8 15.5h3.4M19.5 15.5l2.6 2" stroke-width="1.6"/></svg></span><span class="brand-name">NEXA<span class="brand-dim">_CAPITAL</span></span></a><p class="footer-tagline">Smarter Loans.<br />Fast Approvals. Powered by Top Banks.</p><p class="footer-brand-copy">A connected marketplace for personal and business borrowing, built to make comparison easier.</p><p class="footer-founder">Founder <strong>Atharva Yewale</strong></p><div class="footer-contact-lines"><a href="mailto:atharvaayewale102@gmail.com" aria-label="Email Atharva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>atharvaayewale102@gmail.com</a><a href="tel:+919325324711" aria-label="Call +91 93253 24711"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 19a19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.4 2.8a2 2 0 0 1-.6 1.7L7.5 9.6a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 1.7-.6l2.8.4a2 2 0 0 1 1.6 1.9Z"/></svg>+91 93253 24711</a></div></div>
         <div class="footer-col"><h3>PRODUCTS</h3><a href="#personal-application">Personal loan</a><a href="#lead-form">Business loan</a><a href="#lead-form">Overdraft</a><a href="#lead-form">Home loan</a><a href="#calculator">EMI calculator</a></div>
         <div class="footer-col"><h3>COMPANY</h3><a href="#advantages">Why Nexa Capital</a><a href="#partners">Lending network</a><a href="#process">How it works</a><a href="#borrower-guide">Borrowing guide</a></div>
         <div class="footer-col"><h3>HELP &amp; COMPLIANCE</h3><a class="footer-icon-link" href="#privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>Privacy policy</a><a class="footer-icon-link" href="#terms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v6h6M8 13h8M8 17h8"/></svg>Terms &amp; conditions</a><a class="footer-icon-link" href="#grievance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 4.3 1.7c-1.2 1.1-1.9 1.4-1.9 3M12 17h.01"/></svg>Grievance redressal</a><a class="footer-icon-link" href="https://www.rbi.org.in/scripts/FS_Notification.aspx?Id=12848" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg>RBI Digital Lending Directions</a></div>
@@ -1769,7 +1780,7 @@
         const motionObserver = new IntersectionObserver((entries) => {
           entries.forEach((entry) => entry.target.classList.toggle('motion-paused', !entry.isIntersecting));
         });
-        document.querySelectorAll('.hero-aura, .hero-canvas, .term-dot, .lead-card-overline i, .network-eyebrow i, .result-live i')
+        document.querySelectorAll('.hero-canvas, .term-dot, .lead-card-overline i, .network-eyebrow i, .result-live i')
           .forEach((element) => motionObserver.observe(element));
       }
 

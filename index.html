@@ -253,7 +253,37 @@
     .hero-scene img{
       position:absolute; inset:0; width:100%; height:100%;
       object-fit:cover; object-position:62% 50%;
+      transform-origin:58% 52%;
+      animation:prism-drift 46s ease-in-out infinite alternate;
     }
+    /* the artwork only breathes: transforms stay on the compositor, the bitmap is
+       never repainted */
+    @keyframes prism-drift{
+      from{ transform:scale(1.015) rotate(-.5deg); }
+      to{ transform:scale(1.055) rotate(.5deg); }
+    }
+    /* the live spectrum: a huge blurred rainbow disc lying over the prism, screen-blended
+       so it reads as light rather than paint. It turns once every 34s while its opacity
+       swells and fades, so colours keep arriving and leaving around the glass. */
+    .hero-scene::before{
+      content:""; position:absolute; left:34%; top:46%;
+      width:min(760px, 62vw); aspect-ratio:1; margin:-19% 0 0 -19%;
+      background:conic-gradient(from 0deg,
+        #00E5FF 0deg, #4D7CFF 48deg, #8B5CF6 96deg, #FF2ED2 144deg,
+        #FF8A3D 192deg, #FFE066 240deg, #4ADE80 288deg, #00E5FF 360deg);
+      filter:blur(58px) saturate(135%);
+      mix-blend-mode:screen; opacity:.42; pointer-events:none;
+      transform-origin:50% 50%; will-change:transform, opacity;
+      animation:spectrum-turn 34s linear infinite, spectrum-flow 11s ease-in-out infinite alternate;
+    }
+    @keyframes spectrum-turn{
+      to{ transform:rotate(360deg); }
+    }
+    @keyframes spectrum-flow{
+      from{ opacity:.26; }
+      to{ opacity:.56; }
+    }
+
     /* show the whole artwork, as large as the hero allows; only a left wash for the
        copy column and gentle top/bottom fades keep it melting into the void */
     .hero-scene::after{
@@ -270,6 +300,7 @@
     @media (max-width:980px){
       .hero-scene{ inset:0 0 auto 0; height:min(62vw, 440px); }
       .hero-scene img{ object-position:62% 50%; }
+      .hero-scene::before{ left:56%; top:38%; width:min(420px, 78vw); margin:-39% 0 0 -39%; opacity:.34; }
       .hero-scene::after{
         background:
           linear-gradient(180deg, rgba(0,0,0,.52) 0%, transparent 26%, transparent 52%, rgba(0,0,0,.86) 86%, #000 100%),
@@ -1073,7 +1104,7 @@
     <section class="hero" id="hero" aria-labelledby="hero-title">
       <div class="hero-canvas" aria-hidden="true">
         <div class="hero-scene" id="prism-scene">
-          <img class="hero-scene-img" src="assets/hero-light-prism.webp" alt="" width="2912" height="1440" decoding="async" fetchpriority="high" />
+          <img class="hero-scene-img" src="assets/hero-prism.webp" alt="" width="2912" height="1440" decoding="async" fetchpriority="high" />
         </div>
       </div>
       <div class="container hero-layout">

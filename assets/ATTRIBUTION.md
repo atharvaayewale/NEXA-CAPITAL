@@ -28,7 +28,7 @@ Vector logos for the institutions displayed in the **Lending Network** section:
 monograms used in the hero mark stack and in the lender-directory chips. They are
 illustrations of the relevant brand names and are shown for identification only.
 
-`hero-light-prism.webp` is the hero light artwork: an AI-generated render
+`hero-prism.webp` is the hero light artwork: an AI-generated render
 (glossy glass prism, cyan and white beams, rainbow spectrum on pure black) with no
 text, logo or third-party branding in it. It exists so the hero scene ships as one
 local, credential-free file; swap it for a licensed render before launch if a

@@ -115,11 +115,14 @@ test('the wordmark is a larger, spectrum-coloured lock-up', () => {
 });
 
 test('the hero shows the glass-prism artwork as a local image', () => {
-  assert.match(html, /<img class="hero-scene-img" src="assets\/hero-light-prism\.webp" alt="" width="2912" height="1440"/);
+  assert.match(html, /<img class="hero-scene-img" src="assets\/hero-prism\.webp" alt="" width="2912" height="1440"/);
   assert.match(html, /<div class="hero-scene" id="prism-scene">/);
   assert.match(html, /\.hero-scene\{ position:absolute; inset:0; overflow:hidden; \}/);
   assert.match(html, /\.hero-scene img\{[\s\S]*?object-fit:cover; object-position:62% 50%/);
   assert.match(html, /\.hero-scene::after\{[\s\S]*?linear-gradient\(90deg, rgba\(0,0,0,\.92\) 0%, rgba\(0,0,0,\.74\) 22%/);
+  assert.match(html, /\.hero-scene::before\{[\s\S]*?conic-gradient\(from 0deg,/);
+  assert.match(html, /mix-blend-mode:screen; opacity:\.42;/);
+  assert.match(html, /animation:spectrum-turn 34s linear infinite, spectrum-flow 11s ease-in-out infinite alternate;/);
   assert.doesNotMatch(html, /class="scene"|px-spectrum|prism-rig|prism-face|hero-aura/);
 });
 

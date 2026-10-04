@@ -247,13 +247,13 @@
        events and is paused offscreen or under reduced motion like the other decorative motion. */
     /* ---------- hero light scene: the glass-prism artwork ----------
        One local image behind the copy and the lead card: a glass triangle with a
-       cyan beam, a white beam and a rainbow fan. Gradient overlays feather it
-       into the black void so type stays readable and no hard edge shows. */
+       white beam. Colour-free on purpose: the prism is the only subject. Gradient
+       overlays feather it into the black void so type stays readable. */
     .hero-scene{ position:absolute; inset:0; overflow:hidden; }
-    /* the artwork itself turns, a full slow revolution: the prism, its beams and the
-       rainbow all sweep round with it. It is scaled up and feathered at the rim
-       (mask) so the bitmap's edges never show while it spins. Transform only, so the
-       browser keeps it on the compositor. */
+    /* the artwork itself turns, a full slow revolution running right to left
+       (counter-clockwise): the prism and its beams sweep round with it. It is scaled
+       up and feathered at the rim (mask) so the bitmap's edges never show while it
+       spins. Transform only, so the browser keeps it on the compositor. */
     .hero-scene img{
       position:absolute; inset:0; width:100%; height:100%;
       object-fit:cover; object-position:62% 50%;
@@ -265,7 +265,7 @@
     }
     @keyframes prism-spin{
       from{ transform:rotate(0deg) scale(1.5); }
-      to{ transform:rotate(360deg) scale(1.5); }
+      to{ transform:rotate(-360deg) scale(1.5); }
     }
     /* show the whole artwork, as large as the hero allows; only a left wash for the
        copy column and gentle top/bottom fades keep it melting into the void */
@@ -1087,7 +1087,7 @@
     <section class="hero" id="hero" aria-labelledby="hero-title">
       <div class="hero-canvas" aria-hidden="true">
         <div class="hero-scene" id="prism-scene">
-          <img class="hero-scene-img" src="assets/hero-prism.webp" alt="" width="2912" height="1440" decoding="async" fetchpriority="high" />
+          <img class="hero-scene-img" src="assets/hero-prism-mono-v2.webp" alt="" width="2912" height="1440" decoding="async" fetchpriority="high" />
         </div>
       </div>
       <div class="container hero-layout">

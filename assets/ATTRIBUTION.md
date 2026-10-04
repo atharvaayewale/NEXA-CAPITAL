@@ -29,7 +29,7 @@ monograms used in the hero mark stack and in the lender-directory chips. They ar
 illustrations of the relevant brand names and are shown for identification only.
 
 `hero-prism.webp` is the hero light artwork: an AI-generated render
-(glossy glass prism, cyan and white beams, rainbow spectrum on pure black) with no
+(glossy glass prism and white beams on pure black, desaturated to a colour-free monochrome) with no
 text, logo or third-party branding in it. It exists so the hero scene ships as one
 local, credential-free file; swap it for a licensed render before launch if a
 photographer's asset is preferred.

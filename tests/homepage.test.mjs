@@ -102,6 +102,7 @@ test('the hero cube is replaced by a 3D glass rupee with mobile-safe rendering',
   assert.match(html, /\.rupee-gl\{ position:relative; z-index:2; display:block; width:100%; height:100%; min-height:300px; \}/);
   assert.match(html, /camera: \{ position: \{ z: 5 \} \}/);
   assert.match(html, /renderer\.setScale\(Math\.min\(window\.innerWidth \/ 500, 1\.2\)\)/);
+  assert.match(html, /this\.scale = Math\.max\(1\.0, Math\.min\(value \|\| 1, 1\.4\)\);/);
   assert.match(html, /gl\.clear\(gl\.COLOR_BUFFER_BIT\)/);
   // Transparent canvas, capped pixel ratio and continuous rAF auto-rotation.
   assert.match(html, /const contextAttributes = \{ alpha: true, antialias: false/);
@@ -111,15 +112,37 @@ test('the hero cube is replaced by a 3D glass rupee with mobile-safe rendering',
   // The orbit is unconditional: reduced motion slows it, it never freezes it,
   // and the no-WebGL fallback spins in CSS for the same reason.
   assert.match(html, /autoYaw \+= delta \* \(calm \? 0\.2 : 0\.65\);/);
-  // Layering and sizing: the mark must paint above the hero copy, sit in the free right
-  // column instead of being nudged behind the headline, and keep the real CSS aspect.
-  assert.match(html, /\.hero-canvas\{ position:absolute; inset:0; z-index:2; pointer-events:none; \}/);
-  assert.match(html, /\.rupee-stage\{ width:min\(72vw, 260px\); opacity:\.72; \}/);
+  // 1. Placement: the mark owns a slot inside the hero grid - copy, then .hero-visual
+  //    (with the canvas), then the lead form - instead of an absolute layer that let the
+  //    frosted .lead-card glass paint over it.
+  const heroSection = html.match(/<section class="hero"[\s\S]*?<\/section>/)[0];
+  const iCopy = heroSection.indexOf('class="hero-copy"');
+  const iVisual = heroSection.indexOf('class="hero-visual rupee-stage"');
+  const iCanvas = heroSection.indexOf('id="rupee-canvas"');
+  const iForm = heroSection.indexOf('class="lead-card-wrap"');
+  assert.ok(iCopy > -1 && iVisual > iCopy && iCanvas > iVisual && iForm > iCanvas,
+    'canvas must live inside .hero-visual, which must sit between the copy and the lead form');
+  assert.match(heroSection, /<div class="hero-visual rupee-stage" id="rupee-stage" aria-hidden="true">\s*<div class="rupee-glow"><\/div>\s*<div class="rupee-grid"><\/div>\s*<canvas class="rupee-gl" id="rupee-canvas"><\/canvas>/);
+  assert.match(html, /\.hero-layout\{[^}]*grid-template-columns:minmax\(0, 1fr\) minmax\(0, 400px\) minmax\(0, \.96fr\)/);
+  assert.doesNotMatch(html, /hero-canvas|rupee-scene/);
+  // 2. Explicit stacking context so it floats above the hero background, and stays interactive.
+  assert.match(html, /\.hero-visual\{ position:relative; z-index:10; pointer-events:auto; display:grid; place-items:center; \}/);
+  // 3. Explicit canvas box: the WebGL viewport can never collapse to 0px height.
+  assert.match(html, /#rupee-canvas\{ width:100%; height:420px; min-height:350px; display:block; \}/);
+  assert.match(html, /position:relative; width:100%; max-width:420px; height:420px; min-height:350px;/);
+  assert.match(html, /#rupee-canvas\{ height:360px; min-height:320px; \}/);
+  assert.match(html, /#rupee-canvas\{ height:330px; min-height:300px; \}/);
+  assert.match(html, /@media \(max-width:1200px\)[\s\S]*?\.hero-layout\{ grid-template-columns:minmax\(0, 1fr\); gap:48px; \}/);
+  assert.match(html, /\.hero-visual\{ justify-items:center; order:-1; \}/);
   assert.doesNotMatch(html, /padding:44px -7%|padding:30px -16%/);
   assert.doesNotMatch(html, /translate3d\(-17%, -7%, 0\)/);
   assert.match(html, /const height = Math.max\(140, Math.round\(cssH \* factor\)\);/);
-  assert.match(html, /gl\.uniform1f\(pixelLocation, \(2\.56 \/ Math\.max\(renderer\.height, 1\)\) \* 1\.6\);/);
+  assert.match(html, /gl\.uniform1f\(pixelLocation, \(\(2\.0 \* renderer\.viewHalfHeight\) \/ Math\.max\(renderer\.height, 1\)\) \* 1\.6\);/);
+  assert.match(html, /viewHalfHeight: 1\.02,/);
+  assert.match(html, /vec3 rd = \(uRot \* normalize\(vec3\(p \* uViewHalf, -uCamZ\)\)\) \/ uScale;/);
   assert.match(html, /if \(framesDrawn === 2 && !glHealthy\(\)\) stage\.classList\.add\('is-fallback'\);/);
+  assert.match(html, /if \(framesDrawn === 0 && !document\.hidden && stageVisible\)/);
+  assert.match(html, /glErrorCode = gl\.NO_ERROR;\s*framesDrawn = 0;\s*stage\.classList\.remove\('is-fallback'\);/);
   assert.match(html, /const canRun = \(\) => !document\.hidden && stageVisible;/);
   assert.doesNotMatch(html, /const canRun = \(\) =>[^;]*motionPreference/);
   assert.match(html, /animation:rupee-coin 12s linear infinite;/);

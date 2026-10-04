@@ -199,16 +199,15 @@
       background:radial-gradient(640px circle at 74% 34%, rgba(16,185,129,.10), transparent 66%),
         radial-gradient(520px circle at 22% 26%, rgba(0,229,255,.07), transparent 64%);
     }
-    /* z-index:2 keeps the mark above .hero-layout (z-index:1). It used to sit at 0, so
-       the headline and CTA painted over the only 3D object on the page. */
-    .hero-canvas{ position:absolute; inset:0; z-index:2; pointer-events:none; }
-    .rupee-scene{ position:absolute; inset:0; display:grid; place-items:center end;
-      padding:0 clamp(20px, 4.5vw, 84px) 0 0; pointer-events:none; }
+    /* The mark owns a real grid slot (.hero-visual) between the copy and the lead form, so
+       it can never be painted over: it used to live in an absolute layer above .hero-layout,
+       which put it behind the frosted form card. z-index:10 + pointer-events keep it floating
+       over the hero background while still receiving drag events. */
+    .hero-visual{ position:relative; z-index:10; pointer-events:auto; display:grid; place-items:center; }
     /* Only the square itself is interactive, so the copy and form keep normal hit testing. */
     .rupee-stage{
-      position:relative; width:min(33vw, 420px); aspect-ratio:1 / 1; min-height:300px;
-      justify-self:end; align-self:center; transform:none;
-      pointer-events:auto; opacity:1;
+      position:relative; width:100%; max-width:420px; height:420px; min-height:350px;
+      justify-self:center; align-self:center; pointer-events:auto; opacity:1;
       touch-action:pan-y; -webkit-user-select:none; user-select:none; cursor:grab;
       contain:layout paint style;
     }
@@ -230,6 +229,9 @@
       mask-image:radial-gradient(closest-side, #000 12%, transparent 74%);
     }
     .rupee-gl{ position:relative; z-index:2; display:block; width:100%; height:100%; min-height:300px; }
+    /* An explicit height here is what stops the WebGL viewport collapsing to 0px: the stage no
+       longer depends on aspect-ratio resolving inside a grid track. */
+    #rupee-canvas{ width:100%; height:420px; min-height:350px; display:block; }
     /* Dependency-free static fallback for browsers without WebGL. */
     .rupee-static{ display:none; position:absolute; inset:0; z-index:1; place-items:center; pointer-events:none; }
     .rupee-coin{
@@ -250,7 +252,7 @@
     }
     .rupee-hint::after{ content:"DRAG TO TILT"; }
     @media (hover:none){ .rupee-hint::after{ content:"SWIPE TO TILT"; } }
-    .hero-layout{ position:relative; z-index:1; display:grid; grid-template-columns:minmax(0, 1.04fr) minmax(0, .96fr); gap:58px; align-items:center; }
+    .hero-layout{ position:relative; z-index:1; display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 400px) minmax(0, .96fr); gap:40px; align-items:center; }
     .hero-layout > *{ min-width:0; }
     .hero-copy{ max-width:600px; }
     .term-chip{
@@ -850,11 +852,16 @@
       .process-steps{ grid-template-columns:repeat(2, 1fr); }
       .footer-main{ grid-template-columns:1fr 1fr; }
     }
-    @media (max-width:980px){
+    /* Three columns would squeeze the copy and application form below this width; stack
+       the dedicated visual first so the rotating rupee stays immediately visible. */
+    @media (max-width:1200px){
       .hero-layout{ grid-template-columns:minmax(0, 1fr); gap:48px; }
       .hero-copy{ max-width:660px; }
-      .rupee-scene{ place-items:start end; padding:34px clamp(14px, 3vw, 40px) 0 0; }
-      .rupee-stage{ width:min(38vw, 300px); transform:none; opacity:.9; }
+      .hero-visual{ justify-items:center; order:-1; }
+      .rupee-stage{ max-width:360px; height:360px; min-height:320px; }
+      #rupee-canvas{ height:360px; min-height:320px; }
+    }
+    @media (max-width:980px){
       .personal-application-layout{ grid-template-columns:1fr; gap:40px; }
       .personal-application-copy{ position:static; }
       .calculator-layout{ grid-template-columns:1fr; gap:44px; }
@@ -869,8 +876,8 @@
     @media (max-width:640px){
       .container{ width:calc(100% - 36px); }
       .hero{ padding-top:56px; }
-      .rupee-scene{ padding:26px 14px 0 0; }
-      .rupee-stage{ width:min(72vw, 260px); opacity:.72; }
+      .rupee-stage{ max-width:300px; height:330px; min-height:300px; }
+      #rupee-canvas{ height:330px; min-height:300px; }
       .rupee-hint{ display:none; }
       .section{ padding:72px 0; }
       .loan-type-grid{ grid-template-columns:repeat(2, 1fr); }
@@ -964,9 +971,24 @@
 
   <main>
     <section class="hero" id="hero" aria-labelledby="hero-title">
-      <div class="hero-canvas" aria-hidden="true">
-        <div class="rupee-scene">
-        <div class="rupee-stage" id="rupee-stage">
+      <div class="container hero-layout">
+        <div class="hero-copy">
+          <div class="term-chip"><span class="term-dot"></span><span class="term-path">nexa@ruconnect:~$</span> init loan-engine --lenders 48 --upfront-fees 0</div>
+          <h1 id="hero-title">Instant Personal &amp; Business Loans from <span class="gradient-text">30+ Top Banks.</span></h1>
+          <p class="hero-subhead">Compare rates starting from <strong>9.99% p.a.</strong> Zero upfront fees, 100% digital process with Ruconnect network backing.</p>
+          <div class="hero-highlights">
+            <span class="hero-highlight"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg><strong>30+</strong> bank &amp; NBFC options</span>
+            <span class="hero-highlight"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg> No upfront Nexa fee*</span>
+            <span class="hero-highlight"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg> 100% digital journey</span>
+          </div>
+          <div class="hero-note">
+            <span class="hero-note-icon" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+            <div class="hero-note-copy"><strong>Your options. Your pace.</strong><br />Compare repayment, fees and lender terms before you decide.</div>
+          </div>
+          <p class="hero-footnote">*Rates and fees are indicative and lender-specific. Offers and approvals depend on lender criteria. Lender names are provided for reference, not proof of a direct partnership. <a href="#disclaimer">Important disclosures</a>.</p>
+        </div>
+
+        <div class="hero-visual rupee-stage" id="rupee-stage" aria-hidden="true">
           <div class="rupee-glow"></div>
           <div class="rupee-grid"></div>
           <canvas class="rupee-gl" id="rupee-canvas"></canvas>
@@ -988,24 +1010,6 @@
             </span>
           </div>
           <span class="rupee-hint"></span>
-        </div>
-        </div>
-      </div>
-      <div class="container hero-layout">
-        <div class="hero-copy">
-          <div class="term-chip"><span class="term-dot"></span><span class="term-path">nexa@ruconnect:~$</span> init loan-engine --lenders 48 --upfront-fees 0</div>
-          <h1 id="hero-title">Instant Personal &amp; Business Loans from <span class="gradient-text">30+ Top Banks.</span></h1>
-          <p class="hero-subhead">Compare rates starting from <strong>9.99% p.a.</strong> Zero upfront fees, 100% digital process with Ruconnect network backing.</p>
-          <div class="hero-highlights">
-            <span class="hero-highlight"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg><strong>30+</strong> bank &amp; NBFC options</span>
-            <span class="hero-highlight"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg> No upfront Nexa fee*</span>
-            <span class="hero-highlight"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg> 100% digital journey</span>
-          </div>
-          <div class="hero-note">
-            <span class="hero-note-icon" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg></span>
-            <div class="hero-note-copy"><strong>Your options. Your pace.</strong><br />Compare repayment, fees and lender terms before you decide.</div>
-          </div>
-          <p class="hero-footnote">*Rates and fees are indicative and lender-specific. Offers and approvals depend on lender criteria. Lender names are provided for reference, not proof of a direct partnership. <a href="#disclaimer">Important disclosures</a>.</p>
         </div>
 
         <div class="lead-card-wrap">
@@ -1581,7 +1585,7 @@
         const motionObserver = new IntersectionObserver((entries) => {
           entries.forEach((entry) => entry.target.classList.toggle('motion-paused', !entry.isIntersecting));
         });
-        document.querySelectorAll('.hero-canvas, .term-dot, .lead-card-overline i, .network-eyebrow i, .result-live i')
+        document.querySelectorAll('.hero-visual, .term-dot, .lead-card-overline i, .network-eyebrow i, .result-live i')
           .forEach((element) => motionObserver.observe(element));
       }
 
@@ -1665,8 +1669,12 @@
 
       const createGlassRupee = ({ stage, canvas, hero }) => {
         if (!stage || !canvas || !canvas.getContext) return null;
-        let sizedByLayout = true;
-        const zeroBox = () => !sizedByLayout;
+        let sizedByLayout = false;
+        const zeroBox = () => {
+          const rect = stage.getBoundingClientRect();
+          sizedByLayout = rect.width > 1 && rect.height > 1;
+          return !sizedByLayout;
+        };
         // An un-laid-out stage cannot host a canvas: fall back to the spinning SVG now
         // instead of leaving a transparent rectangle where the mark should be.
         if (zeroBox()) stage.classList.add('is-fallback');
@@ -1689,12 +1697,15 @@
           // Pull the camera back and widen the frustum with it: the mark keeps the
           // same framing at any distance while perspective flattens out.
           camera: { position: { z: 5 } },
-          viewHalfHeight: 1.282,
+          viewHalfHeight: 1.02,
           scale: 1,
           width: 0,
           height: 0,
           setScale(value) {
-            this.scale = Math.max(0.75, Math.min(value || 1, 1.4));
+            // The floor is 1.0, not 0.75: window.innerWidth / 500 is 0.75 on a 375px phone,
+            // which used to shrink the mark to a third of its box - the opposite of what a
+            // small screen needs. Large screens still grow it, up to the ceiling.
+            this.scale = Math.max(1.0, Math.min(value || 1, 1.4));
           },
           // Cap the backing store so high-DPI phones never shade 3x pixels.
           setPixelRatio(value) {
@@ -1750,6 +1761,7 @@
           'uniform float uFillet;',
           'uniform float uGlow;',
           'uniform float uPixel;',
+          'uniform float uViewHalf;',
           'uniform float uAspect;',
           'uniform float uCamZ;',
           'uniform float uScale;',
@@ -1780,7 +1792,7 @@
           '  // Framing is set by the view half-height, not the distance, so camera.position.z',
     '  // can move without cropping the mark. Dividing the ray by uScale == scaling the mesh.',
     '  vec3 ro = (uRot * vec3(0.0, 0.0, uCamZ)) / uScale;',
-    '  vec3 rd = (uRot * normalize(vec3(p * 1.282, -uCamZ))) / uScale;',
+    '  vec3 rd = (uRot * normalize(vec3(p * uViewHalf, -uCamZ))) / uScale;',
           '  float pulse = 0.78 + 0.22 * sin(uTime * 1.35);',
           '  vec3 col = vec3(0.0);',
           '  float cover = 0.0;',
@@ -1908,6 +1920,8 @@
         gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
         gl.clearColor(0.0, 0.0, 0.0, 0.0);
         gl.uniform1f(gl.getUniformLocation(program, 'uCamZ'), renderer.camera.position.z);
+        // The framing constant is fed from one place so the march and the pixel size can never drift.
+        gl.uniform1f(gl.getUniformLocation(program, 'uViewHalf'), renderer.viewHalfHeight);
 
         const rotationLocation = gl.getUniformLocation(program, 'uRot');
         const timeLocation = gl.getUniformLocation(program, 'uTime');
@@ -1947,6 +1961,14 @@
         let glErrorCode = gl.NO_ERROR;
         let framesDrawn = 0;
         const glHealthy = () => !gl.isContextLost() && glErrorCode === gl.NO_ERROR;
+        // If a mobile driver never delivers the first frame, do not strand the user with
+        // a transparent canvas. The SVG spins underneath instead; the normal path stays WebGL.
+        window.setTimeout(() => {
+          if (framesDrawn === 0 && !document.hidden && stageVisible) {
+            glErrorCode = gl.INVALID_OPERATION;
+            stage.classList.add('is-fallback');
+          }
+        }, 1600);
 
         const drawFrame = (time) => {
           if (!glHealthy()) return;
@@ -1973,7 +1995,7 @@
           const pitch = Math.max(-0.85, Math.min(0.85, 0.16 + spinPitch + pointerPitch));
           gl.uniformMatrix3fv(rotationLocation, false, rotation(autoYaw + spinYaw + pointerYaw, pitch));
           gl.uniform1f(timeLocation, time / 1000);
-          gl.uniform1f(pixelLocation, (2.56 / Math.max(renderer.height, 1)) * 1.6);
+          gl.uniform1f(pixelLocation, ((2.0 * renderer.viewHalfHeight) / Math.max(renderer.height, 1)) * 1.6);
           gl.uniform1f(aspectLocation, renderer.width / Math.max(renderer.height, 1));
           gl.uniform1f(scaleLocation, renderer.scale);
           gl.clear(gl.COLOR_BUFFER_BIT);
@@ -2058,6 +2080,8 @@
           stage.classList.add('is-fallback');
         }, false);
         canvas.addEventListener('webglcontextrestored', () => {
+          glErrorCode = gl.NO_ERROR;
+          framesDrawn = 0;
           stage.classList.remove('is-fallback');
           render();
         }, false);

@@ -172,6 +172,7 @@ test('hero mark stack and directory chips use vector marks instead of letter til
   assert.equal((stack.match(/<img /g) || []).length, 5);
   assert.equal((stack.match(/<span>[HIA+]<\/span>/g) || []).length, 0);
   assert.match(html, /icon\.className = 'lender-chip-mark'/);
+  assert.match(html, /\.lender-chip-mark\{[\s\S]*?min-width:26px; max-width:56px; height:26px/);
   assert.match(html, /\.lender-chip\.has-mark::before\{ display:none; \}/);
   assert.match(html, /lenderMarks/);
   assert.match(html, /Founded by <strong>Atharva Yewale<\/strong>/);

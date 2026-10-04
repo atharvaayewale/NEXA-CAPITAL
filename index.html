@@ -233,13 +233,15 @@
     .hero-aura{
       position:absolute; inset:12% 0 auto; margin:0 auto;      /* centred on the hero layout row */
       width:min(880px, 118vw); aspect-ratio:1 / 1; border-radius:50%;
-      /* one bright emerald plume that fades all the way round: a single lobe reads as
-         rotation far better than a symmetric ring */
+      /* one bright plume that fades all the way round, so the spin reads clearly, and the
+         plume itself runs emerald into cyan, violet and magenta — the same neon family as
+         the rest of the theme, kept anchored on electric emerald */
       background:conic-gradient(from 0deg,
-        rgba(16,185,129,1) 0deg, rgba(16,185,129,.72) 44deg,
-        rgba(16,185,129,.26) 96deg, rgba(16,185,129,0) 156deg,
-        rgba(16,185,129,0) 292deg, rgba(16,185,129,.45) 336deg,
-        rgba(16,185,129,1) 360deg);
+        rgba(16,185,129,1) 0deg, rgba(61,255,180,.92) 26deg,
+        rgba(0,229,255,.88) 58deg, rgba(77,124,255,.60) 96deg,
+        rgba(139,92,246,.34) 138deg, rgba(255,46,210,0) 172deg,
+        rgba(255,46,210,0) 288deg, rgba(139,92,246,.22) 322deg,
+        rgba(0,229,255,.42) 344deg, rgba(16,185,129,1) 360deg);
       filter:blur(56px) saturate(1.14);
       /* a ring, not a disc: the middle is cut out so the tag line stays clean and the
          rotating emerald plume is actually visible as it sweeps around the hero */
@@ -356,12 +358,12 @@
     .hero-bottom-right strong{ color:#fff; font-weight:600; }
     .partner-mini-stack{ display:flex; align-items:center; }
     .partner-mini-stack span{
-      width:28px; height:28px; border-radius:9px; display:grid; place-items:center; margin-left:-8px;
+      width:36px; height:36px; border-radius:11px; display:grid; place-items:center; margin-left:-10px;
       border:1px solid rgba(255,255,255,.22); background:linear-gradient(180deg, #F7F9FD, #E9EDF6);
       box-shadow:0 4px 12px rgba(0,0,0,.4);
     }
     .partner-mini-stack span:first-child{ margin-left:0; }
-    .partner-mini-stack img{ width:auto; height:auto; max-width:17px; max-height:17px; object-fit:contain; }
+    .partner-mini-stack img{ width:auto; height:auto; max-width:23px; max-height:23px; object-fit:contain; }
 
     /* ---------- lead card ---------- */
     .lead-card{
@@ -527,11 +529,11 @@
     .partner-logo:hover{ transform:translateY(-3px); border-color:rgba(0,229,255,.42); }
     /* Uniform light well keeps every official mark legible on the dark glass card. */
     .partner-logo-plate{
-      width:100%; height:46px; display:grid; place-items:center; padding:0 10px; border-radius:11px;
+      width:100%; height:58px; display:grid; place-items:center; padding:0 12px; border-radius:13px;
       background:linear-gradient(180deg, #F7F9FD, #E9EDF6);
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.6), 0 6px 16px rgba(0,0,0,.3);
     }
-    .partner-logo-plate img{ display:block; width:auto; height:auto; max-width:100%; max-height:26px; object-fit:contain; }
+    .partner-logo-plate img{ display:block; width:auto; height:auto; max-width:100%; max-height:40px; object-fit:contain; }
     .partner-logo-copy{ display:block; }
     .partner-logo strong{ display:block; font-size:12.5px; font-weight:600; letter-spacing:.01em; line-height:1.25; }
     .partner-logo small{
@@ -577,8 +579,8 @@
     .lender-category-group{ width:100%; margin-bottom:14px; }
     .lender-category-group:last-child{ margin-bottom:0; }
     .lender-chip{
-      display:inline-flex; align-items:center; gap:9px; padding:9px 15px; border-radius:999px;
-      font-size:13px; color:var(--muted); background:rgba(255,255,255,.03); border:1px solid var(--line);
+      display:inline-flex; align-items:center; gap:10px; padding:9px 16px 9px 10px; border-radius:999px;
+      font-size:13.5px; color:var(--muted); background:rgba(255,255,255,.03); border:1px solid var(--line);
       transition:color .18s, border-color .18s, box-shadow .18s, transform .18s; --dot:rgba(255,255,255,.4);
     }
     .lender-chip::before{ content:""; width:6px; height:6px; border-radius:50%; flex:0 0 auto; background:var(--dot); box-shadow:0 0 9px var(--dot); }
@@ -588,8 +590,9 @@
     .lender-chip:nth-child(4n+4){ --dot:var(--amber); }
     .lender-chip.has-mark::before{ display:none; }
     .lender-chip-mark{
-      width:16px; height:16px; flex:0 0 auto; border-radius:4px; object-fit:contain;
-      background:linear-gradient(180deg, #F7F9FD, #E9EDF6); padding:1px;
+      width:auto; min-width:26px; max-width:56px; height:26px; flex:0 0 auto; border-radius:7px; object-fit:contain;
+      background:linear-gradient(180deg, #FFFFFF, #E9EDF6); padding:3px;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.7), 0 2px 6px rgba(0,0,0,.35);
     }
     .lender-chip:hover{ color:#fff; border-color:var(--dot); box-shadow:0 0 18px rgba(0,229,255,.14); transform:translateY(-1px); }
     .lender-disclaimer{ margin:0; padding:0 26px 22px; font-size:11px; line-height:1.6; color:var(--ghost); }
@@ -909,6 +912,82 @@
     }
     .dialog-action:hover{ transform:translateY(-1px); filter:saturate(1.12); }
 
+    /* ---------- ultra-wide fidelity: 4K to 8K canvases ----------
+       Big screens get a wider stage, bigger lender marks and larger type so the
+       composition never shrinks into a small island floating in black. Marks are
+       vectors, so they stay pixel-crisp at any density. */
+    @media (min-width:1500px){
+      .container{ width:min(1420px, calc(100% - 72px)); }
+      .partner-logo-grid{ gap:14px; }
+      .partner-logo-plate{ height:68px; }
+      .partner-logo-plate img{ max-height:48px; }
+      .partner-logo strong{ font-size:13.5px; }
+      .lender-chip{ font-size:14px; padding:10px 18px 10px 11px; }
+      .lender-chip-mark{ height:30px; min-width:30px; max-width:66px; border-radius:8px; }
+      .partner-mini-stack span{ width:42px; height:42px; }
+      .partner-mini-stack img{ max-width:27px; max-height:27px; }
+      .hero-subhead{ font-size:18px; max-width:560px; }
+      .hero-footnote, .hero-note-copy{ font-size:12.5px; }
+      .hero h1{ font-size:clamp(3rem, 4.6vw, 5rem); }
+      .hero-copy{ max-width:720px; }
+      .section-heading h2, .personal-application-copy h2, .calc-copy h2, .process-heading h2, .guide-heading h2, .final-cta-copy h2{ font-size:clamp(2.2rem, 2.9vw, 3.2rem); }
+      .emi-amount{ font-size:clamp(2.6rem, 3.4vw, 3.6rem); }
+    }
+    @media (min-width:2100px){
+      .container{ width:min(1840px, calc(100% - 120px)); }
+      .section{ padding:74px 0; }
+      .partner-logo-grid{ gap:18px; }
+      .partner-logo{ padding:16px 16px 15px; border-radius:20px; }
+      .partner-logo-plate{ height:88px; border-radius:16px; }
+      .partner-logo-plate img{ max-height:62px; }
+      .partner-logo strong{ font-size:16px; }
+      .partner-logo small{ font-size:11px; }
+      .lender-chip{ font-size:16px; padding:12px 22px 12px 13px; }
+      .lender-chip-mark{ width:36px; height:36px; border-radius:9px; }
+      .partner-mini-stack span{ width:52px; height:52px; border-radius:15px; }
+      .partner-mini-stack img{ max-width:34px; max-height:34px; }
+      .hero-subhead{ font-size:21px; max-width:660px; }
+      .hero-highlight, .hero-note-copy{ font-size:15px; }
+      .lender-browser-head strong{ font-size:21px; }
+      .lender-category-title{ font-size:15px; }
+    }
+    @media (min-width:3000px){ /* true 8K-class canvases */
+      .container{ width:min(2500px, calc(100% - 220px)); }
+      .section{ padding:96px 0; }
+      .hero{ padding:56px 0 22px; }
+      .hero-subhead{ font-size:27px; max-width:860px; }
+      .hero-footnote, .hero-note-copy{ font-size:19px; }
+      .hero-highlight{ font-size:19px; padding:14px 22px; }
+      .term-chip{ font-size:17px; }
+      .partner-logo-grid{ gap:26px; }
+      .partner-logo{ padding:22px 22px 20px; border-radius:26px; }
+      .partner-logo-plate{ height:126px; border-radius:22px; }
+      .partner-logo-plate img{ max-height:92px; }
+      .partner-logo strong{ font-size:22px; }
+      .partner-logo small{ font-size:14px; }
+      .lender-chip{ font-size:21px; padding:16px 30px 16px 17px; gap:14px; }
+      .lender-chip-mark{ height:50px; min-width:50px; max-width:112px; border-radius:13px; padding:5px; }
+      .partner-mini-stack span{ width:74px; height:74px; border-radius:22px; margin-left:-16px; }
+      .partner-mini-stack img{ max-width:48px; max-height:48px; }
+      .lender-browser-head strong{ font-size:28px; }
+      .lender-category-title{ font-size:19px; }
+      .network-subtext, .lender-disclaimer{ font-size:16px; }
+      .network-eyebrow{ font-size:17px; }
+      .hero h1{ font-size:clamp(4rem, 4.4vw, 6.6rem); }
+      .hero-copy{ max-width:1000px; }
+      .hero-layout{ gap:64px; }
+      .section-heading h2, .personal-application-copy h2, .calc-copy h2, .process-heading h2, .guide-heading h2, .final-cta-copy h2{ font-size:clamp(3rem, 2.8vw, 4.4rem); }
+      .emi-amount{ font-size:clamp(3.4rem, 3.4vw, 5rem); }
+      .section-eyebrow, .calc-eyebrow, .process-eyebrow, .guide-eyebrow{ font-size:15px; }
+      .lead-card-head-copy h2{ font-size:26px; }
+      .trust-row, .hero-note-copy{ font-size:17px; }
+      .footer-tagline{ font-size:26px; }
+      .footer-brand-copy{ font-size:17px; max-width:420px; }
+      .footer-col a{ font-size:18px; }
+      .footer-col h3{ font-size:14px; }
+      .footer-contact-lines a{ font-size:16px; }
+    }
+
     /* ---------- responsive ---------- */
     @media (max-width:1120px){
       .advantage-grid{ grid-template-columns:repeat(2, 1fr); }
@@ -945,7 +1024,7 @@
       .process-steps{ grid-template-columns:1fr; }
       .guide-grid{ grid-template-columns:1fr; }
       .partner-logo-grid{ grid-template-columns:repeat(2, 1fr); gap:10px; }
-      .partner-logo-plate{ height:42px; }
+      .partner-logo-plate{ height:50px; }
       .footer-main{ grid-template-columns:1fr; gap:30px; }
       .final-cta{ padding:28px 22px; }
       .result-breakdown{ grid-template-columns:1fr; }

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64">
+  <path fill="#fff" d="M64 52.2H0V11.8h64z" style="fill:#fff;fill-opacity:1"/>
+  <path fill="#af2026" d="M55.91 12.52 45.55 29.4l9.28 11.55 8.44-3.9V12.53z" style="fill:#af2026;fill:color(display-p3 .6863 .1255 .149);fill-opacity:1"/>
+  <path fill="#f15c2e" d="m54.83 40.95 8.44 10.53V37.05z" style="fill:#f15c2e;fill:color(display-p3 .9451 .3608 .1804);fill-opacity:1"/>
+  <path fill="#f15c2e" d="M32 12.52 45.55 29.4 55.9 12.52z" style="fill:#f15c2e;fill:color(display-p3 .9451 .3608 .1804);fill-opacity:1"/>
+  <path fill="#fbd440" d="m41.83 35.46 3.72-6.06-13.54-16.88v20.22h.09c3.43 0 6.8.93 9.73 2.72" style="fill:#fbd440;fill:color(display-p3 .9843 .8314 .251);fill-opacity:1"/>
+  <path fill="#af2026" d="M32.1 32.73H32v18.75l9.83-16.02a18.7 18.7 0 0 0-9.74-2.73" style="fill:#af2026;fill:color(display-p3 .6863 .1255 .149);fill-opacity:1"/>
+  <path fill="#f15c2e" d="m49.1 43.6 5.72-2.65-9.27-11.56-3.72 6.07a19 19 0 0 1 7.27 8.13" style="fill:#f15c2e;fill:color(display-p3 .9451 .3608 .1804);fill-opacity:1"/>
+  <path fill="#d91f27" d="M41.83 35.46 32 51.48l17.1-7.9a19 19 0 0 0-7.27-8.12" style="fill:#d91f27;fill:color(display-p3 .851 .1216 .1529);fill-opacity:1"/>
+  <path fill="#fbd440" d="M54.83 40.95 49.1 43.6a19 19 0 0 1 1.74 7.89h12.43z" style="fill:#fbd440;fill:color(display-p3 .9843 .8314 .251);fill-opacity:1"/>
+  <path fill="#af2026" d="M32 51.48h18.84c0-2.73-.6-5.42-1.74-7.9z" style="fill:#af2026;fill:color(display-p3 .6863 .1255 .149);fill-opacity:1"/>
+  <path fill="#af2026" d="M.73 12.52v24.53l8.45 3.9 9.27-11.55L8.1 12.52z" style="fill:#af2026;fill:color(display-p3 .6863 .1255 .149);fill-opacity:1"/>
+  <path fill="#f15c2e" d="m.73 51.48 8.45-10.53-8.45-3.9z" style="fill:#f15c2e;fill:color(display-p3 .9451 .3608 .1804);fill-opacity:1"/>
+  <path fill="#f15c2e" d="M8.1 12.52 18.46 29.4 32 12.52z" style="fill:#f15c2e;fill:color(display-p3 .9451 .3608 .1804);fill-opacity:1"/>
+  <path fill="#d91f27" d="m22.17 35.46-3.72-6.06L32 12.52v20.22h-.09c-3.43 0-6.8.93-9.74 2.72" style="fill:#d91f27;fill:color(display-p3 .851 .1216 .1529);fill-opacity:1"/>
+  <path fill="#f15c2e" d="M31.91 32.73H32v18.75l-9.83-16.02a18.7 18.7 0 0 1 9.74-2.73" style="fill:#f15c2e;fill:color(display-p3 .9451 .3608 .1804);fill-opacity:1"/>
+  <path fill="#f15c2e" d="m14.9 43.6-5.72-2.65 9.28-11.56 3.72 6.07a19 19 0 0 0-7.27 8.13" style="fill:#f15c2e;fill:color(display-p3 .9451 .3608 .1804);fill-opacity:1"/>
+  <path fill="#d91f27" d="M22.17 35.46 32 51.48l-17.1-7.9a19 19 0 0 1 7.27-8.12" style="fill:#d91f27;fill:color(display-p3 .851 .1216 .1529);fill-opacity:1"/>
+  <path fill="#fbd440" d="m9.18 40.95 5.72 2.64a19 19 0 0 0-1.73 7.89H.73z" style="fill:#fbd440;fill:color(display-p3 .9843 .8314 .251);fill-opacity:1"/>
+  <path fill="#af2026" d="M32 51.48H13.17c0-2.73.58-5.42 1.73-7.9z" style="fill:#af2026;fill:color(display-p3 .6863 .1255 .149);fill-opacity:1"/>
+</svg>

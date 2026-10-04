@@ -7,24 +7,29 @@
   <meta name="color-scheme" content="dark" />
   <meta name="description" content="Compare personal and business loan options from 30+ banks and NBFCs with Nexa Capital and the Ruconnect network." />
   <title>Nexa Capital — Smarter Loans. Fast Approvals.</title>
-  <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/open-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
   <style>
-    /* ---------- one typeface for the whole product: Inter Variable ---------- */
+    /* ---------- one typeface for the whole product: Open Sans Variable ----------
+       Open Sans is the web typeface SBI itself serves on sbi.bank.in (SBI-Theme ships
+       OpenSans.woff2 for the whole UI). SBI's corporate identity wordmark is set in Effra
+       (Dalton Maag), a commercial licence that cannot be redistributed, so Effra only joins
+       the stack below for machines that already have it installed. */
     @font-face{
-      font-family:"Inter Variable";
+      font-family:"Open Sans Variable";
       font-style:normal;
-      font-weight:100 900;
+      font-weight:300 800;
       font-display:swap;
-      src:url("assets/fonts/inter-latin-wght-normal.woff2") format("woff2-variations");
+      src:url("assets/fonts/open-sans-latin-wght-normal.woff2") format("woff2-variations");
       unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
     }
-    /* Indian rupee sign, subset from the Latin-extended cut so amounts never fall back to a system font. */
+    /* Open Sans ships no rupee glyph, so ₹ comes from its sibling design Noto Sans — same
+       humanist skeleton, so amounts never fall back to a random system font. */
     @font-face{
-      font-family:"Inter Variable";
+      font-family:"Rupee Sign";
       font-style:normal;
-      font-weight:100 900;
+      font-weight:300 800;
       font-display:swap;
-      src:url("assets/fonts/inter-currency.woff2") format("woff2-variations");
+      src:url("assets/fonts/currency-rupee.woff2") format("woff2-variations");
       unicode-range:U+20A8,U+20B0,U+20B9;
     }
 
@@ -47,12 +52,15 @@
       --magenta:#FF2ED2;
       --amber:#FFB454;
       --mint:#3DFFB4;
+      --emerald:#10B981; /* electric emerald — hero aura accent */
       --spec:linear-gradient(92deg,#00E5FF 0%,#4D7CFF 26%,#8B5CF6 50%,#FF2ED2 74%,#FFB454 100%);
-      /* Inter carries headings, subheads, body copy, form labels, lender tags and numerals.
-         The legacy --font-mono token intentionally resolves to the same family so no
-         element can drift to a second typeface. */
-      --font-display:"Inter Variable","Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-      --font-mono:"Inter Variable","Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+      /* Open Sans — SBI's own website typeface — carries headings, subheads, body copy, form
+         labels, lender tags and numerals. "Effra"/"Effra Std" is SBI's licensed corporate
+         identity face (used only where the machine already has it) and "Rupee Sign" covers ₹.
+         The legacy --font-mono token resolves to the same family so no element can drift to a
+         second typeface. */
+      --font-display:"Open Sans Variable","Open Sans","Effra","Effra Std","Rupee Sign",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+      --font-mono:"Open Sans Variable","Open Sans","Effra","Effra Std","Rupee Sign",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
       --radius:20px;
     }
 
@@ -218,6 +226,25 @@
       content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
       background:radial-gradient(560px circle at 28% 30%, rgba(0,229,255,.08), transparent 65%);
     }
+    /* ---------- rotating electric-emerald aura behind the hero tag line and lead card ----------
+       A single conic-gradient disc (emerald melting into transparent onyx) spins slowly behind
+       the copy and the form card. It is painted underneath the content layer, takes no pointer
+       events and is paused offscreen or under reduced motion like the other decorative motion. */
+    .hero-aura{
+      position:absolute; inset:12% 0 auto; margin:0 auto;      /* centred on the hero layout row */
+      width:min(880px, 118vw); aspect-ratio:1 / 1; border-radius:50%;
+      background:conic-gradient(from 0deg,
+        rgba(16,185,129,.85) 0deg, rgba(16,185,129,.18) 84deg,
+        rgba(0,0,0,0) 150deg, rgba(16,185,129,.50) 232deg,
+        rgba(16,185,129,.06) 300deg, rgba(16,185,129,.85) 360deg);
+      filter:blur(84px) saturate(1.08);
+      -webkit-mask-image:radial-gradient(closest-side, #000 54%, transparent 100%);
+      mask-image:radial-gradient(closest-side, #000 54%, transparent 100%);
+      opacity:.62; pointer-events:none; z-index:0;
+      transform-origin:50% 50%; will-change:transform;
+      animation:spin 12s linear infinite;
+    }
+    @keyframes spin{ 0%{ transform:rotate(0deg); } 100%{ transform:rotate(360deg); } }
     .hero-canvas{ position:absolute; inset:0; z-index:0; pointer-events:none; }
     .prism-scene{ position:absolute; inset:0; display:grid; place-items:center; perspective:1300px; }
     .prism-halo{
@@ -585,7 +612,7 @@
     .personal-steps-mini{ display:grid; gap:10px; margin-top:17px; }
     .personal-steps-mini span{ display:flex; align-items:center; gap:12px; font-size:13.5px; color:var(--muted); }
     .personal-steps-mini i{
-      width:26px; height:26px; flex:0 0 auto; display:grid; place-items:center; border-radius:50%;
+      font-style:normal; width:26px; height:26px; flex:0 0 auto; display:grid; place-items:center; border-radius:50%;
       font-style:normal; font-family:var(--font-mono); font-size:11.5px; font-weight:700; color:var(--cyan);
       background:rgba(0,229,255,.10); border:1px solid rgba(0,229,255,.4);
     }
@@ -762,6 +789,7 @@
     .guide-card:nth-child(2) .step-icon-wrap{ border-color:rgba(139,92,246,.4); }
     .guide-card:nth-child(3) .step-icon-wrap{ border-color:rgba(255,46,210,.4); }
     .guide-link{ align-self:flex-start; font-size:13px; color:var(--cyan); text-decoration:underline; text-underline-offset:4px; }
+    .guide-link svg{ vertical-align:-2px; }
 
     /* ---------- final CTA ---------- */
     .final-cta-section{ padding:16px 0 52px; }
@@ -989,6 +1017,7 @@
 
   <main>
     <section class="hero" id="hero" aria-labelledby="hero-title">
+      <div class="hero-aura" aria-hidden="true"></div>
       <div class="hero-canvas" aria-hidden="true">
         <div class="prism-scene" id="prism-scene">
           <div class="prism-halo"></div>
@@ -1014,7 +1043,7 @@
       </div>
       <div class="container hero-layout">
         <div class="hero-copy">
-          <div class="term-chip"><span class="term-dot"></span><span class="term-path">nexa@ruconnect:~$</span> init loan-engine --lenders 49 --upfront-fees 0</div>
+          <div class="term-chip"><span class="term-dot"></span><span class="term-path">nexa@ruconnect:~$</span> init loan-engine --lenders 48 --upfront-fees 0</div>
           <h1 id="hero-title">Instant Personal &amp; Business Loans from <span class="gradient-text">30+ Top Banks.</span></h1>
           <p class="hero-subhead">Compare rates starting from <strong>9.99% p.a.</strong> Zero upfront fees, 100% digital process with Ruconnect network backing.</p>
           <div class="hero-highlights">
@@ -1062,7 +1091,7 @@
       </div>
       <div class="container hero-bottom">
         <div class="hero-bottom-left"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>Secure, consent-led experience <span>·</span> No credit-bureau check at this stage</div>
-        <div class="hero-bottom-right"><div class="partner-mini-stack" aria-hidden="true"><span><img src="assets/brands/marks/hdfc-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span><span><img src="assets/brands/marks/icici-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span><span><img src="assets/brands/marks/axis-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span><span><img src="assets/brands/marks/kotak-mahindra-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span><span><img src="assets/brands/marks/state-bank-of-india-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span></div><span><strong>One application.</strong> More lender options.</span></div>
+        <div class="hero-bottom-right"><div class="partner-mini-stack" aria-hidden="true"><span><img src="assets/brands/marks/hdfc-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span><span><img src="assets/brands/marks/icici-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span><span><img src="assets/brands/marks/axis-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span><span><img src="assets/brands/marks/kotak-mahindra-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span><span><img src="assets/brands/marks/punjab-national-bank-mark.svg" alt="" width="64" height="64" loading="lazy" decoding="async" /></span></div><span><strong>One application.</strong> More lender options.</span></div>
       </div>
     </section>
 
@@ -1089,8 +1118,8 @@
             <span class="partner-logo-copy"><strong>Kotak Mahindra Bank</strong><small>Private bank</small></span>
           </div>
           <div class="partner-logo glass">
-            <span class="partner-logo-plate"><img src="assets/brands/state-bank-of-india.svg" alt="" width="187" height="64" loading="lazy" decoding="async" /></span>
-            <span class="partner-logo-copy"><strong>State Bank of India</strong><small>Public sector bank</small></span>
+            <span class="partner-logo-plate"><img src="assets/brands/bank-of-maharashtra.svg" alt="" width="400" height="120" loading="lazy" decoding="async" /></span>
+            <span class="partner-logo-copy"><strong>Bank of Maharashtra</strong><small>Public sector bank</small></span>
           </div>
           <div class="partner-logo glass">
             <span class="partner-logo-plate"><img src="assets/brands/idfc-first-bank.svg" alt="" width="182" height="64" loading="lazy" decoding="async" /></span>
@@ -1122,9 +1151,9 @@
           </div>
         </div>
         <div class="lender-browser glass">
-          <div class="lender-browser-head"><div><strong>Explore lender names</strong><span>Institution and product availability can change by location, eligibility and active channel authorisation.</span></div><span class="lender-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg>49 INSTITUTIONS</span></div>
+          <div class="lender-browser-head"><div><strong>Explore lender names</strong><span>Institution and product availability can change by location, eligibility and active channel authorisation.</span></div><span class="lender-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg>48 INSTITUTIONS</span></div>
           <div class="lender-tabs" role="tablist" aria-label="Filter lender directory">
-            <button class="lender-tab is-active" type="button" data-lender-group="all" role="tab" aria-selected="true">All institutions <span>49</span></button>
+            <button class="lender-tab is-active" type="button" data-lender-group="all" role="tab" aria-selected="true">All institutions <span>48</span></button>
             <button class="lender-tab" type="button" data-lender-group="private" role="tab" aria-selected="false">Private &amp; other banks <span>15</span></button>
             <button class="lender-tab" type="button" data-lender-group="public" role="tab" aria-selected="false">Public sector banks <span>10</span></button>
             <button class="lender-tab" type="button" data-lender-group="nbfc" role="tab" aria-selected="false">Major NBFCs <span>15</span></button>
@@ -1245,9 +1274,9 @@
       <div class="container">
         <div class="guide-heading"><div><span class="section-kicker">BEFORE YOU APPLY</span><h2>Borrow with a plan.<br /><span class="gradient-text">Choose with clarity.</span></h2></div><p>A few simple checks can help you understand the commitment before accepting a loan.</p></div>
         <div class="guide-grid">
-          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2M8 18h2M14 18h2"/></svg></span><h3>Plan a comfortable EMI.</h3><p>Compare your estimated repayment with regular expenses and savings. Leave room for unexpected costs.</p><a class="guide-link" href="#calculator">Explore the EMI calculator →</a></article>
-          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v6h6M8 13h8M8 17h8"/></svg></span><h3>Read the full lender terms.</h3><p>Check the Key Facts Statement, annual percentage rate, processing fees and prepayment conditions—not just the headline interest rate.</p><a class="guide-link" href="#disclaimer">Read the important disclosures →</a></article>
-          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg></span><h3>Keep your information safe.</h3><p>Use your lender’s official secure KYC process. Never share an OTP, password or PIN with anyone offering a loan.</p><a class="guide-link" href="#privacy">Understand how enquiries are handled →</a></article>
+          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2M8 18h2M14 18h2"/></svg></span><h3>Plan a comfortable EMI.</h3><p>Compare your estimated repayment with regular expenses and savings. Leave room for unexpected costs.</p><a class="guide-link" href="#calculator">Explore the EMI calculator <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></article>
+          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v6h6M8 13h8M8 17h8"/></svg></span><h3>Read the full lender terms.</h3><p>Check the Key Facts Statement, annual percentage rate, processing fees and prepayment conditions—not just the headline interest rate.</p><a class="guide-link" href="#disclaimer">Read the important disclosures <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></article>
+          <article class="guide-card glass"><span class="step-icon-wrap" aria-hidden="true"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg></span><h3>Keep your information safe.</h3><p>Use your lender’s official secure KYC process. Never share an OTP, password or PIN with anyone offering a loan.</p><a class="guide-link" href="#privacy">Understand how enquiries are handled <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></article>
         </div>
       </div>
     </section>
@@ -1415,13 +1444,13 @@
       // Lender directory: names are supplied examples, not an assertion of active contracts.
       const lenderGroups = {
         private: ['HDFC Bank', 'ICICI Bank', 'Axis Bank', 'Kotak Mahindra Bank', 'IDFC FIRST Bank', 'RBL Bank', 'IndusInd Bank', 'Federal Bank', 'YES Bank', 'Bandhan Bank', 'IDBI Bank', 'City Union Bank', 'Karnataka Bank', 'Dhanlaxmi Bank', 'DBS Bank'],
-        public: ['State Bank of India (SBI)', 'Bank of Baroda (BoB)', 'Canara Bank', 'Punjab National Bank (PNB)', 'Union Bank of India', 'Bank of India (BoI)', 'Central Bank of India', 'Indian Bank', 'Bank of Maharashtra', 'UCO Bank'],
+        public: ['Bank of Baroda (BoB)', 'Canara Bank', 'Punjab National Bank (PNB)', 'Union Bank of India', 'Bank of India (BoI)', 'Central Bank of India', 'Indian Bank', 'Bank of Maharashtra', 'UCO Bank'],
         nbfc: ['Piramal Finance', 'HDB Financial Services (HDBFS)', 'Tata Capital', 'Aditya Birla Finance', 'Bajaj Finserv', 'L&T Finance', 'InCred Financial Services', 'IIFL Finance', 'Godrej Capital', 'Mahindra Finance', 'Shriram Finance', 'Cholamandalam Investment and Finance (Chola DB)', 'Muthoot Finance', 'Manappuram Finance', 'Hero Fincorp'],
         fintech: ['Fibe (EarlySalary)', 'ZipLoan', 'KreditBee', 'Moneyview', 'PaySense', 'CASHe', 'Navi Finserv', 'Finnable', 'mPokket']
       };
       const lenderList = document.getElementById('lender-list');
       const lenderGroupTitles = { private: 'Private & other banks', public: 'Public sector banks', nbfc: 'Major NBFCs', fintech: 'Fintech & neo-lenders' };
-      // Official vector marks for 48 of the 49 listed institutions. The three fintech marks
+      // Official vector marks for 47 of the 48 listed institutions. The three fintech marks
       // traced locally (ZipLoan, PaySense, Finnable) were redrawn as vectors from the brands'
       // published artwork; only Manappuram Finance still shows the plain name chip.
       const lenderMarks = {
@@ -1440,7 +1469,6 @@
         'Karnataka Bank': 'assets/brands/marks/karnataka-bank-mark.svg',
         'Dhanlaxmi Bank': 'assets/brands/marks/dhanlaxmi-bank-mark.svg',
         'DBS Bank': 'assets/brands/marks/dbs-bank-india-mark.svg',
-        'State Bank of India (SBI)': 'assets/brands/marks/state-bank-of-india-mark.svg',
         'Bank of Baroda (BoB)': 'assets/brands/marks/bank-of-baroda-mark.svg',
         'Canara Bank': 'assets/brands/marks/canara-bank-mark.svg',
         'Punjab National Bank (PNB)': 'assets/brands/marks/punjab-national-bank-mark.svg',
@@ -1653,7 +1681,7 @@
         const motionObserver = new IntersectionObserver((entries) => {
           entries.forEach((entry) => entry.target.classList.toggle('motion-paused', !entry.isIntersecting));
         });
-        document.querySelectorAll('.hero-canvas, .term-dot, .lead-card-overline i, .network-eyebrow i, .result-live i')
+        document.querySelectorAll('.hero-aura, .hero-canvas, .term-dot, .lead-card-overline i, .network-eyebrow i, .result-live i')
           .forEach((element) => motionObserver.observe(element));
       }
 

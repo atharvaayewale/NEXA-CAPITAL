@@ -41,6 +41,7 @@ test('dummy application tracking is removed from markup, styles and scripts', ()
 test('demo labels and fictional borrower evidence are not presented as real', () => {
   assert.doesNotMatch(body, /\b(?:demo|prototype|concept|sample borrower|illustrative review|preview only)\b/i);
   assert.doesNotMatch(html, /Aarav M\.|Neha R\.|Sana K\.|review-rating-badge|proof-avatars/);
+  assert.doesNotMatch(body, /State Bank of India|SBI/);
   assert.ok(idSet.has('borrower-guide'));
   assert.equal((html.match(/<article class="guide-card glass">/g) || []).length, 3);
   assert.match(body, /Key Facts Statement/);
@@ -68,7 +69,7 @@ test('motion is paused offscreen and reduced-motion preference also controls scr
   assert.match(html, /animation-play-state:paused !important/);
   assert.match(html, /animation:none !important; transition:none !important; scroll-behavior:auto !important/);
   assert.match(html, /behavior: motionPreference\.matches \? 'auto' : 'smooth'/);
-  assert.doesNotMatch(html, /ring-spin|--ring-angle|blur\(95px\)/);
+  assert.match(html, /'\.hero-aura, \.hero-canvas, \.term-dot/);
 });
 
 test('consent, privacy and lender-specific loan disclosures are retained', () => {
@@ -87,21 +88,33 @@ test('mobile hero can shrink without clipping and the phone prefix has reserved 
   assert.match(html, /\.input-shell \.prefix \+ input\{ padding-left:52px; \}/);
 });
 
-test('one self-hosted Inter family covers every heading, label, tag and paragraph', () => {
+test("SBI's own web typeface, Open Sans, covers every heading, label, tag and paragraph", () => {
   assert.doesNotMatch(html, /fonts\.googleapis\.com|fonts\.gstatic\.com/);
   assert.doesNotMatch(html, /Space Grotesk|JetBrains Mono/);
-  assert.match(html, /--font-display:"Inter Variable"/);
-  assert.match(html, /--font-mono:"Inter Variable"/);
+  assert.doesNotMatch(html, /Inter Variable|assets\/fonts\/inter-/);
+  assert.match(html, /--font-display:"Open Sans Variable","Open Sans","Effra","Effra Std","Rupee Sign"/);
+  assert.match(html, /--font-mono:"Open Sans Variable"/);
 
   const families = [...html.matchAll(/font-family:([^;]+);/g)].map((match) => match[1].trim());
   assert.ok(families.length > 10, 'Expected the stylesheet to declare its typeface');
   for (const family of families) {
-    assert.ok(/^(?:var\(--font-(?:display|mono)\)|"Inter Variable")/.test(family),
+    assert.ok(/^(?:var\(--font-(?:display|mono)\)|"Open Sans Variable"|"Rupee Sign")/.test(family),
       `Unexpected font family: ${family}`);
   }
 
-  assert.match(html, /url\("assets\/fonts\/inter-latin-wght-normal\.woff2"\)/);
-  assert.match(html, /url\("assets\/fonts\/inter-currency\.woff2"\)/);
+  assert.match(html, /url\("assets\/fonts\/open-sans-latin-wght-normal\.woff2"\)/);
+  assert.match(html, /url\("assets\/fonts\/currency-rupee\.woff2"\)/);
+});
+
+test('the hero keeps a rotating electric-emerald aura behind the tag line and card', () => {
+  assert.match(html, /--emerald:#10B981/);
+  assert.match(html, /<div class="hero-aura" aria-hidden="true"><\/div>/);
+  assert.match(html, /\.hero-aura\{[\s\S]*?conic-gradient\(from 0deg,/);
+  assert.match(html, /rgba\(16,185,129,\.85\) 0deg/);
+  assert.match(html, /\.hero-aura\{[\s\S]*?mask-image:radial-gradient\(closest-side, #000 54%, transparent 100%\)/);
+  assert.match(html, /\.hero-aura\{[\s\S]*?pointer-events:none; z-index:0;/);
+  assert.match(html, /@keyframes spin\{ 0%\{ transform:rotate\(0deg\); \} 100%\{ transform:rotate\(360deg\); \} \}/);
+  assert.match(html, /animation:spin 12s linear infinite/);
 });
 
 test('the lending network shows official lender marks in uniform cards, not text initials', () => {
@@ -116,7 +129,7 @@ test('the lending network shows official lender marks in uniform cards, not text
     assert.ok(Number(width) > 0 && Number(height) > 0, `Logo ${slug} needs intrinsic dimensions`);
   }
 
-  for (const name of ['HDFC Bank', 'ICICI Bank', 'Axis Bank', 'Kotak Mahindra Bank', 'State Bank of India', 'Bajaj Finserv', 'Tata Capital']) {
+  for (const name of ['HDFC Bank', 'ICICI Bank', 'Axis Bank', 'Kotak Mahindra Bank', 'Bank of Maharashtra', 'Bajaj Finserv', 'Tata Capital']) {
     assert.ok(body.includes(name), `Lender card missing: ${name}`);
   }
 });
@@ -133,18 +146,18 @@ test('self-hosted fonts and lender marks are present on disk', () => {
 test('the lender directory maps real vector marks to the named institutions', () => {
   const map = html.slice(html.indexOf('const lenderMarks = {'), html.indexOf('const makeLenderChips'));
   const entries = [...map.matchAll(/'([^']+)': 'assets\/brands\/marks\/([a-z0-9-]+)-mark\.svg'/g)];
-  assert.ok(entries.length >= 48, `Expected at least 48 mapped marks, found ${entries.length}`);
+  assert.ok(entries.length >= 47, `Expected at least 47 mapped marks, found ${entries.length}`);
 
   const groups = html.slice(html.indexOf('const lenderGroups = {'), html.indexOf('const lenderList ='));
   const listed = [...groups.matchAll(/'([^']+)'/g)]
     .map((match) => match[1])
     .filter((value) => !['private', 'public', 'nbfc', 'fintech'].includes(value));
-  assert.equal(listed.length, 49, 'The directory still lists 49 institutions');
+  assert.equal(listed.length, 48, 'The directory lists 48 institutions once SBI is removed');
 
   const mapped = new Set(entries.map(([, name]) => name));
-  assert.ok(mapped.size >= 48 && mapped.size <= listed.length, 'Coverage must stay within the directory');
+  assert.ok(mapped.size >= 47 && mapped.size <= listed.length, 'Coverage must stay within the directory');
   for (const name of mapped) assert.ok(listed.includes(name), `${name} is mapped but not listed`);
-  for (const name of ['HDFC Bank', 'ICICI Bank', 'Axis Bank', 'Kotak Mahindra Bank', 'State Bank of India (SBI)', 'Bajaj Finserv', 'Tata Capital', 'Indian Bank', 'Bank of Maharashtra', 'InCred Financial Services', 'Godrej Capital', 'Mahindra Finance', 'ZipLoan', 'PaySense', 'Finnable']) {
+  for (const name of ['HDFC Bank', 'ICICI Bank', 'Axis Bank', 'Kotak Mahindra Bank', 'Bajaj Finserv', 'Tata Capital', 'Indian Bank', 'Bank of Maharashtra', 'InCred Financial Services', 'Godrej Capital', 'Mahindra Finance', 'ZipLoan', 'PaySense', 'Finnable']) {
     assert.ok(mapped.has(name), `Named lender missing a mark: ${name}`);
   }
 

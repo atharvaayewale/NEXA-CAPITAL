@@ -68,7 +68,7 @@ function html(response, status, body) {
   response.end(body);
 }
 
-// Static homepage assets (self-hosted Inter fonts and official lender marks).
+// Static homepage assets (self-hosted Open Sans fonts and official lender marks).
 const ASSET_TYPES = new Map([
   ['.svg', 'image/svg+xml'],
   ['.woff2', 'font/woff2'],

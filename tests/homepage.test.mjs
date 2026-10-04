@@ -86,3 +86,18 @@ test('mobile hero can shrink without clipping and the phone prefix has reserved 
   assert.match(html, /grid-template-columns:minmax\(0, 1fr\)/);
   assert.match(html, /\.input-shell \.prefix \+ input\{ padding-left:52px; \}/);
 });
+
+test('SBI is removed from the lending network and all remaining lenders have real SVG logos', () => {
+  assert.doesNotMatch(html, /State Bank of India|\bSBI\b/i);
+  assert.match(html, /48 INSTITUTIONS/);
+  assert.match(html, /All institutions <span>48<\/span>/);
+  assert.match(html, /--lenders 48 --upfront-fees 0/);
+  assert.match(html, /Public sector banks <span>9<\/span>/);
+  assert.equal((html.match(/class="partner-mark"[^>]*><svg\b/g) || []).length, 6);
+  // Every directory chip renders a brand mark built from the per-institution SVG logo map.
+  assert.match(html, /logo\.className = 'lender-chip-logo';/);
+  assert.match(html, /logo\.innerHTML = lenderLogos\[name\]/);
+  assert.equal((html.match(/'[^']+': '<svg viewBox="0 0 32 32">/g) || []).length, 48);
+  assert.equal((html.match(/<span><svg viewBox="0 0 32 32">/g) || []).length, 3);
+});
+

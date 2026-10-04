@@ -133,7 +133,7 @@ test('self-hosted fonts and lender marks are present on disk', () => {
 test('the lender directory maps real vector marks to the named institutions', () => {
   const map = html.slice(html.indexOf('const lenderMarks = {'), html.indexOf('const makeLenderChips'));
   const entries = [...map.matchAll(/'([^']+)': 'assets\/brands\/marks\/([a-z0-9-]+)-mark\.svg'/g)];
-  assert.ok(entries.length >= 45, `Expected at least 45 mapped marks, found ${entries.length}`);
+  assert.ok(entries.length >= 48, `Expected at least 48 mapped marks, found ${entries.length}`);
 
   const groups = html.slice(html.indexOf('const lenderGroups = {'), html.indexOf('const lenderList ='));
   const listed = [...groups.matchAll(/'([^']+)'/g)]
@@ -142,9 +142,9 @@ test('the lender directory maps real vector marks to the named institutions', ()
   assert.equal(listed.length, 49, 'The directory still lists 49 institutions');
 
   const mapped = new Set(entries.map(([, name]) => name));
-  assert.ok(mapped.size >= 45 && mapped.size <= listed.length, 'Coverage must stay within the directory');
+  assert.ok(mapped.size >= 48 && mapped.size <= listed.length, 'Coverage must stay within the directory');
   for (const name of mapped) assert.ok(listed.includes(name), `${name} is mapped but not listed`);
-  for (const name of ['HDFC Bank', 'ICICI Bank', 'Axis Bank', 'Kotak Mahindra Bank', 'State Bank of India (SBI)', 'Bajaj Finserv', 'Tata Capital', 'Indian Bank', 'Bank of Maharashtra', 'InCred Financial Services', 'Godrej Capital', 'Mahindra Finance']) {
+  for (const name of ['HDFC Bank', 'ICICI Bank', 'Axis Bank', 'Kotak Mahindra Bank', 'State Bank of India (SBI)', 'Bajaj Finserv', 'Tata Capital', 'Indian Bank', 'Bank of Maharashtra', 'InCred Financial Services', 'Godrej Capital', 'Mahindra Finance', 'ZipLoan', 'PaySense', 'Finnable']) {
     assert.ok(mapped.has(name), `Named lender missing a mark: ${name}`);
   }
 

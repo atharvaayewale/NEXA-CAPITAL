@@ -1421,8 +1421,9 @@
       };
       const lenderList = document.getElementById('lender-list');
       const lenderGroupTitles = { private: 'Private & other banks', public: 'Public sector banks', nbfc: 'Major NBFCs', fintech: 'Fintech & neo-lenders' };
-      // Official vector marks for 45 of the 49 listed institutions. Institutions whose
-      // marks could not be sourced as vectors keep the plain name chip instead.
+      // Official vector marks for 48 of the 49 listed institutions. The three fintech marks
+      // traced locally (ZipLoan, PaySense, Finnable) were redrawn as vectors from the brands'
+      // published artwork; only Manappuram Finance still shows the plain name chip.
       const lenderMarks = {
         'HDFC Bank': 'assets/brands/marks/hdfc-bank-mark.svg',
         'ICICI Bank': 'assets/brands/marks/icici-bank-mark.svg',
@@ -1468,7 +1469,10 @@
         'Moneyview': 'assets/brands/marks/moneyview-mark.svg',
         'CASHe': 'assets/brands/marks/cashe-mark.svg',
         'Navi Finserv': 'assets/brands/marks/navi-mark.svg',
-        'mPokket': 'assets/brands/marks/mpokket-mark.svg'
+        'mPokket': 'assets/brands/marks/mpokket-mark.svg',
+        'ZipLoan': 'assets/brands/marks/ziploan-mark.svg',
+        'PaySense': 'assets/brands/marks/paysense-mark.svg',
+        'Finnable': 'assets/brands/marks/finnable-mark.svg'
       };
       const makeLenderChips = (names, target) => names.forEach((name) => {
         const chip = document.createElement('span');

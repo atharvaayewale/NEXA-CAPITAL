@@ -36,6 +36,8 @@ illustrations of the relevant brand names and are shown for identification only.
 | `marks/godrej-capital-mark.svg` | Godrej group script mark from a public Inkscape-exported SVG | no licence declared — treat as identification use |
 | `marks/mahindra-finance-mark.svg` | "Mahindra FINANCE" lock-up from a public site-asset repository | no licence declared — treat as identification use |
 
+| `marks/ziploan-mark.svg`, `marks/paysense-mark.svg`, `marks/finnable-mark.svg` | Re-drawn locally as vectors from the brands' published logos (ZipLoan header lock-up, PaySense navy lock-up, Finnable white wordmark) because no vector source exists online | derived artwork — identification use only, replace from the brand's media kit before a commercial launch |
+
 The wide lock-ups in `marks/` were minified with SVGO (no geometry changes) for weight.
 Note that `marks/godrej-capital-mark.svg` is the Godrej group script, not a
 Godrej Capital-specific lock-up; swap it from the brand's media kit before launch.

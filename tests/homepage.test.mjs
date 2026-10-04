@@ -121,8 +121,12 @@ test('the hero shows the glass-prism artwork as a local image', () => {
   assert.match(html, /\.hero-scene img\{[\s\S]*?object-fit:cover; object-position:62% 50%/);
   assert.match(html, /\.hero-scene::after\{[\s\S]*?linear-gradient\(90deg, rgba\(0,0,0,\.92\) 0%, rgba\(0,0,0,\.74\) 22%/);
   assert.match(html, /\.hero-scene::before\{[\s\S]*?conic-gradient\(from 0deg,/);
-  assert.match(html, /mix-blend-mode:screen; opacity:\.42;/);
-  assert.match(html, /animation:spectrum-turn 34s linear infinite, spectrum-flow 11s ease-in-out infinite alternate;/);
+  assert.match(html, /mix-blend-mode:screen; opacity:\.5;/);
+  assert.match(html, /animation:spectrum-turn 28s linear infinite, spectrum-flow 9s ease-in-out infinite alternate;/);
+  assert.match(html, /\.void-bg::before\{[\s\S]*?conic-gradient\(from 0deg,/);
+  assert.match(html, /animation:page-spectrum 42s linear infinite;/);
+  assert.match(html, /\.void-bg\{ overflow:hidden; \}/);
+  assert.match(html, /radial-gradient\(115% 78% at 50% 44%, rgba\(0,0,0,\.58\) 0%/);
   assert.doesNotMatch(html, /class="scene"|px-spectrum|prism-rig|prism-face|hero-aura/);
 });
 

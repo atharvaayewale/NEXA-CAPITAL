@@ -66,8 +66,10 @@
 
     *{ box-sizing:border-box; }
     html{ scroll-behavior:smooth; scroll-padding-top:96px; background:var(--void); }
+    /* html carries the void colour; body stays transparent so the fixed void canvas
+       (z-index -2) is not painted behind body's own opaque background */
     body{
-      margin:0; min-width:320px; color:var(--ink); background:var(--void);
+      margin:0; min-width:320px; color:var(--ink); background:transparent;
       font-family:var(--font-display); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
       overflow-x:clip; position:relative;
     }
@@ -94,6 +96,32 @@
       radial-gradient(920px 540px at 86% 2%, rgba(139,92,246,.13), transparent 64%),
       radial-gradient(1100px 620px at 55% 110%, rgba(255,46,210,.09), transparent 62%),
       #000000;
+    }
+    /* the page-wide spectrum: one huge blurred rainbow wheel behind every section,
+       turning forever. It is fixed, so it keeps moving wherever the reader scrolls,
+       and it sits behind the starfield and all content. transform-only animation:
+       the browser rasterises the blur once and just spins the layer. */
+    .void-bg{ overflow:hidden; }
+    .void-bg::before{
+      content:""; position:absolute; left:50%; top:50%;
+      width:132vmax; height:132vmax; margin:-66vmax 0 0 -66vmax;
+      background:conic-gradient(from 0deg,
+        rgba(0,229,255,.85) 0deg, rgba(77,124,255,.80) 40deg, rgba(139,92,246,.85) 80deg,
+        rgba(255,46,210,.80) 120deg, rgba(255,138,61,.72) 160deg, rgba(255,224,102,.66) 200deg,
+        rgba(74,222,128,.62) 240deg, rgba(0,229,255,.85) 360deg);
+      filter:blur(110px) saturate(140%);
+      opacity:.30; pointer-events:none;
+      transform:translateZ(0);
+      animation:page-spectrum 42s linear infinite;
+    }
+    /* a soft dark core keeps the void reading black so copy stays crisp; the colour
+       still sweeps the edges of every section */
+    .void-bg::after{
+      content:""; position:absolute; inset:0;
+      background:radial-gradient(115% 78% at 50% 44%, rgba(0,0,0,.58) 0%, rgba(0,0,0,.42) 46%, rgba(0,0,0,.16) 78%, transparent 100%);
+    }
+    @keyframes page-spectrum{
+      to{ transform:translateZ(0) rotate(360deg); }
     }
     .void-stars{ position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.55; background-image:
       radial-gradient(1.4px 1.4px at 12% 18%, rgba(255,255,255,.85) 50%, transparent 51%),
@@ -266,21 +294,21 @@
        swells and fades, so colours keep arriving and leaving around the glass. */
     .hero-scene::before{
       content:""; position:absolute; left:34%; top:46%;
-      width:min(760px, 62vw); aspect-ratio:1; margin:-19% 0 0 -19%;
+      width:min(940px, 76vw); aspect-ratio:1; margin:-19% 0 0 -19%;
       background:conic-gradient(from 0deg,
         #00E5FF 0deg, #4D7CFF 48deg, #8B5CF6 96deg, #FF2ED2 144deg,
         #FF8A3D 192deg, #FFE066 240deg, #4ADE80 288deg, #00E5FF 360deg);
-      filter:blur(58px) saturate(135%);
-      mix-blend-mode:screen; opacity:.42; pointer-events:none;
+      filter:blur(46px) saturate(140%);
+      mix-blend-mode:screen; opacity:.5; pointer-events:none;
       transform-origin:50% 50%; will-change:transform, opacity;
-      animation:spectrum-turn 34s linear infinite, spectrum-flow 11s ease-in-out infinite alternate;
+      animation:spectrum-turn 28s linear infinite, spectrum-flow 9s ease-in-out infinite alternate;
     }
     @keyframes spectrum-turn{
       to{ transform:rotate(360deg); }
     }
     @keyframes spectrum-flow{
-      from{ opacity:.26; }
-      to{ opacity:.56; }
+      from{ opacity:.34; }
+      to{ opacity:.72; }
     }
 
     /* show the whole artwork, as large as the hero allows; only a left wash for the

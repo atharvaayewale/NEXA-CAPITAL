@@ -110,7 +110,16 @@ test('the hero cube is replaced by a 3D glass rupee with mobile-safe rendering',
   assert.match(html, /rafId = requestAnimationFrame\(step\)/);
   // The orbit is unconditional: reduced motion slows it, it never freezes it,
   // and the no-WebGL fallback spins in CSS for the same reason.
-  assert.match(html, /autoYaw \+= delta \* \(calm \? 0\.12 : 0\.42\);/);
+  assert.match(html, /autoYaw \+= delta \* \(calm \? 0\.2 : 0\.65\);/);
+  // Layering and sizing: the mark must paint above the hero copy, sit in the free right
+  // column instead of being nudged behind the headline, and keep the real CSS aspect.
+  assert.match(html, /\.hero-canvas\{ position:absolute; inset:0; z-index:2; pointer-events:none; \}/);
+  assert.match(html, /\.rupee-stage\{ width:min\(72vw, 260px\); opacity:\.72; \}/);
+  assert.doesNotMatch(html, /padding:44px -7%|padding:30px -16%/);
+  assert.doesNotMatch(html, /translate3d\(-17%, -7%, 0\)/);
+  assert.match(html, /const height = Math.max\(140, Math.round\(cssH \* factor\)\);/);
+  assert.match(html, /gl\.uniform1f\(pixelLocation, \(2\.56 \/ Math\.max\(renderer\.height, 1\)\) \* 1\.6\);/);
+  assert.match(html, /if \(framesDrawn === 2 && !glHealthy\(\)\) stage\.classList\.add\('is-fallback'\);/);
   assert.match(html, /const canRun = \(\) => !document\.hidden && stageVisible;/);
   assert.doesNotMatch(html, /const canRun = \(\) =>[^;]*motionPreference/);
   assert.match(html, /animation:rupee-coin 12s linear infinite;/);

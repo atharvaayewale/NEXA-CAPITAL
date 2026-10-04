@@ -101,7 +101,12 @@ test('the hero cube is replaced by a 3D glass rupee with mobile-safe rendering',
   assert.match(html, /renderer\.setPixelRatio\(Math\.min\(window\.devicePixelRatio, 2\)\)/);
   assert.match(html, /maxPixelRatio: 2/);
   assert.match(html, /rafId = requestAnimationFrame\(step\)/);
-  assert.match(html, /autoYaw \+= delta \* 0\.42;/);
+  // The orbit is unconditional: reduced motion slows it, it never freezes it,
+  // and the no-WebGL fallback spins in CSS for the same reason.
+  assert.match(html, /autoYaw \+= delta \* \(calm \? 0\.12 : 0\.42\);/);
+  assert.match(html, /const canRun = \(\) => !document\.hidden && stageVisible;/);
+  assert.doesNotMatch(html, /const canRun = \(\) =>[^;]*motionPreference/);
+  assert.match(html, /animation:rupee-coin 12s linear infinite;/);
   // Mouse and touch both tilt the mark; vertical page scroll stays intact.
   assert.match(html, /addEventListener\('touchstart'/);
   assert.match(html, /addEventListener\('touchmove'/);

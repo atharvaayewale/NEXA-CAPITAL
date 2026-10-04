@@ -203,17 +203,18 @@
     .rupee-scene{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; }
     /* Only the square itself is interactive, so the copy and form keep normal hit testing. */
     .rupee-stage{
-      position:relative; width:min(33vw, 400px); aspect-ratio:1 / 1;
+      position:relative; width:min(37vw, 430px); aspect-ratio:1 / 1;
       justify-self:center; align-self:center; transform:translate3d(-17%, -7%, 0);
-      pointer-events:auto; opacity:.95;
+      pointer-events:auto; opacity:1;
       touch-action:pan-y; -webkit-user-select:none; user-select:none; cursor:grab;
       contain:layout paint style;
     }
     .rupee-stage.is-grabbing{ cursor:grabbing; }
     .rupee-glow{
       position:absolute; inset:8%; border-radius:50%; pointer-events:none; z-index:0;
-      background:radial-gradient(closest-side, rgba(16,185,129,.30), rgba(0,245,160,.12) 46%, transparent 76%);
-      filter:blur(16px); animation:rupee-breathe 7.5s ease-in-out infinite;
+      background:radial-gradient(closest-side, rgba(16,185,129,.42), rgba(0,245,160,.16) 46%, transparent 76%);
+      box-shadow:0 0 90px rgba(16,185,129,.30), inset 0 0 70px rgba(0,245,160,.16);
+      filter:blur(14px); animation:rupee-breathe 7.5s ease-in-out infinite;
     }
     @keyframes rupee-breathe{ 0%,100%{ opacity:.55; transform:scale(.94); } 50%{ opacity:.95; transform:scale(1.06); } }
     .rupee-grid{
@@ -230,8 +231,13 @@
     .rupee-static{ display:none; position:absolute; inset:0; z-index:1; place-items:center; pointer-events:none; }
     .rupee-static span{
       font-family:var(--font-display); font-weight:700; line-height:1; color:rgba(255,255,255,.92);
-      font-size:clamp(120px, 22vw, 286px); transform:perspective(900px) rotateY(-18deg) rotateX(8deg);
+      font-size:clamp(120px, 22vw, 286px);
       text-shadow:0 0 30px rgba(0,245,160,.55), 0 0 74px rgba(16,185,129,.34), 0 2px 0 rgba(255,255,255,.22);
+      animation:rupee-coin 12s linear infinite;
+    }
+    @keyframes rupee-coin{
+      from{ transform:perspective(900px) rotateY(0deg) rotateX(9deg); }
+      to{ transform:perspective(900px) rotateY(360deg) rotateX(9deg); }
     }
     .rupee-stage.is-fallback .rupee-gl{ display:none; }
     .rupee-stage.is-fallback .rupee-static{ display:grid; }
@@ -894,6 +900,7 @@
         animation:none !important; transition:none !important; scroll-behavior:auto !important;
       }
       .rupee-stage{ will-change:auto !important; }
+      .rupee-stage.is-fallback .rupee-static span{ animation:rupee-coin 30s linear infinite !important; }
     }
     ::-webkit-scrollbar{ width:10px; height:10px; }
     ::-webkit-scrollbar-track{ background:#000; }
@@ -1876,29 +1883,31 @@
         // Visibility and tab state only: the matching IntersectionObserver below owns
         // resuming, so this must not read a class another observer toggles, or a
         // re-entry race would strand the loop (frozen mark) until the next resize.
-        const canRun = () => !document.hidden && stageVisible && !motionPreference.matches;
+        const canRun = () => !document.hidden && stageVisible;
         const glHealthy = () => !gl.isContextLost();
 
         const drawFrame = (time) => {
           if (!glHealthy()) return;
           const delta = lastTime ? Math.min((time - lastTime) / 1000, 0.05) : 0.016;
           lastTime = time;
-          if (!motionPreference.matches) {
-            autoYaw += delta * 0.42;
-            if (!dragging) {
-              spinYaw += velocityYaw * delta;
-              spinPitch += velocityPitch * delta;
-              const friction = Math.pow(0.1, delta);
-              velocityYaw *= friction;
-              velocityPitch *= friction;
-              const settle = Math.pow(0.45, delta);
-              spinYaw *= settle;
-              spinPitch *= settle;
-            }
-            const ease = 1 - Math.exp(-delta / 0.18);
-            pointerYaw += (targetYaw - pointerYaw) * ease;
-            pointerPitch += (targetPitch - pointerPitch) * ease;
+          // The mark always turns. A reduced-motion request slows the orbit and
+          // damps the pointer response instead of freezing the object, because a
+          // static hero would drop the one thing this visual exists to show.
+          const calm = motionPreference.matches;
+          autoYaw += delta * (calm ? 0.12 : 0.42);
+          if (!dragging) {
+            spinYaw += velocityYaw * delta;
+            spinPitch += velocityPitch * delta;
+            const friction = Math.pow(calm ? 0.01 : 0.1, delta);
+            velocityYaw *= friction;
+            velocityPitch *= friction;
+            const settle = Math.pow(calm ? 0.2 : 0.45, delta);
+            spinYaw *= settle;
+            spinPitch *= settle;
           }
+          const ease = 1 - Math.exp(-delta / (calm ? 0.5 : 0.18));
+          pointerYaw += (targetYaw * (calm ? 0.35 : 1) - pointerYaw) * ease;
+          pointerPitch += (targetPitch * (calm ? 0.35 : 1) - pointerPitch) * ease;
           const pitch = Math.max(-0.85, Math.min(0.85, 0.16 + spinPitch + pointerPitch));
           gl.uniformMatrix3fv(rotationLocation, false, rotation(autoYaw + spinYaw + pointerYaw, pitch));
           gl.uniform1f(timeLocation, time / 1000);

@@ -113,17 +113,13 @@ test('the wordmark is a larger, spectrum-coloured lock-up', () => {
   assert.match(html, /\.brand-name \.brand-dim\{ color:inherit; font-weight:600; opacity:\.82; \}/);
 });
 
-test('the hero paints a glass prism bending two beams into a spectrum', () => {
-  assert.match(html, /<div class="prism-scene" id="prism-scene">/);
-  assert.match(html, /<div class="prism-rig" id="prism-rig">/);
-  assert.match(html, /class="scene"/);
-  assert.match(html, /id="px-spectrum"/);
-  assert.match(html, /id="px-beam-cyan"|url\(#px-beam-cyan\)/);
-  assert.match(html, /class="spectrum"/);
-  assert.match(html, /\.prism-scene\{ position:absolute; inset:0; display:grid; place-items:center; \}/);
-  assert.match(html, /@keyframes spectrum-breathe/);
-  assert.match(html, /@keyframes beam-breathe/);
-  assert.doesNotMatch(html, /hero-aura|prism-spin|halo-spin|prism-face|beam-spread/);
+test('the hero shows the glass-prism artwork as a local image', () => {
+  assert.match(html, /<img class="hero-scene-img" src="assets\/hero-light-prism\.webp" alt="" width="1376" height="768"/);
+  assert.match(html, /<div class="hero-scene" id="prism-scene">/);
+  assert.match(html, /\.hero-scene\{ position:absolute; inset:0; overflow:hidden; \}/);
+  assert.match(html, /\.hero-scene img\{[\s\S]*?object-fit:cover; object-position:74% 52%/);
+  assert.match(html, /\.hero-scene::after\{[\s\S]*?linear-gradient\(90deg, rgba\(0,0,0,\.94\) 0%, rgba\(0,0,0,\.80\) 24%/);
+  assert.doesNotMatch(html, /class="scene"|px-spectrum|prism-rig|prism-face|hero-aura/);
 });
 
 test('the lending network shows official lender marks in uniform cards, not text initials', () => {

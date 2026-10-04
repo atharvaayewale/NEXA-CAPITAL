@@ -237,23 +237,27 @@
        A single conic-gradient disc (emerald melting into transparent onyx) spins slowly behind
        the copy and the form card. It is painted underneath the content layer, takes no pointer
        events and is paused offscreen or under reduced motion like the other decorative motion. */
-    /* ---------- hero light scene: a glass prism bending two beams into a spectrum ----------
-       Recreated as pure CSS/SVG (no raster) so it stays razor-sharp on any display,
-       including 8K canvases: a glass triangle, a cyan beam and a white beam entering it,
-       and the rainbow fan leaving the lower edge. Sits under the copy and the lead card. */
-    .prism-scene{ position:absolute; inset:0; display:grid; place-items:center; }
-    .prism-rig{ position:relative; width:min(880px, 68vw); aspect-ratio:9 / 8; transform:translateX(-3%) translateY(-2%); }
-    .prism-rig .scene{ width:100%; height:100%; display:block; overflow:visible; }
-    .scene .spectrum{ animation:spectrum-breathe 7.5s ease-in-out infinite; transform-origin:50% 62%; }
-    .scene .beam-cyan{ animation:beam-breathe 5.6s ease-in-out infinite; }
-    .scene .beam-white{ animation:beam-breathe 6.8s ease-in-out infinite .6s; }
-    .scene .glow-halo{ animation:halo-breathe 9s ease-in-out infinite; }
-    @keyframes spectrum-breathe{ 0%,100%{ opacity:.95; } 50%{ opacity:.72; } }
-    @keyframes beam-breathe{ 0%,100%{ opacity:1; } 50%{ opacity:.62; } }
-    @keyframes halo-breathe{ 0%,100%{ opacity:.85; } 50%{ opacity:.6; } }
-    .prism-rig.parallax-active{ will-change:transform; }
-    .hero-canvas{ position:absolute; inset:0; z-index:0; pointer-events:none; }
-    .prism-scene{ position:absolute; inset:0; display:grid; place-items:center; perspective:1300px; }
+    /* ---------- hero light scene: the glass-prism artwork ----------
+       One local image behind the copy and the lead card: a glass triangle with a
+       cyan beam, a white beam and a rainbow fan. Gradient overlays feather it
+       into the black void so type stays readable and no hard edge shows. */
+    .hero-scene{ position:absolute; inset:0; overflow:hidden; }
+    .hero-scene img{
+      position:absolute; inset:0; width:100%; height:100%;
+      object-fit:cover; object-position:74% 52%;
+    }
+    /* keep the artwork bright: only a soft dark wash under the text column, a gentle
+       vignette at the extremes and top/bottom fades so it melts into the void */
+    .hero-scene::after{
+      content:""; position:absolute; inset:0;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.94) 0%, rgba(0,0,0,.80) 24%, rgba(0,0,0,.34) 42%, transparent 54%),
+        radial-gradient(120% 100% at 52% 48%, transparent 52%, rgba(0,0,0,.5) 84%, #000 100%),
+        linear-gradient(180deg, #000 0%, transparent 14%, transparent 86%, #000 100%);
+    }
+    @media (max-width:980px){
+      .hero-scene img{ object-position:72% 42%; opacity:.85; }
+    }
     .hero-layout{ position:relative; z-index:1; display:grid; grid-template-columns:minmax(0, 1.04fr) minmax(0, .96fr); gap:40px; align-items:center; }
     .hero-layout > *{ min-width:0; }
     .hero-copy{ max-width:600px; }
@@ -985,7 +989,6 @@
       *, *::before, *::after{
         animation:none !important; transition:none !important; scroll-behavior:auto !important;
       }
-      .prism-rig{ will-change:auto !important; }
     }
     ::-webkit-scrollbar{ width:10px; height:10px; }
     ::-webkit-scrollbar-track{ background:#000; }
@@ -1047,109 +1050,8 @@
   <main>
     <section class="hero" id="hero" aria-labelledby="hero-title">
       <div class="hero-canvas" aria-hidden="true">
-        <div class="prism-scene" id="prism-scene">
-          <div class="prism-rig" id="prism-rig">
-            <svg class="scene" viewBox="0 0 900 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <radialGradient id="px-halo" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#22D3EE" stop-opacity=".46"/>
-                  <stop offset="45%" stop-color="#0E7490" stop-opacity=".22"/>
-                  <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
-                </radialGradient>
-                <linearGradient id="px-glass" x1="200" y1="120" x2="820" y2="680" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#6EE7F5" stop-opacity=".14"/>
-                  <stop offset="30%" stop-color="#0B2530" stop-opacity=".55"/>
-                  <stop offset="62%" stop-color="#06131A" stop-opacity=".62"/>
-                  <stop offset="100%" stop-color="#7FD8F5" stop-opacity=".10"/>
-                </linearGradient>
-                <linearGradient id="px-glass-inner" x1="470" y1="150" x2="470" y2="660" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#EAFDFF" stop-opacity=".18"/>
-                  <stop offset="45%" stop-color="#9BE8FF" stop-opacity=".07"/>
-                  <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
-                </linearGradient>
-                <linearGradient id="px-beam-cyan" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#00E5FF" stop-opacity="0"/>
-                  <stop offset="45%" stop-color="#22D3EE" stop-opacity=".75"/>
-                  <stop offset="100%" stop-color="#A5F3FC" stop-opacity="1"/>
-                </linearGradient>
-                <linearGradient id="px-beam-white" x1="1" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
-                  <stop offset="45%" stop-color="#FFFFFF" stop-opacity=".65"/>
-                  <stop offset="100%" stop-color="#FFFFFF" stop-opacity="1"/>
-                </linearGradient>
-                <linearGradient id="px-spectrum" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="#059669" stop-opacity="0"/>
-                  <stop offset="12%" stop-color="#10B981" stop-opacity="1"/>
-                  <stop offset="30%" stop-color="#4ADE80" stop-opacity="1"/>
-                  <stop offset="48%" stop-color="#FDE047" stop-opacity="1"/>
-                  <stop offset="68%" stop-color="#FB923C" stop-opacity="1"/>
-                  <stop offset="86%" stop-color="#F43F5E" stop-opacity="1"/>
-                  <stop offset="100%" stop-color="#DC2626" stop-opacity="1"/>
-                </linearGradient>
-                <radialGradient id="px-fan-fade" cx="68%" cy="78%" r="72%">
-                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
-                  <stop offset="52%" stop-color="#FFFFFF" stop-opacity=".6"/>
-                  <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
-                </radialGradient>
-                <mask id="px-fan-mask">
-                  <rect x="0" y="580" width="900" height="220" fill="url(#px-fan-fade)"/>
-                </mask>
-                <linearGradient id="px-floor" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#E0FBFF" stop-opacity=".16"/>
-                  <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
-                </linearGradient>
-                <filter id="px-soft" x="-45%" y="-45%" width="190%" height="190%"><feGaussianBlur stdDeviation="13"/></filter>
-                <filter id="px-soft-sm" x="-45%" y="-45%" width="190%" height="190%"><feGaussianBlur stdDeviation="5"/></filter>
-                <filter id="px-soft-lg" x="-55%" y="-55%" width="210%" height="210%"><feGaussianBlur stdDeviation="30"/></filter>
-                <filter id="px-glow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="3.6"/></filter>
-                <filter id="px-crisp" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.1"/></filter>
-              </defs>
-
-              <ellipse class="glow-halo" cx="470" cy="430" rx="400" ry="350" fill="url(#px-halo)" filter="url(#px-soft-lg)"/>
-
-              <!-- beams arriving from the far corners -->
-              <g class="beam-cyan" style="mix-blend-mode:screen">
-                <path d="M-70 40 L330 412" stroke="url(#px-beam-cyan)" stroke-width="30" stroke-linecap="round" filter="url(#px-soft)"/>
-                <path d="M-70 40 L330 412" stroke="#22D3EE" stroke-width="9" stroke-linecap="round" opacity=".55" filter="url(#px-soft-sm)"/>
-                <path d="M-70 40 L330 412" stroke="#E6FDFF" stroke-width="3.6" stroke-linecap="round"/>
-              </g>
-              <g class="beam-white" style="mix-blend-mode:screen">
-                <path d="M980 30 L660 400" stroke="url(#px-beam-white)" stroke-width="28" stroke-linecap="round" filter="url(#px-soft)"/>
-                <path d="M980 30 L660 400" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" opacity=".5" filter="url(#px-soft-sm)"/>
-                <path d="M980 30 L660 400" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
-              </g>
-
-              <!-- glass prism -->
-              <g>
-                <ellipse cx="470" cy="662" rx="330" ry="24" fill="url(#px-floor)" filter="url(#px-soft)"/>
-                <polygon points="470,132 150,652 790,652" fill="url(#px-glass)"/>
-                <polygon points="470,132 330,540 610,540" fill="url(#px-glass-inner)" opacity=".85"/>
-                <path d="M470 132 L470 652" stroke="rgba(255,255,255,.22)" stroke-width="1.8"/>
-                <path d="M330 400 L610 400" stroke="rgba(255,255,255,.12)" stroke-width="1.4"/>
-                <path d="M400 520 L640 520" stroke="rgba(255,255,255,.09)" stroke-width="1.2"/>
-                <polygon points="470,132 150,652 790,652" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2.4"/>
-                <path d="M470 132 L150 652" stroke="#FFFFFF" stroke-width="3.6" filter="url(#px-glow)"/>
-                <path d="M470 132 L790 652" stroke="rgba(255,255,255,.8)" stroke-width="3" filter="url(#px-glow)"/>
-                <path d="M150 652 L790 652" stroke="rgba(255,255,255,.55)" stroke-width="2.6" filter="url(#px-crisp)"/>
-                <polygon points="470,132 386,300 556,300" fill="#FFFFFF" opacity=".14"/>
-                <polygon points="470,132 386,300 470,300" fill="#FFFFFF" opacity=".08"/>
-                <polygon points="660,652 790,652 764,540" fill="#FFFFFF" opacity=".10"/>
-              </g>
-
-              <!-- light travelling through the glass and leaving the base -->
-              <g style="mix-blend-mode:screen">
-                <path d="M330 412 L560 652" stroke="#FFFFFF" stroke-width="2.6" opacity=".55" filter="url(#px-crisp)"/>
-                <ellipse cx="560" cy="652" rx="40" ry="16" fill="#FFFFFF" opacity=".5" filter="url(#px-soft-sm)"/>
-              </g>
-
-              <!-- rainbow fan leaving the lower edge -->
-              <g class="spectrum" style="mix-blend-mode:screen" mask="url(#px-fan-mask)">
-                <polygon points="560,640 -40,812 700,806" fill="url(#px-spectrum)" opacity=".9" filter="url(#px-soft-lg)"/>
-                <polygon points="555,644 20,796 600,792" fill="url(#px-spectrum)" opacity=".95" filter="url(#px-soft)"/>
-                <polygon points="550,648 120,776 520,780" fill="url(#px-spectrum)" opacity=".85" filter="url(#px-soft-sm)"/>
-              </g>
-            </svg>
-          </div>
+        <div class="hero-scene" id="prism-scene">
+          <img class="hero-scene-img" src="assets/hero-light-prism.webp" alt="" width="1376" height="768" decoding="async" fetchpriority="high" />
         </div>
       </div>
       <div class="container hero-layout">
@@ -1796,72 +1698,6 @@
           .forEach((element) => motionObserver.observe(element));
       }
 
-      // Frame-batched, time-based prism parallax: no layout work on pointer events.
-      const heroEl = document.getElementById('hero');
-      const prismRig = document.getElementById('prism-rig');
-      const finePointer = window.matchMedia('(pointer: fine)');
-      if (heroEl && prismRig) {
-        let targetX = 0, targetY = 0, curX = 0, curY = 0;
-        let rafId = null, lastTime = null, pendingPointer = null, heroVisible = true;
-        const canAnimate = () => heroVisible && !document.hidden && finePointer.matches && !motionPreference.matches;
-        const stopParallax = () => {
-          if (rafId !== null) cancelAnimationFrame(rafId);
-          rafId = null;
-          lastTime = null;
-          pendingPointer = null;
-          targetX = targetY = curX = curY = 0;
-          prismRig.classList.remove('parallax-active');
-          prismRig.style.removeProperty('transform');
-        };
-        const tick = (time) => {
-          if (!canAnimate()) { stopParallax(); return; }
-          if (pendingPointer) {
-            const rect = heroEl.getBoundingClientRect();
-            targetX = ((pendingPointer.x - rect.left) / rect.width - 0.5) * 16;
-            targetY = ((pendingPointer.y - rect.top) / rect.height - 0.5) * -10;
-            pendingPointer = null;
-          }
-          const delta = lastTime === null ? 16 : Math.min(time - lastTime, 64);
-          const easing = 1 - Math.exp(-delta / 120);
-          curX += (targetX - curX) * easing;
-          curY += (targetY - curY) * easing;
-          lastTime = time;
-          prismRig.style.transform = `rotateX(${-10 + curY}deg) rotateY(${curX}deg)`;
-          if (Math.abs(targetX - curX) > 0.01 || Math.abs(targetY - curY) > 0.01) {
-            rafId = requestAnimationFrame(tick);
-          } else {
-            rafId = null;
-            lastTime = null;
-            prismRig.classList.remove('parallax-active');
-          }
-        };
-        const requestTick = () => {
-          if (canAnimate() && rafId === null) {
-            prismRig.classList.add('parallax-active');
-            rafId = requestAnimationFrame(tick);
-          }
-        };
-        heroEl.addEventListener('pointermove', (event) => {
-          if (!canAnimate()) return;
-          pendingPointer = { x: event.clientX, y: event.clientY };
-          requestTick();
-        }, { passive: true });
-        heroEl.addEventListener('pointerleave', () => {
-          pendingPointer = null;
-          targetX = targetY = 0;
-          requestTick();
-        });
-        document.addEventListener('visibilitychange', () => { if (document.hidden) stopParallax(); });
-        motionPreference.addEventListener('change', stopParallax);
-        finePointer.addEventListener('change', stopParallax);
-        if ('IntersectionObserver' in window) {
-          const heroObserver = new IntersectionObserver(([entry]) => {
-            heroVisible = entry.isIntersecting;
-            if (!heroVisible) stopParallax();
-          });
-          heroObserver.observe(heroEl);
-        }
-      }
     })();
   </script>
 </body>

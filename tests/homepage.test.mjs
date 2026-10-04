@@ -110,8 +110,8 @@ test('the hero keeps a rotating electric-emerald aura behind the tag line and ca
   assert.match(html, /--emerald:#10B981/);
   assert.match(html, /<div class="hero-aura" aria-hidden="true"><\/div>/);
   assert.match(html, /\.hero-aura\{[\s\S]*?conic-gradient\(from 0deg,/);
-  assert.match(html, /rgba\(16,185,129,\.85\) 0deg/);
-  assert.match(html, /\.hero-aura\{[\s\S]*?mask-image:radial-gradient\(closest-side, #000 54%, transparent 100%\)/);
+  assert.match(html, /rgba\(16,185,129,1\) 0deg/);
+  assert.match(html, /\.hero-aura\{[\s\S]*?mask-image:radial-gradient\(closest-side, transparent 34%, #000 58%, #000 76%, transparent 100%\)/);
   assert.match(html, /\.hero-aura\{[\s\S]*?pointer-events:none; z-index:0;/);
   assert.match(html, /@keyframes spin\{ 0%\{ transform:rotate\(0deg\); \} 100%\{ transform:rotate\(360deg\); \} \}/);
   assert.match(html, /animation:spin 12s linear infinite/);
@@ -174,4 +174,5 @@ test('hero mark stack and directory chips use vector marks instead of letter til
   assert.match(html, /icon\.className = 'lender-chip-mark'/);
   assert.match(html, /\.lender-chip\.has-mark::before\{ display:none; \}/);
   assert.match(html, /lenderMarks/);
+  assert.match(html, /Founded by <strong>Atharva Yewale<\/strong>/);
 });

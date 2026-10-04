@@ -1752,7 +1752,7 @@
           '      t += max(d * 0.9, 0.0025);',
           '      if (t > tf) break;',
           '    }',
-          '    float soft = 1.0 - smoothstep(0.0, uPixel, dmin);',
+          '    float soft = 1.0 - smoothstep(uPixel * 0.25, uPixel, dmin);',
           '    if (hit > 0.0 || soft > 0.002) {',
           '      vec3 q = ro + rd * max(t, 0.0);',
           '      vec4 f = field4(q.xy);',

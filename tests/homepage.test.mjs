@@ -107,18 +107,19 @@ test("SBI's own web typeface, Open Sans, covers every heading, label, tag and pa
 });
 
 test('the wordmark is a larger, spectrum-coloured lock-up', () => {
-  assert.match(html, /\.brand-name\{\s*font-family:var\(--font-mono\); font-size:17\.5px; font-weight:700; letter-spacing:\.07em;/);
-  assert.match(html, /\.brand-name\{[\s\S]*?background:linear-gradient\(94deg, #9BF6FF 0%, #00E5FF 20%, #4D7CFF 44%, #8B5CF6 68%, #FF2ED2 100%\)/);
+  assert.match(html, /\.brand-name\{\s*font-family:var\(--font-mono\); font-size:19\.5px; font-weight:700; letter-spacing:\.075em; color:#fff;/);
+  assert.match(html, /\.brand-name \.brand-dim\{[\s\S]*?background:linear-gradient\(94deg, #7DF9FF 0%, #00E5FF 20%, #4D7CFF 44%, #8B5CF6 66%, #FF2ED2 86%, #FFB454 100%\)/);
   assert.match(html, /-webkit-background-clip:text; background-clip:text; color:transparent;/);
-  assert.match(html, /\.brand-name \.brand-dim\{ color:inherit; font-weight:600; opacity:\.82; \}/);
+  assert.match(html, /\.brand-mark\{ width:42px; height:42px;/);
+  assert.match(html, /<link rel="icon" href="data:image\/svg\+xml,/);
 });
 
 test('the hero shows the glass-prism artwork as a local image', () => {
-  assert.match(html, /<img class="hero-scene-img" src="assets\/hero-light-prism\.webp" alt="" width="1376" height="768"/);
+  assert.match(html, /<img class="hero-scene-img" src="assets\/hero-light-prism\.webp" alt="" width="2912" height="1440"/);
   assert.match(html, /<div class="hero-scene" id="prism-scene">/);
   assert.match(html, /\.hero-scene\{ position:absolute; inset:0; overflow:hidden; \}/);
-  assert.match(html, /\.hero-scene img\{[\s\S]*?object-fit:cover; object-position:74% 52%/);
-  assert.match(html, /\.hero-scene::after\{[\s\S]*?linear-gradient\(90deg, rgba\(0,0,0,\.94\) 0%, rgba\(0,0,0,\.80\) 24%/);
+  assert.match(html, /\.hero-scene img\{[\s\S]*?object-fit:cover; object-position:62% 50%/);
+  assert.match(html, /\.hero-scene::after\{[\s\S]*?linear-gradient\(90deg, rgba\(0,0,0,\.92\) 0%, rgba\(0,0,0,\.74\) 22%/);
   assert.doesNotMatch(html, /class="scene"|px-spectrum|prism-rig|prism-face|hero-aura/);
 });
 
